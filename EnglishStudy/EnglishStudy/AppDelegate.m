@@ -10,13 +10,16 @@
 #import "HomeViewController.h"
 #import <Pods/Reachability/Reachability.h>
 
+#import "ESFooterView.h"
+
 @interface AppDelegate()
 {
-    
+    ESFooterView *footerView;
 }
 
+- (void)setupView;
 
--(void)reachabilityChanged:(NSNotification*)note;
+- (void)reachabilityChanged:(NSNotification*)note;
 
 @end
 
@@ -75,6 +78,9 @@
     self.navigationController.navigationBar.hidden = YES;
     
     self.window.rootViewController = self.navigationController;
+    
+    [self setupView];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -120,6 +126,23 @@
     {
         self.isNetworkAvailable = NO;
     }
+}
+
+#pragma mark - SetupView
+
+- (void)setupView
+{
+    footerView = [[[NSBundle mainBundle] loadNibNamed:@"ESFooterView" owner:self options:nil] objectAtIndex:0];
+    [self.navigationController.view addSubview:footerView];
+    footerView.frame = CGRectMake(0, kMainScreenHeight - 30, 320, 30);
+    [footerView setupView];
+}
+
+- (void)showAlertView:(NSString *)title andMessage:(NSString *)message
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"Đồng Ý" otherButtonTitles: nil];
+    [alertView show];
+    alertView = nil;
 }
 
 @end

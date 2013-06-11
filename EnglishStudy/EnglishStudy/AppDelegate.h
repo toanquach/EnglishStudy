@@ -16,4 +16,6 @@
 
 @property (nonatomic) BOOL  isNetworkAvailable;
 
+- (void)showAlertView:(NSString *)title andMessage:(NSString *)message;
+
 @end

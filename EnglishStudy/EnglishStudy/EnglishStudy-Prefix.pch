@@ -11,4 +11,40 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import "Define.h"
+
+    //
+    //      UIAppdelegate for Global Use
+    //
+    #define UIAppDelegate ((AppDelegate *)[UIApplication sharedApplication].delegate)
+    #import "AppDelegate.h"
+
+    #define IMAGESPATH [NSHomeDirectory() stringByAppendingString:@"/Documents/"]
+
+    #define HOMEDIRECTORY [[NSBundle mainBundle] resourcePath]
+
+    #define DOCUMENTDIRECTORY [NSHomeDirectory() stringByAppendingString:@"/Documents/"]
+
+    #define LIBRARY_CATCHES_DIRECTORY [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/"]
+    //
+    // Check type device
+    //
+    #define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+
+    #define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+
+    #define IS_IPHONE_5 (IS_IPHONE && [[UIScreen mainScreen] bounds].size.height == 568.0f)
+
+    #define kMainScreenWidth            [[UIScreen mainScreen] bounds].size.width
+
+    #define kMainScreenHeight            [[UIScreen mainScreen] bounds].size.height
+    //
+    //  Custom NSLog Function
+    //
+    #ifdef DEBUG
+    #   define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+    #else
+    #   define DLog(...)
+    #endif
+
 #endif
