@@ -30,8 +30,10 @@
     // ----------------------------------------------------
     int singerRadioButtonSelected;
     
-    __unsafe_unretained IBOutlet UIImageView *bestSongExpandView;
     int isBestSongClick;
+    __unsafe_unretained IBOutlet UIImageView *bestSongImageView;
+    __unsafe_unretained IBOutlet UIImageView *bestSongExpandImageView;
+    __unsafe_unretained IBOutlet UIView *bestSongExpandView;
 }
 
 - (void)setupView;
@@ -84,6 +86,8 @@
     songRadioImageView = nil;
     songRadioButton = nil;
     containerButtonView = nil;
+    bestSongImageView = nil;
+    bestSongExpandImageView = nil;
     bestSongExpandView = nil;
     [super viewDidUnload];
 }
@@ -113,33 +117,41 @@
 
 - (IBAction)bestSongButtonClicked:(id)sender
 {
+    NSString *hotsong = @"btn_icon_hotsongs.png";
+    NSString *hotsong_hover = @"btn_hotsong_hover.png";
+    
     if (bestSongButton.selected == YES)
     {
-        [bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateNormal];
+        //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateNormal];
         [UIView animateWithDuration:0.5 animations:^
          {
-             bestSongExpandView.frame = CGRectMake(154, 4, 0, 80);             
+             bestSongExpandView.frame = CGRectMake(140, 0, 1, 80);
+             bestSongExpandImageView.frame = CGRectMake(0, 0, 1, 80);
          }
          completion:^(BOOL finished)
          {
              bestSongExpandView.hidden = YES;
-             [bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateNormal];
+             //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateNormal];
+             bestSongImageView.image = [UIImage imageNamed:hotsong];
          }];
     }
     else
     {
         // btn_hotsong_hover.png
         bestSongExpandView.hidden = NO;
-        bestSongExpandView.frame = CGRectMake(154, 4, 0, 80);
-        [bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateSelected];
+        bestSongExpandView.frame = CGRectMake(140, 0, 1, 80);
+        bestSongExpandImageView.frame = CGRectMake(0, 0, 1, 80);
+        //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateSelected];
+        bestSongImageView.image = [UIImage imageNamed:hotsong_hover];
         
         [UIView animateWithDuration:0.5 animations:^
         {
-            bestSongExpandView.frame = CGRectMake(154, 4, 154, 80);
+            bestSongExpandView.frame = CGRectMake(140, 0, 153, 80);
+            bestSongExpandImageView.frame = CGRectMake(0, 0, 153, 80);
         }
         completion:^(BOOL finished)
         {
-            [bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateSelected];
+            //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateSelected];
         }];
         
     }

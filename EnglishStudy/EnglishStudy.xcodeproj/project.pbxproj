@@ -25,6 +25,9 @@
 		6A7DAE9D1760E8C7005F4267 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE9C1760E8C7005F4267 /* CFNetwork.framework */; };
 		6A7DAEA11760E916005F4267 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAEA01760E916005F4267 /* QuartzCore.framework */; };
 		6A7DAEA51760E95D005F4267 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAEA41760E95D005F4267 /* Security.framework */; };
+		6A7EA86B1767F2AA00542515 /* icon-category.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA8681767F2AA00542515 /* icon-category.png */; };
+		6A7EA86C1767F2AA00542515 /* icon-singer.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA8691767F2AA00542515 /* icon-singer.png */; };
+		6A7EA86D1767F2AA00542515 /* icon-song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA86A1767F2AA00542515 /* icon-song.png */; };
 		6A89F2991766BF0B00A2EE56 /* ESButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A89F2981766BF0B00A2EE56 /* ESButton.m */; };
 		6A89F2A31766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A89F29B1766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf */; };
 		6A89F2A41766CFB400A2EE56 /* HelveticaNeueLTStd-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A89F29C1766CFB400A2EE56 /* HelveticaNeueLTStd-Roman.otf */; };
@@ -80,6 +83,9 @@
 		6A7DAE9C1760E8C7005F4267 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		6A7DAEA01760E916005F4267 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6A7DAEA41760E95D005F4267 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6A7EA8681767F2AA00542515 /* icon-category.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-category.png"; sourceTree = "<group>"; };
+		6A7EA8691767F2AA00542515 /* icon-singer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-singer.png"; sourceTree = "<group>"; };
+		6A7EA86A1767F2AA00542515 /* icon-song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-song.png"; sourceTree = "<group>"; };
 		6A89F2971766BF0B00A2EE56 /* ESButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESButton.h; sourceTree = "<group>"; };
 		6A89F2981766BF0B00A2EE56 /* ESButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESButton.m; sourceTree = "<group>"; };
 		6A89F29B1766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeue-lt-roman.otf"; sourceTree = "<group>"; };
@@ -205,6 +211,7 @@
 		6A7DAE6D1760DE85005F4267 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6A7EA8671767F2AA00542515 /* home */,
 				6A89F2BB17672D6600A2EE56 /* home_images */,
 				6A89F29A1766CFB400A2EE56 /* Fonts */,
 			);
@@ -246,6 +253,16 @@
 				6A7DAE781760DEE5005F4267 /* HomeViewController.xib */,
 			);
 			name = "Home Page";
+			sourceTree = "<group>";
+		};
+		6A7EA8671767F2AA00542515 /* home */ = {
+			isa = PBXGroup;
+			children = (
+				6A7EA8681767F2AA00542515 /* icon-category.png */,
+				6A7EA8691767F2AA00542515 /* icon-singer.png */,
+				6A7EA86A1767F2AA00542515 /* icon-song.png */,
+			);
+			path = home;
 			sourceTree = "<group>";
 		};
 		6A89F2961766BEFF00A2EE56 /* UI */ = {
@@ -391,6 +408,9 @@
 				6A89F2DC17672D6800A2EE56 /* Logo_Header_Text.png in Resources */,
 				6A89F2DD17672D6800A2EE56 /* search_textfield.png in Resources */,
 				6A89F2DF17672E4800A2EE56 /* hoctienganh_640x960_home.jpg in Resources */,
+				6A7EA86B1767F2AA00542515 /* icon-category.png in Resources */,
+				6A7EA86C1767F2AA00542515 /* icon-singer.png in Resources */,
+				6A7EA86D1767F2AA00542515 /* icon-song.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
