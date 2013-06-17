@@ -35,16 +35,17 @@
     {
         [self.imageView setContentMode:UIViewContentModeTop];
         
-        //UIFont *font = [UIFont fontWithName:@"Stag-Book" size:11];
+        UIFont *font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
         
         self.titleLabel.backgroundColor = [UIColor clearColor];
         
-        //self.titleLabel.font = font;
+        self.titleLabel.font = font;
         
         self.titleLabel.textAlignment = UITextAlignmentCenter;
         [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self setTitleShadowColor:[UIColor colorWithWhite:1.0 alpha:0.6] forState:UIControlStateNormal];
+        //[self setTitleShadowColor:[UIColor colorWithWhite:1.0 alpha:0.6] forState:UIControlStateNormal];
         self.titleLabel.shadowOffset = CGSizeMake(0, 1);
+        self.titleLabel.shadowColor = [UIColor blackColor];
     }
     return self;
 }

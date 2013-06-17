@@ -20,4 +20,7 @@
 //
 #define kFont_SamsungIF_Rg                  @"SamsungIF_Rg"
 #define kFont_HelveticaNeueLTStd_Roman      @"HelveticaNeueLTStd-Roman"
+#define kFont_Stag_Book                     @"Stag-Book"
+#define kFont_HelveticaNeue_Bold            @"HelveticaNeue-Bold"
+#define kFont_Klavika_Regular               @"Klavika-Regular"
 #endif

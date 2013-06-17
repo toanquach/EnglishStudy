@@ -26,7 +26,10 @@
 	<array>
 		<string>SamsungIF_Rg.ttf</string>
 		<string>HelveticaNeueLTStd-Roman.otf</string>
-		<string>SamsungIF_Bd.ttf</string>
+		<string>Stag-Book.otf</string>
+		<string>HelveticaNeue-Bold.otf</string>
+		<string>Stag-Bold.otf</string>
+		<string>Klavika-Regular.otf</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
