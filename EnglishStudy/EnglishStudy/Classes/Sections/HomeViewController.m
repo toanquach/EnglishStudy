@@ -37,6 +37,8 @@
 }
 
 - (void)setupView;
+- (void)sendButtonToBack;
+- (void)bringButtonToFront;
 
 // ------------------------------------------
 - (IBAction)bestSongButtonClicked:(id)sender;
@@ -113,45 +115,77 @@
     }
 }
 
+- (void)sendButtonToBack
+{
+    [containerButtonView sendSubviewToBack:accountButton];
+}
+
+- (void)bringButtonToFront
+{
+    [containerButtonView bringSubviewToFront:accountButton];
+}
+
 #pragma mark - Button Delegate
 
 - (IBAction)bestSongButtonClicked:(id)sender
 {
     NSString *hotsong = @"btn_icon_hotsongs.png";
     NSString *hotsong_hover = @"btn_hotsong_hover.png";
-    
+    bestSongButton.userInteractionEnabled = NO;
     if (bestSongButton.selected == YES)
     {
-        //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateNormal];
-        [UIView animateWithDuration:0.5 animations:^
-         {
-             bestSongExpandView.frame = CGRectMake(140, 0, 1, 80);
-             bestSongExpandImageView.frame = CGRectMake(0, 0, 1, 80);
-         }
-         completion:^(BOOL finished)
-         {
-             bestSongExpandView.hidden = YES;
-             //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateNormal];
-             bestSongImageView.image = [UIImage imageNamed:hotsong];
-         }];
+        bestSongExpandView.alpha = 1.0;
+        [UIView animateWithDuration:0.25 animations:^
+        {
+            bestSongExpandView.alpha = 0.0;
+            
+        }completion:^(BOOL finished)
+        {
+            bestSongExpandView.hidden = YES;
+            [UIView animateWithDuration:0.5 animations:^
+            {
+                 bestSongExpandImageView.frame = CGRectMake(140, 0, 1, 80);
+                
+            }completion:^(BOOL finished)
+            {
+                 bestSongImageView.image = [UIImage imageNamed:hotsong];
+                 
+                 bestSongExpandImageView.hidden = YES;
+                
+                bestSongButton.userInteractionEnabled = YES;
+                
+                [self bringButtonToFront];
+                
+            }];
+        }];
     }
     else
     {
-        // btn_hotsong_hover.png
-        bestSongExpandView.hidden = NO;
-        bestSongExpandView.frame = CGRectMake(140, 0, 1, 80);
-        bestSongExpandImageView.frame = CGRectMake(0, 0, 1, 80);
-        //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_icon_hotsongs.png"] forState:UIControlStateSelected];
+        bestSongExpandImageView.hidden = NO;
+        bestSongExpandImageView.frame = CGRectMake(140, 0, 1, 80);
+        
         bestSongImageView.image = [UIImage imageNamed:hotsong_hover];
+        
+        bestSongExpandView.hidden = NO;
+        bestSongExpandView.alpha = 0.0;
+        
+        [self sendButtonToBack];
         
         [UIView animateWithDuration:0.5 animations:^
         {
-            bestSongExpandView.frame = CGRectMake(140, 0, 153, 80);
-            bestSongExpandImageView.frame = CGRectMake(0, 0, 153, 80);
+            bestSongExpandImageView.frame = CGRectMake(140, 0, 153, 80);
         }
         completion:^(BOOL finished)
         {
-            //[bestSongButton setBackgroundImage:[UIImage imageNamed:@"btn_hotsong_hover.png"] forState:UIControlStateSelected];
+            [UIView animateWithDuration:0.25 animations:^
+            {
+                bestSongExpandView.alpha = 1.0;
+                
+            }completion:^(BOOL finished)
+             {
+                 bestSongButton.userInteractionEnabled = YES;
+                 
+             }];
         }];
         
     }

@@ -43,6 +43,7 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, -20}, {320, 480}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="729153036"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -66,6 +67,7 @@
 										<int key="NSvFlags">256</int>
 										<string key="NSFrameSize">{140, 80}</string>
 										<reference key="NSSuperview" ref="801243475"/>
+										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="614220364"/>
 										<bool key="IBUIOpaque">NO</bool>
 										<bool key="IBUIClipsSubviews">YES</bool>
@@ -76,30 +78,32 @@
 											<string key="NSResourceName">btn_icon_hotsongs.png</string>
 										</object>
 									</object>
+									<object class="IBUIImageView" id="955271375">
+										<reference key="NSNextResponder" ref="801243475"/>
+										<int key="NSvFlags">-2147483392</int>
+										<string key="NSFrame">{{140, 0}, {153, 80}}</string>
+										<reference key="NSSuperview" ref="801243475"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="149495066"/>
+										<bool key="IBUIOpaque">NO</bool>
+										<bool key="IBUIClipsSubviews">YES</bool>
+										<bool key="IBUIMultipleTouchEnabled">YES</bool>
+										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+										<object class="NSCustomResource" key="IBUIImage">
+											<string key="NSClassName">NSImage</string>
+											<string key="NSResourceName">btn_hotsong_hover_expand.png</string>
+										</object>
+									</object>
 									<object class="IBUIView" id="149495066">
 										<reference key="NSNextResponder" ref="801243475"/>
 										<int key="NSvFlags">-2147483356</int>
 										<array class="NSMutableArray" key="NSSubviews">
-											<object class="IBUIImageView" id="955271375">
-												<reference key="NSNextResponder" ref="149495066"/>
-												<int key="NSvFlags">256</int>
-												<string key="NSFrameSize">{153, 80}</string>
-												<reference key="NSSuperview" ref="149495066"/>
-												<reference key="NSNextKeyView" ref="344690783"/>
-												<bool key="IBUIOpaque">NO</bool>
-												<bool key="IBUIClipsSubviews">YES</bool>
-												<bool key="IBUIMultipleTouchEnabled">YES</bool>
-												<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-												<object class="NSCustomResource" key="IBUIImage">
-													<string key="NSClassName">NSImage</string>
-													<string key="NSResourceName">btn_hotsong_hover_expand.png</string>
-												</object>
-											</object>
 											<object class="IBUIImageView" id="344690783">
 												<reference key="NSNextResponder" ref="149495066"/>
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{7, 8}, {20, 18}}</string>
 												<reference key="NSSuperview" ref="149495066"/>
+												<reference key="NSWindow"/>
 												<reference key="NSNextKeyView" ref="344727073"/>
 												<bool key="IBUIOpaque">NO</bool>
 												<bool key="IBUIClipsSubviews">YES</bool>
@@ -115,7 +119,8 @@
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{8, 33}, {19, 19}}</string>
 												<reference key="NSSuperview" ref="149495066"/>
-												<reference key="NSNextKeyView" ref="1023887562"/>
+												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="142104612"/>
 												<bool key="IBUIOpaque">NO</bool>
 												<bool key="IBUIClipsSubviews">YES</bool>
 												<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -130,7 +135,8 @@
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{8, 57}, {19, 20}}</string>
 												<reference key="NSSuperview" ref="149495066"/>
-												<reference key="NSNextKeyView" ref="709491985"/>
+												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="724605864"/>
 												<bool key="IBUIOpaque">NO</bool>
 												<bool key="IBUIClipsSubviews">YES</bool>
 												<bool key="IBUIMultipleTouchEnabled">YES</bool>
@@ -145,6 +151,7 @@
 												<int key="NSvFlags">292</int>
 												<string key="NSFrame">{{35, 7}, {112, 21}}</string>
 												<reference key="NSSuperview" ref="149495066"/>
+												<reference key="NSWindow"/>
 												<reference key="NSNextKeyView" ref="792520997"/>
 												<string key="NSReuseIdentifierKey">_NS:9</string>
 												<bool key="IBUIOpaque">NO</bool>
@@ -156,7 +163,7 @@
 												<object class="NSColor" key="IBUITextColor">
 													<int key="NSColorSpace">1</int>
 													<bytes key="NSRGB">MSAxIDEAA</bytes>
-													<object class="NSColorSpace" key="NSCustomColorSpace">
+													<object class="NSColorSpace" key="NSCustomColorSpace" id="815225109">
 														<int key="NSID">1</int>
 													</object>
 												</object>
@@ -173,10 +180,61 @@
 												</object>
 												<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 											</object>
+											<object class="IBUILabel" id="142104612">
+												<reference key="NSNextResponder" ref="149495066"/>
+												<int key="NSvFlags">292</int>
+												<string key="NSFrame">{{35, 31}, {112, 21}}</string>
+												<reference key="NSSuperview" ref="149495066"/>
+												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="1023887562"/>
+												<string key="NSReuseIdentifierKey">_NS:9</string>
+												<bool key="IBUIOpaque">NO</bool>
+												<bool key="IBUIClipsSubviews">YES</bool>
+												<int key="IBUIContentMode">7</int>
+												<bool key="IBUIUserInteractionEnabled">NO</bool>
+												<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+												<string key="IBUIText">Ca Sĩ</string>
+												<object class="NSColor" key="IBUITextColor">
+													<int key="NSColorSpace">1</int>
+													<bytes key="NSRGB">MSAxIDEAA</bytes>
+													<reference key="NSCustomColorSpace" ref="815225109"/>
+												</object>
+												<nil key="IBUIHighlightedColor"/>
+												<int key="IBUIBaselineAdjustment">0</int>
+												<reference key="IBUIFontDescription" ref="587861037"/>
+												<reference key="IBUIFont" ref="1039640773"/>
+												<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+											</object>
+											<object class="IBUILabel" id="724605864">
+												<reference key="NSNextResponder" ref="149495066"/>
+												<int key="NSvFlags">292</int>
+												<string key="NSFrame">{{35, 56}, {112, 21}}</string>
+												<reference key="NSSuperview" ref="149495066"/>
+												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView" ref="653036060"/>
+												<string key="NSReuseIdentifierKey">_NS:9</string>
+												<bool key="IBUIOpaque">NO</bool>
+												<bool key="IBUIClipsSubviews">YES</bool>
+												<int key="IBUIContentMode">7</int>
+												<bool key="IBUIUserInteractionEnabled">NO</bool>
+												<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+												<string key="IBUIText">Bài Hát</string>
+												<object class="NSColor" key="IBUITextColor">
+													<int key="NSColorSpace">1</int>
+													<bytes key="NSRGB">MSAxIDEAA</bytes>
+													<reference key="NSCustomColorSpace" ref="815225109"/>
+												</object>
+												<nil key="IBUIHighlightedColor"/>
+												<int key="IBUIBaselineAdjustment">0</int>
+												<reference key="IBUIFontDescription" ref="587861037"/>
+												<reference key="IBUIFont" ref="1039640773"/>
+												<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
+											</object>
 										</array>
 										<string key="NSFrame">{{140, 0}, {153, 80}}</string>
 										<reference key="NSSuperview" ref="801243475"/>
-										<reference key="NSNextKeyView" ref="955271375"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="344690783"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<object class="NSColor" key="IBUIBackgroundColor" id="1050883366">
 											<int key="NSColorSpace">3</int>
@@ -189,7 +247,8 @@
 										<int key="NSvFlags">292</int>
 										<string key="NSFrameSize">{140, 80}</string>
 										<reference key="NSSuperview" ref="801243475"/>
-										<reference key="NSNextKeyView" ref="149495066"/>
+										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="955271375"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -224,16 +283,34 @@
 								</array>
 								<string key="NSFrame">{{14, 4}, {293, 80}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="325554845"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<reference key="IBUIBackgroundColor" ref="1050883366"/>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
-							<object class="IBUIButton" id="709491985">
+							<object class="IBUIImageView" id="653036060">
 								<reference key="NSNextResponder" ref="612556364"/>
-								<int key="NSvFlags">-2147483356</int>
+								<int key="NSvFlags">-2147483392</int>
 								<string key="NSFrame">{{167, 4}, {140, 80}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="709491985"/>
+								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIClipsSubviews">YES</bool>
+								<bool key="IBUIMultipleTouchEnabled">YES</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+								<object class="NSCustomResource" key="IBUIImage" id="92668540">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">btn_icon_accounts.png</string>
+								</object>
+							</object>
+							<object class="IBUIButton" id="709491985">
+								<reference key="NSNextResponder" ref="612556364"/>
+								<int key="NSvFlags">292</int>
+								<string key="NSFrame">{{167, 4}, {140, 80}}</string>
+								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="888169194"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -247,10 +324,7 @@
 									<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 								</object>
 								<reference key="IBUINormalTitleShadowColor" ref="907751019"/>
-								<object class="NSCustomResource" key="IBUINormalBackgroundImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">account.png</string>
-								</object>
+								<reference key="IBUINormalBackgroundImage" ref="92668540"/>
 								<reference key="IBUIFontDescription" ref="147472422"/>
 								<reference key="IBUIFont" ref="934592556"/>
 							</object>
@@ -259,6 +333,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{14, 98}, {140, 79}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="280710829"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -284,6 +359,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{167, 99}, {140, 79}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="643366357"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -309,6 +385,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{14, 194}, {140, 79}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="784558951"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -334,6 +411,7 @@
 								<int key="NSvFlags">-2147483356</int>
 								<string key="NSFrame">{{167, 194}, {140, 79}}</string>
 								<reference key="NSSuperview" ref="612556364"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
@@ -357,6 +435,7 @@
 						</array>
 						<string key="NSFrame">{{0, 139}, {320, 285}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="801243475"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="1050883366"/>
@@ -367,6 +446,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{15, 93}, {290, 25}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="612556364"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
@@ -393,6 +473,7 @@
 						<int key="NSvFlags">256</int>
 						<string key="NSFrame">{{0, 3}, {320, 69}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="18915815"/>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -406,6 +487,7 @@
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="563968666"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -502,19 +584,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">bestSongExpandImageView</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="955271375"/>
-					</object>
-					<int key="connectionID">56</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">bestSongExpandView</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="149495066"/>
 					</object>
 					<int key="connectionID">57</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">bestSongExpandImageView</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="955271375"/>
+					</object>
+					<int key="connectionID">56</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -570,14 +652,10 @@
 							<reference ref="280710829"/>
 							<reference ref="888169194"/>
 							<reference ref="709491985"/>
+							<reference ref="653036060"/>
 							<reference ref="801243475"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">8</int>
-						<reference key="object" ref="709491985"/>
-						<reference key="parent" ref="612556364"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">9</int>
@@ -616,6 +694,7 @@
 							<reference ref="325554845"/>
 							<reference ref="614220364"/>
 							<reference ref="149495066"/>
+							<reference ref="955271375"/>
 						</array>
 						<reference key="parent" ref="612556364"/>
 						<string key="objectName">View Group Hot Song</string>
@@ -634,18 +713,15 @@
 						<int key="objectID">50</int>
 						<reference key="object" ref="149495066"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="955271375"/>
 							<reference ref="344690783"/>
 							<reference ref="792520997"/>
 							<reference ref="1023887562"/>
 							<reference ref="344727073"/>
+							<reference ref="142104612"/>
+							<reference ref="724605864"/>
 						</array>
 						<reference key="parent" ref="801243475"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">45</int>
-						<reference key="object" ref="955271375"/>
-						<reference key="parent" ref="149495066"/>
+						<string key="objectName">View Best Song Expand</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">52</int>
@@ -666,6 +742,31 @@
 						<int key="objectID">55</int>
 						<reference key="object" ref="344727073"/>
 						<reference key="parent" ref="149495066"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">45</int>
+						<reference key="object" ref="955271375"/>
+						<reference key="parent" ref="801243475"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">58</int>
+						<reference key="object" ref="142104612"/>
+						<reference key="parent" ref="149495066"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">59</int>
+						<reference key="object" ref="724605864"/>
+						<reference key="parent" ref="149495066"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">8</int>
+						<reference key="object" ref="709491985"/>
+						<reference key="parent" ref="612556364"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">60</int>
+						<reference key="object" ref="653036060"/>
+						<reference key="parent" ref="612556364"/>
 					</object>
 				</array>
 			</object>
@@ -696,12 +797,15 @@
 				<string key="53.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="54.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="55.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="59.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="60.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="7.CustomClassName">ESButton</string>
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="0.0" key="7.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="8.CustomClassName">ESButton</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<real value="1" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
+				<real value="0.0" key="8.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="9.CustomClassName">ESButton</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="1" key="9.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
@@ -710,18 +814,56 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">57</int>
+			<int key="maxID">60</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">ESButton</string>
+					<string key="superclassName">UIButton</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ESButton.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">HomeViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="bestSongButtonClicked:">id</string>
+						<string key="singerRadioButtonClicked:">id</string>
+						<string key="songRadioButtonClicked:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="bestSongButtonClicked:">
+							<string key="name">bestSongButtonClicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="singerRadioButtonClicked:">
+							<string key="name">singerRadioButtonClicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="songRadioButtonClicked:">
+							<string key="name">songRadioButtonClicked:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/HomeViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="Logo_Header_Text.png">{640, 138}</string>
-			<string key="account.png">{16, 16}</string>
 			<string key="bg_main.png">{640, 960}</string>
 			<string key="btn_hotsong_hover_expand.png">{305, 160}</string>
+			<string key="btn_icon_accounts.png">{275, 161}</string>
 			<string key="btn_icon_hotsongs.png">{275, 161}</string>
 			<string key="favourite-song.png">{16, 16}</string>
 			<string key="icon-category.png">{28, 24}</string>
