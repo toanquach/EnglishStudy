@@ -30,7 +30,7 @@
 
 - (void)setupView
 {
-    copyRightLabel.font = [UIFont fontWithName:kFont_HelveticaNeueLTStd_Roman size:12];
+    copyRightLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:12];
 }
 
 - (IBAction)shareFBButtonClicked:(id)sender

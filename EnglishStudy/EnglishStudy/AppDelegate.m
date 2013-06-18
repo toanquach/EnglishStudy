@@ -31,6 +31,10 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
+    //  -----------------------------------------
+    //          Copy DB to cache
+    //
+    NSFileManager *fileManager = [NSFileManager defaultManager];
     // ------------------------------------------
     //      Check network available
     //
@@ -74,10 +78,15 @@
     // -----------------------------------
     //      Config Navigation
     //
-    self.navigationController.navigationBarHidden = YES;
-    self.navigationController.navigationBar.hidden = YES;
+    //self.navigationController.navigationBarHidden = YES;
+    //self.navigationController.navigationBar.hidden = YES;
     
     self.window.rootViewController = self.navigationController;
+    
+    if ([[UINavigationBar class]respondsToSelector:@selector(appearance)])
+    {
+        [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"nav_background.png"] forBarMetrics:UIBarMetricsDefault];
+    }
     
     [self setupView];
     

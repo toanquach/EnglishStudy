@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A3FB104176FFB3B00C75552 /* AccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A3FB102176FFB3B00C75552 /* AccountsViewController.m */; };
+		6A3FB105176FFB3B00C75552 /* AccountsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB103176FFB3B00C75552 /* AccountsViewController.xib */; };
+		6A3FB10A176FFC9800C75552 /* HotSongViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A3FB108176FFC9800C75552 /* HotSongViewController.m */; };
+		6A3FB10B176FFC9800C75552 /* HotSongViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB109176FFC9800C75552 /* HotSongViewController.xib */; };
+		6A3FB113176FFEAB00C75552 /* Klavika-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB10C176FFEAB00C75552 /* Klavika-Bold.otf */; };
+		6A3FB114176FFEAB00C75552 /* Klavika-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB10D176FFEAB00C75552 /* Klavika-BoldItalic.otf */; };
+		6A3FB115176FFEAB00C75552 /* Klavika-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB10E176FFEAB00C75552 /* Klavika-Light.otf */; };
+		6A3FB116176FFEAB00C75552 /* Klavika-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB10F176FFEAB00C75552 /* Klavika-LightItalic.otf */; };
+		6A3FB117176FFEAB00C75552 /* Klavika-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB110176FFEAB00C75552 /* Klavika-Medium.otf */; };
+		6A3FB118176FFEAB00C75552 /* Klavika-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB111176FFEAB00C75552 /* Klavika-MediumItalic.otf */; };
+		6A3FB119176FFEAB00C75552 /* Klavika-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB112176FFEAB00C75552 /* Klavika-RegularItalic.otf */; };
 		6A7DAE2E1760D6C2005F4267 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2D1760D6C2005F4267 /* UIKit.framework */; };
 		6A7DAE301760D6C2005F4267 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2F1760D6C2005F4267 /* Foundation.framework */; };
 		6A7DAE321760D6C2005F4267 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE311760D6C2005F4267 /* CoreGraphics.framework */; };
@@ -72,9 +83,26 @@
 		6AAAF083176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */; };
 		6AAAF084176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */; };
 		6AAAF086176F7F200022BB6A /* Klavika-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */; };
+		6AEA6D7D17702A36005987AF /* nav_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7C17702A36005987AF /* nav_background.png */; };
+		6AEA6D7F1770361C005987AF /* nav_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7E1770361C005987AF /* nav_background@2x.png */; };
+		6AEA6D8217703984005987AF /* nav_back_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D8017703984005987AF /* nav_back_button.png */; };
+		6AEA6D8317703984005987AF /* nav_back_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D8117703984005987AF /* nav_back_button@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A3FB101176FFB3B00C75552 /* AccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccountsViewController.h; sourceTree = "<group>"; };
+		6A3FB102176FFB3B00C75552 /* AccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccountsViewController.m; sourceTree = "<group>"; };
+		6A3FB103176FFB3B00C75552 /* AccountsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AccountsViewController.xib; sourceTree = "<group>"; };
+		6A3FB107176FFC9800C75552 /* HotSongViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HotSongViewController.h; sourceTree = "<group>"; };
+		6A3FB108176FFC9800C75552 /* HotSongViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotSongViewController.m; sourceTree = "<group>"; };
+		6A3FB109176FFC9800C75552 /* HotSongViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HotSongViewController.xib; sourceTree = "<group>"; };
+		6A3FB10C176FFEAB00C75552 /* Klavika-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Bold.otf"; sourceTree = "<group>"; };
+		6A3FB10D176FFEAB00C75552 /* Klavika-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-BoldItalic.otf"; sourceTree = "<group>"; };
+		6A3FB10E176FFEAB00C75552 /* Klavika-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Light.otf"; sourceTree = "<group>"; };
+		6A3FB10F176FFEAB00C75552 /* Klavika-LightItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-LightItalic.otf"; sourceTree = "<group>"; };
+		6A3FB110176FFEAB00C75552 /* Klavika-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Medium.otf"; sourceTree = "<group>"; };
+		6A3FB111176FFEAB00C75552 /* Klavika-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-MediumItalic.otf"; sourceTree = "<group>"; };
+		6A3FB112176FFEAB00C75552 /* Klavika-RegularItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-RegularItalic.otf"; sourceTree = "<group>"; };
 		6A7DAE2A1760D6C2005F4267 /* EnglishStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnglishStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7DAE2D1760D6C2005F4267 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6A7DAE2F1760D6C2005F4267 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -148,6 +176,10 @@
 		6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan1.jpg; sourceTree = "<group>"; };
 		6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan2.jpg; sourceTree = "<group>"; };
 		6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Regular.otf"; sourceTree = "<group>"; };
+		6AEA6D7C17702A36005987AF /* nav_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_background.png; sourceTree = "<group>"; };
+		6AEA6D7E1770361C005987AF /* nav_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav_background@2x.png"; sourceTree = "<group>"; };
+		6AEA6D8017703984005987AF /* nav_back_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_back_button.png; sourceTree = "<group>"; };
+		6AEA6D8117703984005987AF /* nav_back_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav_back_button@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +201,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A3FB100176FFB2100C75552 /* Account Page */ = {
+			isa = PBXGroup;
+			children = (
+				6A3FB101176FFB3B00C75552 /* AccountsViewController.h */,
+				6A3FB102176FFB3B00C75552 /* AccountsViewController.m */,
+				6A3FB103176FFB3B00C75552 /* AccountsViewController.xib */,
+			);
+			name = "Account Page";
+			sourceTree = "<group>";
+		};
+		6A3FB106176FFB7600C75552 /* Hot Song Page */ = {
+			isa = PBXGroup;
+			children = (
+				6A3FB107176FFC9800C75552 /* HotSongViewController.h */,
+				6A3FB108176FFC9800C75552 /* HotSongViewController.m */,
+				6A3FB109176FFC9800C75552 /* HotSongViewController.xib */,
+			);
+			name = "Hot Song Page";
+			sourceTree = "<group>";
+		};
+		6A52D4B317706CE30071F70C /* Hot Song Page */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Hot Song Page";
+			sourceTree = "<group>";
+		};
+		6A52D4B417706D2D0071F70C /* Databases */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Databases;
+			sourceTree = "<group>";
+		};
 		6A7DAE211760D6C2005F4267 = {
 			isa = PBXGroup;
 			children = (
@@ -230,6 +296,7 @@
 		6A7DAE6C1760DE85005F4267 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				6A52D4B417706D2D0071F70C /* Databases */,
 				6A89F2961766BEFF00A2EE56 /* UI */,
 				6A7DAE6D1760DE85005F4267 /* Assets */,
 				6A7DAE6E1760DE85005F4267 /* AssetTests */,
@@ -278,6 +345,8 @@
 		6A7DAE741760DEC2005F4267 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				6A3FB106176FFB7600C75552 /* Hot Song Page */,
+				6A3FB100176FFB2100C75552 /* Account Page */,
 				6A7DAE751760DEC8005F4267 /* Home Page */,
 			);
 			path = Sections;
@@ -296,6 +365,10 @@
 		6A7EA8671767F2AA00542515 /* home */ = {
 			isa = PBXGroup;
 			children = (
+				6AEA6D8017703984005987AF /* nav_back_button.png */,
+				6AEA6D8117703984005987AF /* nav_back_button@2x.png */,
+				6AEA6D7E1770361C005987AF /* nav_background@2x.png */,
+				6AEA6D7C17702A36005987AF /* nav_background.png */,
 				6AAAF073176F7A970022BB6A /* icon-facebook.png */,
 				6AAAF06F176F7A780022BB6A /* line-vertical.png */,
 				6AAAF070176F7A780022BB6A /* line.png */,
@@ -318,6 +391,13 @@
 		6A89F29A1766CFB400A2EE56 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				6A3FB10C176FFEAB00C75552 /* Klavika-Bold.otf */,
+				6A3FB10D176FFEAB00C75552 /* Klavika-BoldItalic.otf */,
+				6A3FB10E176FFEAB00C75552 /* Klavika-Light.otf */,
+				6A3FB10F176FFEAB00C75552 /* Klavika-LightItalic.otf */,
+				6A3FB110176FFEAB00C75552 /* Klavika-Medium.otf */,
+				6A3FB111176FFEAB00C75552 /* Klavika-MediumItalic.otf */,
+				6A3FB112176FFEAB00C75552 /* Klavika-RegularItalic.otf */,
 				6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */,
 				6AAAF069176F77FB0022BB6A /* HelveticaNeue-Bold.otf */,
 				6AAAF06A176F77FC0022BB6A /* Stag-Bold.otf */,
@@ -337,6 +417,7 @@
 		6A89F2AC1766D2F600A2EE56 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6A52D4B317706CE30071F70C /* Hot Song Page */,
 				6A89F2AD1766D31100A2EE56 /* ESFooterView.h */,
 				6A89F2AE1766D31100A2EE56 /* ESFooterView.m */,
 				6A89F2B21766D32D00A2EE56 /* ESFooterView.xib */,
@@ -471,6 +552,19 @@
 				6AAAF083176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg in Resources */,
 				6AAAF084176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg in Resources */,
 				6AAAF086176F7F200022BB6A /* Klavika-Regular.otf in Resources */,
+				6A3FB105176FFB3B00C75552 /* AccountsViewController.xib in Resources */,
+				6A3FB10B176FFC9800C75552 /* HotSongViewController.xib in Resources */,
+				6A3FB113176FFEAB00C75552 /* Klavika-Bold.otf in Resources */,
+				6A3FB114176FFEAB00C75552 /* Klavika-BoldItalic.otf in Resources */,
+				6A3FB115176FFEAB00C75552 /* Klavika-Light.otf in Resources */,
+				6A3FB116176FFEAB00C75552 /* Klavika-LightItalic.otf in Resources */,
+				6A3FB117176FFEAB00C75552 /* Klavika-Medium.otf in Resources */,
+				6A3FB118176FFEAB00C75552 /* Klavika-MediumItalic.otf in Resources */,
+				6A3FB119176FFEAB00C75552 /* Klavika-RegularItalic.otf in Resources */,
+				6AEA6D7D17702A36005987AF /* nav_background.png in Resources */,
+				6AEA6D7F1770361C005987AF /* nav_background@2x.png in Resources */,
+				6AEA6D8217703984005987AF /* nav_back_button.png in Resources */,
+				6AEA6D8317703984005987AF /* nav_back_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +580,8 @@
 				6A7DAE791760DEE5005F4267 /* HomeViewController.m in Sources */,
 				6A89F2991766BF0B00A2EE56 /* ESButton.m in Sources */,
 				6A89F2AF1766D31100A2EE56 /* ESFooterView.m in Sources */,
+				6A3FB104176FFB3B00C75552 /* AccountsViewController.m in Sources */,
+				6A3FB10A176FFC9800C75552 /* HotSongViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

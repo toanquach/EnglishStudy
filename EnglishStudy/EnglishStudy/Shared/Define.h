@@ -23,4 +23,7 @@
 #define kFont_Stag_Book                     @"Stag-Book"
 #define kFont_HelveticaNeue_Bold            @"HelveticaNeue-Bold"
 #define kFont_Klavika_Regular               @"Klavika-Regular"
+#define kFont_Klavika_Bold                  @"Klavika-Bold"
+
+#define kDabase_Name                        @"loidich_v1.db"
 #endif

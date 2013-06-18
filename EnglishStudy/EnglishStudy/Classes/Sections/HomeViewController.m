@@ -9,10 +9,11 @@
 #import "HomeViewController.h"
 #import "ESButton.h"
 
+#import "HotSongViewController.h"
+#import "AccountsViewController.h"
+
 @interface HomeViewController ()
 {
-    __unsafe_unretained IBOutlet UIImageView *headerTextImageView;
-    __unsafe_unretained IBOutlet UIImageView *mainBGImageView;
     __unsafe_unretained IBOutlet ESButton *bestSongButton;
     __unsafe_unretained IBOutlet ESButton *accountButton;
     __unsafe_unretained IBOutlet ESButton *favoritesButton;
@@ -20,20 +21,19 @@
     __unsafe_unretained IBOutlet ESButton *purchaseButton;
     __unsafe_unretained IBOutlet ESButton *otherAppButton;
     __unsafe_unretained IBOutlet UITextField *searchTextField;
-    __unsafe_unretained IBOutlet UIButton *searchButton;
-    __unsafe_unretained IBOutlet UIButton *singerRadioButton;
-    __unsafe_unretained IBOutlet UIImageView *singerRadioImageView;
-    __unsafe_unretained IBOutlet UIImageView *songRadioImageView;
-    __unsafe_unretained IBOutlet UIButton *songRadioButton;
-    
     __unsafe_unretained IBOutlet UIView *containerButtonView;
+    __unsafe_unretained IBOutlet UIImageView *bestSongImageView;
+    __unsafe_unretained IBOutlet UIImageView *bestSongExpandImageView;
+    __unsafe_unretained IBOutlet UIView *bestSongExpandView;
+    
+    __unsafe_unretained IBOutlet UIButton *hotCategoryButton;
+    __unsafe_unretained IBOutlet UIButton *hotSingerButton;
+    __unsafe_unretained IBOutlet UIButton *hotSongButton;
     // ----------------------------------------------------
     int singerRadioButtonSelected;
     
     int isBestSongClick;
-    __unsafe_unretained IBOutlet UIImageView *bestSongImageView;
-    __unsafe_unretained IBOutlet UIImageView *bestSongExpandImageView;
-    __unsafe_unretained IBOutlet UIView *bestSongExpandView;
+
 }
 
 - (void)setupView;
@@ -42,8 +42,10 @@
 
 // ------------------------------------------
 - (IBAction)bestSongButtonClicked:(id)sender;
-- (IBAction)singerRadioButtonClicked:(id)sender;
-- (IBAction)songRadioButtonClicked:(id)sender;
+- (IBAction)hotCategoryButtonClicked:(id)sender;
+- (IBAction)hotSingerButtonClicked:(id)sender;
+- (IBAction)hotSongButtonClicked:(id)sender;
+- (IBAction)accountButtonClicked:(id)sender;
 
 @end
 
@@ -65,6 +67,18 @@
     [self setupView];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [super viewWillDisappear:animated];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -73,8 +87,6 @@
 
 - (void)viewDidUnload
 {
-    headerTextImageView = nil;
-    mainBGImageView = nil;
     bestSongButton = nil;
     accountButton = nil;
     favoritesButton = nil;
@@ -82,15 +94,13 @@
     purchaseButton = nil;
     otherAppButton = nil;
     searchTextField = nil;
-    searchButton = nil;
-    singerRadioButton = nil;
-    singerRadioImageView = nil;
-    songRadioImageView = nil;
-    songRadioButton = nil;
     containerButtonView = nil;
     bestSongImageView = nil;
     bestSongExpandImageView = nil;
     bestSongExpandView = nil;
+    hotCategoryButton = nil;
+    hotSingerButton = nil;
+    hotSongButton = nil;
     [super viewDidUnload];
 }
 
@@ -98,14 +108,7 @@
 
 - (void)setupView
 {
-    singerRadioButton.titleEdgeInsets = UIEdgeInsetsMake(0, 12, 0, 0);
-    songRadioButton.titleEdgeInsets = UIEdgeInsetsMake(0, 20, 0, 0);
     searchTextField.delegate = self;
-    //
-    //      Set Singer Radio Button Selected
-    //
-    singerRadioButtonSelected = kRadioButton_Singer;
-    singerRadioImageView.image = [UIImage imageNamed:kRadion_Checked_Image];
     
     if (IS_IPHONE_5)
     {
@@ -127,71 +130,12 @@
 
 #pragma mark - Button Delegate
 
+/*
+    Best Song Button Click, slide submenu list button ON/OFF
+ */
+
 - (IBAction)bestSongButtonClicked:(id)sender
 {
-//    NSString *hotsong = @"btn_icon_hotsongs.png";
-//    NSString *hotsong_hover = @"btn_hotsong_hover.png";
-//    bestSongButton.userInteractionEnabled = NO;
-//    if (bestSongButton.selected == YES)
-//    {
-//        bestSongExpandView.alpha = 1.0;
-//        [UIView animateWithDuration:0.25 animations:^
-//        {
-//            bestSongExpandView.alpha = 0.0;
-//            
-//        }completion:^(BOOL finished)
-//        {
-//            bestSongExpandView.hidden = YES;
-//            [UIView animateWithDuration:0.5 animations:^
-//            {
-//                 bestSongExpandImageView.frame = CGRectMake(140, 0, 1, 80);
-//                
-//            }completion:^(BOOL finished)
-//            {
-//                 bestSongImageView.image = [UIImage imageNamed:hotsong];
-//                 
-//                 bestSongExpandImageView.hidden = YES;
-//                
-//                bestSongButton.userInteractionEnabled = YES;
-//                
-//                [self bringButtonToFront];
-//                
-//            }];
-//        }];
-//    }
-//    else
-//    {
-//        bestSongExpandImageView.hidden = NO;
-//        bestSongExpandImageView.frame = CGRectMake(140, 0, 1, 80);
-//        
-//        bestSongImageView.image = [UIImage imageNamed:hotsong_hover];
-//        
-//        bestSongExpandView.hidden = NO;
-//        bestSongExpandView.alpha = 0.0;
-//        
-//        [self sendButtonToBack];
-//        
-//        [UIView animateWithDuration:0.5 animations:^
-//        {
-//            bestSongExpandImageView.frame = CGRectMake(140, 0, 153, 80);
-//        }
-//        completion:^(BOOL finished)
-//        {
-//            [UIView animateWithDuration:0.25 animations:^
-//            {
-//                bestSongExpandView.alpha = 1.0;
-//                
-//            }completion:^(BOOL finished)
-//             {
-//                 bestSongButton.userInteractionEnabled = YES;
-//                 
-//             }];
-//        }];
-//        
-//    }
-//    
-//    bestSongButton.selected = !bestSongButton.selected;
-
     NSString *hotsong = @"btn_icon_hotsongs.png";
     NSString *hotsong_hover = @"btn_hotsong_hover.png";
     bestSongButton.userInteractionEnabled = NO;
@@ -243,18 +187,36 @@
     bestSongButton.selected = !bestSongButton.selected;
 }
 
-- (IBAction)singerRadioButtonClicked:(id)sender
+- (IBAction)hotCategoryButtonClicked:(id)sender
 {
-    singerRadioButtonSelected = kRadioButton_Singer;
-    singerRadioImageView.image = [UIImage imageNamed:kRadion_Checked_Image];
-    songRadioImageView.image = [UIImage imageNamed:kRadion_UnChecked_Image];
+    HotSongViewController *viewController = [[HotSongViewController alloc]init];
+    
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
 }
 
-- (IBAction)songRadioButtonClicked:(id)sender
+- (IBAction)hotSingerButtonClicked:(id)sender
 {
-    singerRadioButtonSelected = kRadioButton_Song;
-    songRadioImageView.image = [UIImage imageNamed:kRadion_Checked_Image];
-    singerRadioImageView.image = [UIImage imageNamed:kRadion_UnChecked_Image];
+    HotSongViewController *viewController = [[HotSongViewController alloc]init];
+    
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+}
+
+- (IBAction)hotSongButtonClicked:(id)sender
+{
+    HotSongViewController *viewController = [[HotSongViewController alloc]init];
+    
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+}
+
+- (IBAction)accountButtonClicked:(id)sender
+{
+    AccountsViewController *viewController = [[AccountsViewController alloc]init];
+    
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
 }
 
 #pragma mark - UITextfield Delegate
