@@ -44,6 +44,8 @@
 		6A7EA86B1767F2AA00542515 /* icon-category.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA8681767F2AA00542515 /* icon-category.png */; };
 		6A7EA86C1767F2AA00542515 /* icon-singer.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA8691767F2AA00542515 /* icon-singer.png */; };
 		6A7EA86D1767F2AA00542515 /* icon-song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA86A1767F2AA00542515 /* icon-song.png */; };
+		6A82F07C1771B8F8005A4414 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F07A1771B8F8005A4414 /* icon.png */; };
+		6A82F07D1771B8F8005A4414 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F07B1771B8F8005A4414 /* icon@2x.png */; };
 		6A89F2991766BF0B00A2EE56 /* ESButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A89F2981766BF0B00A2EE56 /* ESButton.m */; };
 		6A89F2A31766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A89F29B1766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf */; };
 		6A89F2A41766CFB400A2EE56 /* HelveticaNeueLTStd-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A89F29C1766CFB400A2EE56 /* HelveticaNeueLTStd-Roman.otf */; };
@@ -150,6 +152,8 @@
 		6A7EA8681767F2AA00542515 /* icon-category.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-category.png"; sourceTree = "<group>"; };
 		6A7EA8691767F2AA00542515 /* icon-singer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-singer.png"; sourceTree = "<group>"; };
 		6A7EA86A1767F2AA00542515 /* icon-song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-song.png"; sourceTree = "<group>"; };
+		6A82F07A1771B8F8005A4414 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		6A82F07B1771B8F8005A4414 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		6A89F2971766BF0B00A2EE56 /* ESButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESButton.h; sourceTree = "<group>"; };
 		6A89F2981766BF0B00A2EE56 /* ESButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESButton.m; sourceTree = "<group>"; };
 		6A89F29B1766CFB400A2EE56 /* HelveticaNeue-lt-roman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeue-lt-roman.otf"; sourceTree = "<group>"; };
@@ -357,6 +361,8 @@
 		6A7DAE6D1760DE85005F4267 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				6A82F07A1771B8F8005A4414 /* icon.png */,
+				6A82F07B1771B8F8005A4414 /* icon@2x.png */,
 				6A905BC31770C9430039E090 /* Loadmoney */,
 				6A6F00BA1770AF5D00BAF81E /* Accounts */,
 				6A7EA8671767F2AA00542515 /* home */,
@@ -655,6 +661,8 @@
 				6A905BD01770C9430039E090 /* btn_uncheck.png in Resources */,
 				6A905BD11770C9430039E090 /* icon_warning.png in Resources */,
 				6A905BD71770CA4F0039E090 /* PlayerMusicViewController.xib in Resources */,
+				6A82F07C1771B8F8005A4414 /* icon.png in Resources */,
+				6A82F07D1771B8F8005A4414 /* icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
