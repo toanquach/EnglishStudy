@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LoadMoneyViewController : UIViewController
+@interface LoadMoneyViewController : UIViewController<UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 
 @end

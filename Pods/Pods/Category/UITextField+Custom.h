@@ -10,8 +10,8 @@
 
 @interface UITextField(Custom)
 
-- (CGRect) textRectForBounds: (CGRect) bounds;
-
-- (CGRect) editingRectForBounds: (CGRect) bounds;
+//- (CGRect) textRectForBounds: (CGRect) bounds;
+//
+//- (CGRect) editingRectForBounds: (CGRect) bounds;
 
 @end

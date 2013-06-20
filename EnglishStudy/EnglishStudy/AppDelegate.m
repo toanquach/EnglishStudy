@@ -31,10 +31,6 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    //  -----------------------------------------
-    //          Copy DB to cache
-    //
-    NSFileManager *fileManager = [NSFileManager defaultManager];
     // ------------------------------------------
     //      Check network available
     //

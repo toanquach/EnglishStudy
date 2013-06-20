@@ -18,6 +18,10 @@
 		6A3FB117176FFEAB00C75552 /* Klavika-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB110176FFEAB00C75552 /* Klavika-Medium.otf */; };
 		6A3FB118176FFEAB00C75552 /* Klavika-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB111176FFEAB00C75552 /* Klavika-MediumItalic.otf */; };
 		6A3FB119176FFEAB00C75552 /* Klavika-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A3FB112176FFEAB00C75552 /* Klavika-RegularItalic.otf */; };
+		6A5B078217720B6C00C52894 /* loidich_v1.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 6A5B078117720B6C00C52894 /* loidich_v1.sqlite */; };
+		6A5B078517720B8500C52894 /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5B078417720B8500C52894 /* DatabaseManager.m */; };
+		6A5B078717720CC500C52894 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5B078617720CC500C52894 /* libsqlite3.dylib */; };
+		6A5B078A1772102400C52894 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5B07891772102400C52894 /* Category.m */; };
 		6A6F00BD1770AF5D00BAF81E /* btn_nap_xu.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00BB1770AF5D00BAF81E /* btn_nap_xu.png */; };
 		6A6F00BE1770AF5D00BAF81E /* btn_nap_xu_hover.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00BC1770AF5D00BAF81E /* btn_nap_xu_hover.png */; };
 		6A6F00C21770B0C600BAF81E /* btn_block.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00BF1770B0C600BAF81E /* btn_block.png */; };
@@ -121,6 +125,12 @@
 		6A3FB110176FFEAB00C75552 /* Klavika-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Medium.otf"; sourceTree = "<group>"; };
 		6A3FB111176FFEAB00C75552 /* Klavika-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-MediumItalic.otf"; sourceTree = "<group>"; };
 		6A3FB112176FFEAB00C75552 /* Klavika-RegularItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-RegularItalic.otf"; sourceTree = "<group>"; };
+		6A5B078117720B6C00C52894 /* loidich_v1.sqlite */ = {isa = PBXFileReference; lastKnownFileType = file; path = loidich_v1.sqlite; sourceTree = "<group>"; };
+		6A5B078317720B8400C52894 /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
+		6A5B078417720B8500C52894 /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
+		6A5B078617720CC500C52894 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		6A5B07881772102400C52894 /* Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
+		6A5B07891772102400C52894 /* Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 		6A6F00BB1770AF5D00BAF81E /* btn_nap_xu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_nap_xu.png; sourceTree = "<group>"; };
 		6A6F00BC1770AF5D00BAF81E /* btn_nap_xu_hover.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_nap_xu_hover.png; sourceTree = "<group>"; };
 		6A6F00BF1770B0C600BAF81E /* btn_block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_block.png; sourceTree = "<group>"; };
@@ -225,6 +235,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A5B078717720CC500C52894 /* libsqlite3.dylib in Frameworks */,
 				6A7DAEA51760E95D005F4267 /* Security.framework in Frameworks */,
 				6A7DAEA11760E916005F4267 /* QuartzCore.framework in Frameworks */,
 				6A7DAE9D1760E8C7005F4267 /* CFNetwork.framework in Frameworks */,
@@ -272,6 +283,11 @@
 		6A52D4B417706D2D0071F70C /* Databases */ = {
 			isa = PBXGroup;
 			children = (
+				6A5B078117720B6C00C52894 /* loidich_v1.sqlite */,
+				6A5B078317720B8400C52894 /* DatabaseManager.h */,
+				6A5B078417720B8500C52894 /* DatabaseManager.m */,
+				6A5B07881772102400C52894 /* Category.h */,
+				6A5B07891772102400C52894 /* Category.m */,
 			);
 			path = Databases;
 			sourceTree = "<group>";
@@ -313,6 +329,7 @@
 				6A7DAE9C1760E8C7005F4267 /* CFNetwork.framework */,
 				6A7DAE9A1760E8BF005F4267 /* SystemConfiguration.framework */,
 				6A7DAE6A1760D720005F4267 /* libPods.a */,
+				6A5B078617720CC500C52894 /* libsqlite3.dylib */,
 				6A7DAE2D1760D6C2005F4267 /* UIKit.framework */,
 				6A7DAE2F1760D6C2005F4267 /* Foundation.framework */,
 				6A7DAE311760D6C2005F4267 /* CoreGraphics.framework */,
@@ -663,6 +680,7 @@
 				6A905BD71770CA4F0039E090 /* PlayerMusicViewController.xib in Resources */,
 				6A82F07C1771B8F8005A4414 /* icon.png in Resources */,
 				6A82F07D1771B8F8005A4414 /* icon@2x.png in Resources */,
+				6A5B078217720B6C00C52894 /* loidich_v1.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -682,6 +700,8 @@
 				6A3FB10A176FFC9800C75552 /* HotSongViewController.m in Sources */,
 				6A905BC11770C8780039E090 /* LoadMoneyViewController.m in Sources */,
 				6A905BD61770CA4F0039E090 /* PlayerMusicViewController.m in Sources */,
+				6A5B078517720B8500C52894 /* DatabaseManager.m in Sources */,
+				6A5B078A1772102400C52894 /* Category.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

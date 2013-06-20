@@ -10,11 +10,37 @@
 
 @interface LoadMoneyViewController ()
 {
+    __unsafe_unretained IBOutlet UILabel *thecaoLabel;
+    __unsafe_unretained IBOutlet UILabel *soSeriesLabel;
+    __unsafe_unretained IBOutlet UILabel *nhaMangLabel;
+    __unsafe_unretained IBOutlet UILabel *emailLabel;
     
+    __unsafe_unretained IBOutlet UITextField *theCaoTextField;
+    __unsafe_unretained IBOutlet UITextField *soSeriesTextField;
+    __unsafe_unretained IBOutlet UIButton *nhaMangButton;
+    __unsafe_unretained IBOutlet UITextField *emailTextField;
+    __unsafe_unretained IBOutlet UIButton *agreeCheckBoxButton;
+    __unsafe_unretained IBOutlet UIWebView *agreeWebView;
+    
+    __unsafe_unretained IBOutlet UIButton *napXuButton;
+    
+    
+    __unsafe_unretained IBOutlet UIView *pickerBGView;
+    __unsafe_unretained IBOutlet UIPickerView *nhaMangPickerView;
+    __unsafe_unretained IBOutlet UIScrollView *mainScrollView;
+    
+    NSMutableArray *listNhaMang;
+    int selectNhaMangIndex;
 }
 
 - (void)setupView;
 
+- (IBAction)nhaMangButtonClicked:(id)sender;
+- (IBAction)soSeriesInfoButtonClicked:(id)sender;
+- (IBAction)emailInfoButtonClicked:(id)sender;
+- (IBAction)napXuButtonClicked:(id)sender;
+- (IBAction)closeButtonClicked:(id)sender;
+- (IBAction)checkArgeeButtonClicked:(id)sender;
 @end
 
 @implementation LoadMoneyViewController
@@ -32,6 +58,10 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setupView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,7 +105,180 @@
     
     titleLabel = nil;
     
-//    @"Bạn đồng ý với các điều khoản nạp thẻ";
+    //
+    //          Style for control
+    //
+    thecaoLabel.font = [UIFont fontWithName:kFont_Klavika_Medium size:16];
+    soSeriesLabel.font = [UIFont fontWithName:kFont_Klavika_Medium size:16];
+    nhaMangLabel.font = [UIFont fontWithName:kFont_Klavika_Medium size:16];
+    emailLabel.font = [UIFont fontWithName:kFont_Klavika_Medium size:16];
+    
+    theCaoTextField.font = [UIFont fontWithName:kFont_Klavika_Medium size:14];
+    soSeriesTextField.font = [UIFont fontWithName:kFont_Klavika_Medium size:14];
+    emailTextField.font = [UIFont fontWithName:kFont_Klavika_Medium size:14];
+    
+    nhaMangButton.titleEdgeInsets = UIEdgeInsetsMake(2, -230, 0, 0);
+    nhaMangButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    
+    theCaoTextField.textColor = [UIColor whiteColor];
+    soSeriesTextField.textColor = [UIColor whiteColor];
+    emailTextField.textColor = [UIColor whiteColor];
+    
+    theCaoTextField.delegate = self;
+    soSeriesTextField.delegate = self;
+    emailTextField.delegate = self;
+    
+    NSString *html = @"<html><head><style type=\"text/css\">body {margin: 0.0px 0.0px 0.0px 0.0px;font: 16.0px Klavika-Medium; color:#fff;}div{line-height:20px; word-spacing:-1px; align:center;text-align:center;} </style></head><body><div>Bạn đồng ý với các <font color=\"#e069f6\" style=\"text-decoration:underline;\">điều khoản nạp thẻ</font></div></body></html>";
+    [agreeWebView loadHTMLString:html baseURL:nil];
+    
+    napXuButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
+    [napXuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
+    pickerBGView.hidden = YES;
+    
+    listNhaMang = [NSMutableArray arrayWithObjects:@"Vinaphone",@"Mobiphone",@"Viettel", nil];
+    selectNhaMangIndex = 0;
+    [nhaMangButton setTitle:@"Vinaphone" forState:UIControlStateNormal];
+    [napXuButton setTitle:@"Nạp Xu" forState:UIControlStateNormal];
+    
+    mainScrollView.contentSize = CGSizeMake(320, napXuButton.frame.origin.y + napXuButton.frame.size.height + 20);
 }
 
+#pragma mark - Keyboard will show
+
+- (void)keyboardWillShow:(NSNotification *)sender
+{
+    NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGSize keyboardSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    [UIView animateWithDuration:duration animations:^
+     {
+         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(0, 0, keyboardSize.height, 0);
+         [mainScrollView setContentInset:edgeInsets];
+         [mainScrollView setScrollIndicatorInsets:edgeInsets];
+     }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)sender
+{
+    NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:duration animations:^
+     {
+         UIEdgeInsets edgeInsets = UIEdgeInsetsZero;
+         [mainScrollView setContentInset:edgeInsets];
+         [mainScrollView setScrollIndicatorInsets:edgeInsets];
+     }];
+}
+
+#pragma mark - Button Event
+
+- (void)backButtonPressed:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+
+- (IBAction)nhaMangButtonClicked:(id)sender
+{
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    pickerBGView.hidden = NO;
+    [nhaMangPickerView selectRow:selectNhaMangIndex inComponent:0 animated:YES];
+}
+
+- (IBAction)soSeriesInfoButtonClicked:(id)sender
+{
+    [UIAppDelegate showAlertView:nil andMessage:@"series button clicked"];
+}
+
+- (IBAction)emailInfoButtonClicked:(id)sender
+{
+    [UIAppDelegate showAlertView:nil andMessage:@"email button clicked"];    
+}
+
+- (IBAction)napXuButtonClicked:(id)sender
+{
+    // Call service
+}
+
+- (IBAction)closeButtonClicked:(id)sender
+{
+    selectNhaMangIndex = [nhaMangPickerView selectedRowInComponent:0];
+    pickerBGView.hidden = YES;
+    [nhaMangButton setTitle:[listNhaMang objectAtIndex:selectNhaMangIndex] forState:UIControlStateNormal];
+}
+
+- (IBAction)checkArgeeButtonClicked:(id)sender
+{
+    agreeCheckBoxButton.selected = !agreeCheckBoxButton.selected;
+}
+
+#pragma mark - UITextField Delegate
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [self closeButtonClicked:nil];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField == theCaoTextField)
+    {
+        [theCaoTextField resignFirstResponder];
+        [soSeriesTextField becomeFirstResponder];
+    }
+    else if(textField == soSeriesTextField)
+    {
+        [soSeriesTextField resignFirstResponder];
+        [emailTextField becomeFirstResponder];
+    }
+    else if(emailTextField == textField)
+    {
+        [emailTextField resignFirstResponder];
+    }
+    return YES;
+}
+
+#pragma mark - UITextField Delegate
+
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return [listNhaMang count];
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return [listNhaMang objectAtIndex:row];
+}
+
+- (void)viewDidUnload
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+ 
+    
+    thecaoLabel = nil;
+    soSeriesLabel = nil;
+    nhaMangLabel = nil;
+    emailLabel = nil;
+    theCaoTextField = nil;
+    soSeriesTextField = nil;
+    nhaMangButton = nil;
+    emailLabel = nil;
+    agreeCheckBoxButton = nil;
+    emailTextField = nil;
+    agreeWebView = nil;
+    napXuButton = nil;
+    pickerBGView = nil;
+    nhaMangPickerView = nil;
+    mainScrollView = nil;
+    [super viewDidUnload];
+}
 @end

@@ -24,6 +24,7 @@
 #define kFont_HelveticaNeue_Bold            @"HelveticaNeue-Bold"
 #define kFont_Klavika_Regular               @"Klavika-Regular"
 #define kFont_Klavika_Bold                  @"Klavika-Bold"
+#define kFont_Klavika_Medium                @"Klavika-Medium"
 
-#define kDabase_Name                        @"loidich_v1.db"
+#define kDabase_Name                        @"loidich_v1.sqlite"
 #endif
