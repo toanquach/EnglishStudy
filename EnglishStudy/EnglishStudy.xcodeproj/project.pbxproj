@@ -105,6 +105,7 @@
 		6AAAF083176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */; };
 		6AAAF084176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */; };
 		6AAAF086176F7F200022BB6A /* Klavika-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */; };
+		6ADB2A551772B40100FBE8DE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADB2A541772B40100FBE8DE /* Reachability.m */; };
 		6AEA6D7D17702A36005987AF /* nav_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7C17702A36005987AF /* nav_background.png */; };
 		6AEA6D7F1770361C005987AF /* nav_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7E1770361C005987AF /* nav_background@2x.png */; };
 		6AEA6D8217703984005987AF /* nav_back_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D8017703984005987AF /* nav_back_button.png */; };
@@ -224,6 +225,8 @@
 		6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan1.jpg; sourceTree = "<group>"; };
 		6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan2.jpg; sourceTree = "<group>"; };
 		6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Regular.otf"; sourceTree = "<group>"; };
+		6ADB2A531772B40100FBE8DE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		6ADB2A541772B40100FBE8DE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		6AEA6D7C17702A36005987AF /* nav_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_background.png; sourceTree = "<group>"; };
 		6AEA6D7E1770361C005987AF /* nav_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav_background@2x.png"; sourceTree = "<group>"; };
 		6AEA6D8017703984005987AF /* nav_back_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_back_button.png; sourceTree = "<group>"; };
@@ -366,6 +369,7 @@
 		6A7DAE6C1760DE85005F4267 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				6ADB2A521772B40100FBE8DE /* Reachability */,
 				6A52D4B417706D2D0071F70C /* Databases */,
 				6A89F2961766BEFF00A2EE56 /* UI */,
 				6A7DAE6D1760DE85005F4267 /* Assets */,
@@ -548,6 +552,15 @@
 			name = "Player Music Page";
 			sourceTree = "<group>";
 		};
+		6ADB2A521772B40100FBE8DE /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				6ADB2A531772B40100FBE8DE /* Reachability.h */,
+				6ADB2A541772B40100FBE8DE /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -702,6 +715,7 @@
 				6A905BD61770CA4F0039E090 /* PlayerMusicViewController.m in Sources */,
 				6A5B078517720B8500C52894 /* DatabaseManager.m in Sources */,
 				6A5B078A1772102400C52894 /* Category.m in Sources */,
+				6ADB2A551772B40100FBE8DE /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

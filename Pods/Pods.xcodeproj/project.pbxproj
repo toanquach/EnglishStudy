@@ -13,7 +13,6 @@
 		6A7DAE8C1760E253005F4267 /* UIButton+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE7D1760E253005F4267 /* UIButton+Custom.m */; };
 		6A7DAE8D1760E253005F4267 /* UINavigationController+Fade.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE7F1760E253005F4267 /* UINavigationController+Fade.m */; };
 		6A7DAE8E1760E253005F4267 /* UITextField+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE811760E253005F4267 /* UITextField+Custom.m */; };
-		6A7DAE8F1760E253005F4267 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE841760E253005F4267 /* Reachability.m */; };
 		6A7DAE901760E253005F4267 /* KeychainUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE871760E253005F4267 /* KeychainUtil.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		6A7DAE921760E253005F4267 /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7DAE8B1760E253005F4267 /* Utils.m */; };
 		6A7DAE941760E278005F4267 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE931760E278005F4267 /* UIKit.framework */; };
@@ -48,8 +47,6 @@
 		6A7DAE7F1760E253005F4267 /* UINavigationController+Fade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Fade.m"; sourceTree = "<group>"; };
 		6A7DAE801760E253005F4267 /* UITextField+Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+Custom.h"; sourceTree = "<group>"; };
 		6A7DAE811760E253005F4267 /* UITextField+Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+Custom.m"; sourceTree = "<group>"; };
-		6A7DAE831760E253005F4267 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		6A7DAE841760E253005F4267 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		6A7DAE861760E253005F4267 /* KeychainUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainUtil.h; sourceTree = "<group>"; };
 		6A7DAE871760E253005F4267 /* KeychainUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainUtil.m; sourceTree = "<group>"; };
 		6A7DAE8A1760E253005F4267 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
@@ -112,7 +109,6 @@
 			children = (
 				6A7DAE5F1760D70F005F4267 /* Supporting Files */,
 				6A7DAE7B1760E253005F4267 /* Category */,
-				6A7DAE821760E253005F4267 /* Reachability */,
 				6A7DAE851760E253005F4267 /* Utilities */,
 				6A7DAE611760D70F005F4267 /* Pods.h */,
 				6A7DAE631760D70F005F4267 /* Pods.m */,
@@ -141,15 +137,6 @@
 				6A7DAE811760E253005F4267 /* UITextField+Custom.m */,
 			);
 			path = Category;
-			sourceTree = "<group>";
-		};
-		6A7DAE821760E253005F4267 /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				6A7DAE831760E253005F4267 /* Reachability.h */,
-				6A7DAE841760E253005F4267 /* Reachability.m */,
-			);
-			path = Reachability;
 			sourceTree = "<group>";
 		};
 		6A7DAE851760E253005F4267 /* Utilities */ = {
@@ -218,7 +205,6 @@
 				6A7DAE8C1760E253005F4267 /* UIButton+Custom.m in Sources */,
 				6A7DAE8D1760E253005F4267 /* UINavigationController+Fade.m in Sources */,
 				6A7DAE8E1760E253005F4267 /* UITextField+Custom.m in Sources */,
-				6A7DAE8F1760E253005F4267 /* Reachability.m in Sources */,
 				6A7DAE901760E253005F4267 /* KeychainUtil.m in Sources */,
 				6A7DAE921760E253005F4267 /* Utils.m in Sources */,
 				6A7DAE971760E2A9005F4267 /* NSString+MD5.m in Sources */,

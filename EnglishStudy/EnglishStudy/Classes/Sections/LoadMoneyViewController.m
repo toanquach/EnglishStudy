@@ -130,6 +130,8 @@
     
     NSString *html = @"<html><head><style type=\"text/css\">body {margin: 0.0px 0.0px 0.0px 0.0px;font: 16.0px Klavika-Medium; color:#fff;}div{line-height:20px; word-spacing:-1px; align:center;text-align:center;} </style></head><body><div>Bạn đồng ý với các <font color=\"#e069f6\" style=\"text-decoration:underline;\">điều khoản nạp thẻ</font></div></body></html>";
     [agreeWebView loadHTMLString:html baseURL:nil];
+    [agreeWebView setBackgroundColor:[UIColor clearColor]];
+    [agreeWebView setOpaque:NO];
     
     napXuButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     [napXuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -139,9 +141,11 @@
     listNhaMang = [NSMutableArray arrayWithObjects:@"Vinaphone",@"Mobiphone",@"Viettel", nil];
     selectNhaMangIndex = 0;
     [nhaMangButton setTitle:@"Vinaphone" forState:UIControlStateNormal];
-    [napXuButton setTitle:@"Nạp Xu" forState:UIControlStateNormal];
+    [napXuButton setTitle:@"NẠP XU" forState:UIControlStateNormal];
     
-    mainScrollView.contentSize = CGSizeMake(320, napXuButton.frame.origin.y + napXuButton.frame.size.height + 20);
+    mainScrollView.contentSize = CGSizeMake(320, napXuButton.frame.origin.y + napXuButton.frame.size.height + 110);
+    
+    mainScrollView.contentSize = CGSizeMake(320, 480);
 }
 
 #pragma mark - Keyboard will show
@@ -183,6 +187,7 @@
 {
     [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
     pickerBGView.hidden = NO;
+    [nhaMangPickerView reloadComponent:0];
     [nhaMangPickerView selectRow:selectNhaMangIndex inComponent:0 animated:YES];
 }
 
@@ -217,7 +222,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    [self closeButtonClicked:nil];
+    pickerBGView.hidden = YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

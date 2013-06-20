@@ -17,6 +17,8 @@
 
 @implementation DatabaseManager
 
+@synthesize database;
+
 + (DatabaseManager *)sharedDatabaseManager
 {
     static dispatch_once_t once;

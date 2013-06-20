@@ -110,6 +110,9 @@
     NSString *html = @"<html><head><style type=\"text/css\">body {margin: 0.0px 0.0px 0.0px 0.0px;font: 12.0px Klavika-Regular; min-height: 20.0px; color:#fff;}div{line-height:20px; word-spacing:-1px;} </style></head><body><div>Share Facebook cho bài hát, mỗi lần share Facebook bạn được cộng <font color=\"#ffd303\">100 xu</font> (mỗi ngày bạn chỉ được share Facebook một lần)</div></body></html>";
     [shareFacebookWebview loadHTMLString:html baseURL:nil];
     
+    [shareFacebookWebview setBackgroundColor:[UIColor clearColor]];
+    [shareFacebookWebview setOpaque:NO];
+    
     for(UIView *mView in shareFacebookWebview.subviews)
     {
         if ([mView isKindOfClass:[UIScrollView class]])
@@ -120,6 +123,8 @@
     
     NSString *html2 = @"<html><head><style type=\"text/css\">body {margin: 0.0px 0.0px 0.0px 0.0px;font: 12.0px Klavika-Regular; min-height: 20.0px; color:#fff;}div{line-height:20px; word-spacing:-1px; align:center;text-align:center;} </style></head><body><div>Nạp thẻ cào, bạn có thể dùng thẻ Mobifone, Vinaphone, Viettel tất cả mệnh giá. Nạp <font color=\"#ffd303\">1000 đồng</font>  bạn sẽ được <font color=\"#ffd303\">100 xu</font></div></body></html>";
     [loadMoneyWebView loadHTMLString:html2 baseURL:nil];
+    [loadMoneyWebView setBackgroundColor:[UIColor clearColor]];
+    [loadMoneyWebView setOpaque:NO];
     
     for(UIView *mView in loadMoneyWebView.subviews)
     {

@@ -8,9 +8,19 @@
 
 #import "AppDelegate.h"
 #import "HomeViewController.h"
-#import <Pods/Reachability/Reachability.h>
+#import "Reachability.h"
 
 #import "ESFooterView.h"
+
+@implementation UINavigationBar (CustomImage)
+
+- (void)drawRect:(CGRect)rect
+{
+    UIImage *image = [UIImage imageNamed:@"nav_background.png"];
+    [image drawInRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+}
+
+@end
 
 @interface AppDelegate()
 {

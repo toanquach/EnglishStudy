@@ -103,119 +103,59 @@ static sqlite3_stmt* delete_statement = nil;
 
 - (NSMutableArray*)getCategory:(sqlite3*)db
 {
-    /*
      database = db;
      NSString * query;
-     NSMutableArray* userArray = [[NSMutableArray alloc] init];
-     query = @"SELECT * FROM users"; //sort by productname"
+     NSMutableArray *list = [NSMutableArray array];
+     query = @"SELECT * FROM category";
      
      NSLog(@"%@", query);
      const char *sql = [query UTF8String];
      
      if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
      {
-     NSLog(@"Error: failed to prepare statement with message '%s',",sqlite3_errmsg(database));
+         NSLog(@"Error: failed to prepare statement with message '%s',",sqlite3_errmsg(database));
      }
      
      while(sqlite3_step(select_statement)==SQLITE_ROW)
      {
-     User* user = [[User alloc] init];
-     const unsigned char* idChars = sqlite3_column_text(select_statement, 0);
-     if (idChars==NULL) {
-     user.ID = @"NO";
+         Category *cate = [[Category alloc] init];
+         const unsigned char* mTblID = sqlite3_column_text(select_statement, 0);
+         if (mTblID == NULL)
+         {
+             cate.tblID = -1;
+         }
+         else
+         {
+             cate.tblID = [[NSString stringWithUTF8String:(const char*)mTblID] intValue];
+         }
+     
+         const unsigned char* nameChars = sqlite3_column_text(select_statement, 1);
+         if (nameChars==NULL)
+         {
+             cate.name = @"";
+         }
+         else
+         {
+             cate.name = [NSString stringWithUTF8String:(const char*)nameChars];
+         }
+     
+         const unsigned char *numChars = sqlite3_column_text(select_statement, 2);
+         if (numChars==NULL)
+         {
+             cate.num_song = -1;
+         }
+         else
+         {
+             cate.num_song = [[NSString stringWithUTF8String:(const char*)numChars] intValue];
+         }
+     
+         [list addObject:cate];
+         cate = nil;
      }
-     else {
-     user.ID = [NSString stringWithUTF8String:(const char*)idChars];
-     }
-     
-     
-     
-     const unsigned char* nameChars = sqlite3_column_text(select_statement, 1);
-     if (nameChars==NULL) {
-     user.name = @"NO";
-     }
-     else {
-     user.name = [NSString stringWithUTF8String:(const char*)nameChars];
-     }
-     
-     const unsigned char* emailChars = sqlite3_column_text(select_statement, 2);
-     if (emailChars==NULL) {
-     user.email = @"NO";
-     }
-     else {
-     
-     user.email = [NSString stringWithUTF8String:(const char*)emailChars];
-     
-     }
-     
-     const unsigned char* pwdChars = sqlite3_column_text(select_statement, 3);
-     if (pwdChars==NULL) {
-     user.password = @"NO";
-     }
-     else {
-     
-     user.password = [NSString stringWithUTF8String:(const char*)pwdChars];
-     
-     }
-     
-     const unsigned char* imageChars = sqlite3_column_text(select_statement, 4);
-     if (pwdChars==NULL) {
-     user.image = @"NO";
-     }
-     else {
-     
-     user.image = [NSString stringWithUTF8String:(const char*)imageChars];
-     
-     }
-     
-     const unsigned char* lnameChars = sqlite3_column_text(select_statement, 5);
-     if (lnameChars==NULL) {
-     user.lName = @"NO";
-     }
-     else {
-     
-     user.lName = [NSString stringWithUTF8String:(const char*)lnameChars];
-     
-     }
-     
-     const unsigned char* genderChars = sqlite3_column_text(select_statement, 6);
-     if (genderChars==NULL) {
-     user.gender = @"NO";
-     }
-     else {
-     
-     user.gender = [NSString stringWithUTF8String:(const char*)genderChars];
-     
-     }
-     
-     const unsigned char* birthChars = sqlite3_column_text(select_statement, 7);
-     if (birthChars==NULL) {
-     user.birthday = @"NO";
-     }
-     else {
-     
-     user.birthday = [NSString stringWithUTF8String:(const char*)birthChars];
-     
-     }
-     
-     const unsigned char* mobileChars = sqlite3_column_text(select_statement, 8);
-     if (mobileChars==NULL) {
-     user.mobile = @"NO";
-     }
-     else {
-     
-     user.mobile = [NSString stringWithUTF8String:(const char*)mobileChars];
-     
-     }
-     
-     [userArray addObject:user];
-     user = nil;
-     
-     
-     }
+    
      sqlite3_finalize(select_statement);
-     return userArray;
-     */
+    
+    return list;
 }
 
 - (Category *)getCategoryById:(sqlite3*)db

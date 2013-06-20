@@ -14,6 +14,8 @@
     sqlite3 * database;
 }
 
+@property(nonatomic) sqlite3 *database;
+
 + (DatabaseManager *)sharedDatabaseManager;
 
 @end

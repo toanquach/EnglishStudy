@@ -7,7 +7,9 @@
 //
 
 #import "HotSongViewController.h"
+
 #import "DatabaseManager.h"
+#import "Category.h"
 
 @interface HotSongViewController ()
 {
@@ -36,7 +38,11 @@
     // Do any additional setup after loading the view from its nib.
     [self setupView];
     
-    [DatabaseManager sharedDatabaseManager];
+    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+    Category *cate = [[Category alloc]init];
+    NSMutableArray *list = [cate getCategory:db.database];
+    
+    NSLog(@"%@",list);
 }
 
 
