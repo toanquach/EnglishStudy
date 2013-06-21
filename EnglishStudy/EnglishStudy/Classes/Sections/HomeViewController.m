@@ -11,6 +11,7 @@
 
 #import "HotSongViewController.h"
 #import "AccountsViewController.h"
+#import "CategoryViewController.h"
 
 @interface HomeViewController ()
 {
@@ -189,16 +190,16 @@
 
 - (IBAction)hotCategoryButtonClicked:(id)sender
 {
-    HotSongViewController *viewController = [[HotSongViewController alloc]init];
-    
+    CategoryViewController *viewController = [[CategoryViewController alloc]init];
+    viewController.categotyType = kCategoryType_Category;
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }
 
 - (IBAction)hotSingerButtonClicked:(id)sender
 {
-    HotSongViewController *viewController = [[HotSongViewController alloc]init];
-    
+    CategoryViewController *viewController = [[CategoryViewController alloc]init];
+    viewController.categotyType = kCategoryType_Singer;
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }

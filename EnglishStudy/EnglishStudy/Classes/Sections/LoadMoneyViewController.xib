@@ -1004,7 +1004,7 @@
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="bg_main.png">{640, 960}</string>
 			<string key="bgd_combobox.png">{601, 50}</string>
-			<string key="bgd_textbox.png">{601, 50}</string>
+			<string key="bgd_textbox.png">{603, 52}</string>
 			<string key="btn_check.png">{41, 40}</string>
 			<string key="btn_nap_the.png">{311, 90}</string>
 			<string key="btn_uncheck.png">{41, 40}</string>

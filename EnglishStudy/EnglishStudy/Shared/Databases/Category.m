@@ -142,7 +142,7 @@ static sqlite3_stmt* delete_statement = nil;
          const unsigned char *numChars = sqlite3_column_text(select_statement, 2);
          if (numChars==NULL)
          {
-             cate.num_song = -1;
+             cate.num_song = 0;
          }
          else
          {

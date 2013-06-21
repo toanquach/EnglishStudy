@@ -27,4 +27,8 @@
 #define kFont_Klavika_Medium                @"Klavika-Medium"
 
 #define kDabase_Name                        @"loidich_v1.sqlite"
+
+#define kCategoryType_Category              1
+#define kCategoryType_Singer                2
+
 #endif
