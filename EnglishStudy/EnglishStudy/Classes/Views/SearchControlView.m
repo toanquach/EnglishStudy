@@ -66,7 +66,6 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delaySearchUntilQueryUnchangedForTimeOffset);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
     {
-       //NSLog(@"Search With Key: %@",searchText);
         [delegate SearchControlViewWithKeyword:resultStr];
     });
     

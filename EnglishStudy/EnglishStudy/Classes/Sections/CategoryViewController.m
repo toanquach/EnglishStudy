@@ -74,7 +74,22 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [UIAppDelegate hiddenConnectionView];
+    if (self.categotyType == kCategoryType_Category)
+    {
+        DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+        Category *cate = [[Category alloc]init];
+        listItem = [cate getCategory:db.database];
+        [myTableView reloadData];
+    }
+    else
+    {
+        DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+        Singer *singer = [[Singer alloc]init];
+        listItem = [singer getSinger:db.database];
+        [myTableView reloadData];
+    }
+    
+    //[UIAppDelegate hiddenConnectionView];
 }
 
 #pragma mark - Setup View
@@ -92,21 +107,6 @@
     myTableView.tableHeaderView = searchControlView;
     myTableView.tableFooterView = footerView;
     isSearch = 0;
-    
-    if (self.categotyType == kCategoryType_Category)
-    {
-        DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-        Category *cate = [[Category alloc]init];
-        listItem = [cate getCategory:db.database];
-        [myTableView reloadData];
-    }
-    else
-    {
-        DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-        Singer *singer = [[Singer alloc]init];
-        listItem = [singer getSinger:db.database];
-        [myTableView reloadData];
-    }
     
     // -----------------------
     //      Set Back Button
@@ -258,6 +258,14 @@
     viewController = nil;
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if([indexPath row] == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
+    {
+        [UIAppDelegate hiddenConnectionView];
+    }
 }
 
 #pragma mark - UIBUtton event

@@ -7,7 +7,9 @@
 //
 
 #import "HomeViewController.h"
+
 #import "ESButton.h"
+#import "SongViewCell.h"
 
 #import "HotSongViewController.h"
 #import "AccountsViewController.h"
@@ -15,7 +17,7 @@
 #import "PurchaseViewController.h"
 #import "FavoritesViewController.h"
 #import "SettingsViewController.h"
-#import "SongViewCell.h"
+#import "PlayerMusicViewController.h"
 
 @interface HomeViewController ()
 {
@@ -41,11 +43,11 @@
 
     __unsafe_unretained IBOutlet UIView *searchBgView;
     __unsafe_unretained IBOutlet UITableView *searchTableView;
+    __unsafe_unretained IBOutlet UIActivityIndicatorView *loadingIndicator;
     
     dispatch_time_t delaySearchUntilQueryUnchangedForTimeOffset;
     
     NSMutableArray *listItem;
-    __unsafe_unretained IBOutlet UIActivityIndicatorView *loadingIndicator;
 }
 
 - (void)setupView;
@@ -83,16 +85,21 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self setupView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [UIAppDelegate showFooterView];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [UIAppDelegate hiddenFooterView];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [super viewWillDisappear:animated];
 }
@@ -105,6 +112,10 @@
 
 - (void)viewDidUnload
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+
+    listItem = nil;
     bestSongButton = nil;
     accountButton = nil;
     favoritesButton = nil;
@@ -140,6 +151,8 @@
     
     searchTableView.delegate = self;
     searchTableView.dataSource = self;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
+    searchTableView.tableFooterView = footerView;
     
     delaySearchUntilQueryUnchangedForTimeOffset = 0.4 * NSEC_PER_SEC;
 }
@@ -154,6 +167,9 @@
     [containerButtonView bringSubviewToFront:accountButton];
 }
 
+//
+//  Slide Expand menu of Hot Music Button
+//
 - (void)slideOnOffMenuButton:(BOOL)flag
 {
     NSString *hotsong = @"btn_icon_hotsongs.png";
@@ -251,7 +267,6 @@
 - (IBAction)accountButtonClicked:(id)sender
 {
     AccountsViewController *viewController = [[AccountsViewController alloc]init];
-    
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }
@@ -259,7 +274,6 @@
 - (IBAction)favoritesButtonClicked:(id)sender
 {
     FavoritesViewController *viewController = [[FavoritesViewController alloc]init];
-    
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }
@@ -275,7 +289,6 @@
 - (IBAction)purchaseButtonClicked:(id)sender
 {
     PurchaseViewController *viewController = [[PurchaseViewController alloc]init];
-    
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }
@@ -304,6 +317,7 @@
     NSString *resultStr = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     searchBgView.hidden = NO;
+    searchTableView.hidden = YES;
     [loadingIndicator startAnimating];
     //
     // waiting when user pressing
@@ -329,11 +343,16 @@
         DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
         Song *song = [[Song alloc] init];
         listItem = [song searchSong:db.database WithText:keyword];
+        
+        if ([listItem count] > 0)
+        {
+            searchTableView.hidden = NO;
+        }
+        
         [searchTableView reloadData];
         //[loadingIndicator stopAnimating];
     }
 }
-
 
 #pragma mark - UITableViewCell
 
@@ -388,4 +407,30 @@
 //    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+#pragma mark - Keyboard will show
+
+- (void)keyboardWillShow:(NSNotification *)sender
+{
+    NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    CGSize keyboardSize = [[[sender userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    [UIView animateWithDuration:duration animations:^
+     {
+         UIEdgeInsets edgeInsets = UIEdgeInsetsMake(0, 0, keyboardSize.height, 0);
+         [searchTableView setContentInset:edgeInsets];
+         [searchTableView setScrollIndicatorInsets:edgeInsets];
+     }];
+}
+
+- (void)keyboardWillHide:(NSNotification *)sender
+{
+    NSTimeInterval duration = [[[sender userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+    
+    [UIView animateWithDuration:duration animations:^
+     {
+         UIEdgeInsets edgeInsets = UIEdgeInsetsZero;
+         [searchTableView setContentInset:edgeInsets];
+         [searchTableView setScrollIndicatorInsets:edgeInsets];
+     }];
+}
 @end

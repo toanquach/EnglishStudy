@@ -53,7 +53,25 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [UIAppDelegate hiddenConnectionView];
+    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+    Song *song = [[Song alloc] init];
+    if (self.type == kCategoryType_Song)
+    {
+        listTableItems = [song getSong:db.database];
+    }
+    else if(self.type == kCategoryType_Singer)
+    {
+        song.singer_id = typeId;
+        listTableItems = [song getSongBySingerId:db.database];
+    }
+    else
+    {
+        song.category_id = typeId;
+        listTableItems = [song getSongByCategoryId:db.database];
+    }
+    [myTableView reloadData];
+    
+    //[UIAppDelegate hiddenConnectionView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -78,24 +96,6 @@
     myTableView.delegate = self;
     myTableView.tableHeaderView = searchControlView;
     myTableView.tableFooterView = footerView;
-    
-    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-    Song *song = [[Song alloc] init];
-    if (self.type == kCategoryType_Song)
-    {
-        listTableItems = [song getSong:db.database];
-    }
-    else if(self.type == kCategoryType_Singer)
-    {
-        song.singer_id = typeId;
-        listTableItems = [song getSongBySingerId:db.database];
-    }
-    else
-    {
-        song.category_id = typeId;
-        listTableItems = [song getSongByCategoryId:db.database];
-    }
-    [myTableView reloadData];
     
     // -----------------------
     //      Set Back Button
@@ -126,7 +126,6 @@
     
     self.navigationItem.titleView = titleLabel;
 }
-
 
 #pragma mark - Keyboard will show
 
@@ -247,10 +246,27 @@
     return cell;
 }
 
+-(void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if([indexPath row] == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
+    {
+        [UIAppDelegate hiddenConnectionView];
+    }
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
-    viewController.playerSong = [listTableItems objectAtIndex:indexPath.row];
+    
+    if (isSearch == 0)
+    {
+        viewController.playerSong = [listTableItems objectAtIndex:indexPath.row];
+    }
+    else
+    {
+        viewController.playerSong = [listSearch objectAtIndex:indexPath.row];
+    }
+   
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
     

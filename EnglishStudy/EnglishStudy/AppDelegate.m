@@ -176,5 +176,14 @@
     [hud hide:YES];
 }
 
+- (void)showFooterView
+{
+    footerView.hidden = NO;
+}
+
+- (void)hiddenFooterView
+{
+    footerView.hidden = YES;
+}
 
 @end

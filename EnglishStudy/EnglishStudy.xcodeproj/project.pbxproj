@@ -166,6 +166,11 @@
 		6AAAF083176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */; };
 		6AAAF084176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */; };
 		6AAAF086176F7F200022BB6A /* Klavika-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */; };
+		6AC8CA4417782A4900C28191 /* PlayerMusicViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC8CA4317782A4900C28191 /* PlayerMusicViewCell.m */; };
+		6AC8CA4617782A5D00C28191 /* PlayerMusicViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AC8CA4517782A5D00C28191 /* PlayerMusicViewCell.xib */; };
+		6AC8CA491778422F00C28191 /* radio-checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC8CA471778422F00C28191 /* radio-checked.png */; };
+		6AC8CA4A1778422F00C28191 /* radio.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC8CA481778422F00C28191 /* radio.png */; };
+		6AC8CA4D1778497100C28191 /* MusicDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC8CA4C1778497100C28191 /* MusicDataManager.m */; };
 		6ADB2A551772B40100FBE8DE /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ADB2A541772B40100FBE8DE /* Reachability.m */; };
 		6AEA6D7D17702A36005987AF /* nav_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7C17702A36005987AF /* nav_background.png */; };
 		6AEA6D7F1770361C005987AF /* nav_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AEA6D7E1770361C005987AF /* nav_background@2x.png */; };
@@ -357,6 +362,13 @@
 		6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan1.jpg; sourceTree = "<group>"; };
 		6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan2.jpg; sourceTree = "<group>"; };
 		6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Regular.otf"; sourceTree = "<group>"; };
+		6AC8CA4217782A4900C28191 /* PlayerMusicViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerMusicViewCell.h; sourceTree = "<group>"; };
+		6AC8CA4317782A4900C28191 /* PlayerMusicViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerMusicViewCell.m; sourceTree = "<group>"; };
+		6AC8CA4517782A5D00C28191 /* PlayerMusicViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerMusicViewCell.xib; sourceTree = "<group>"; };
+		6AC8CA471778422F00C28191 /* radio-checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "radio-checked.png"; sourceTree = "<group>"; };
+		6AC8CA481778422F00C28191 /* radio.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radio.png; sourceTree = "<group>"; };
+		6AC8CA4B1778497100C28191 /* MusicDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicDataManager.h; sourceTree = "<group>"; };
+		6AC8CA4C1778497100C28191 /* MusicDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicDataManager.m; sourceTree = "<group>"; };
 		6ADB2A531772B40100FBE8DE /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		6ADB2A541772B40100FBE8DE /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		6AEA6D7C17702A36005987AF /* nav_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = nav_background.png; sourceTree = "<group>"; };
@@ -442,6 +454,8 @@
 				6A3F083717754DCA0009B1C1 /* Singer.m */,
 				6A3F0839177552430009B1C1 /* Song.h */,
 				6A3F083A177552430009B1C1 /* Song.m */,
+				6AC8CA4B1778497100C28191 /* MusicDataManager.h */,
+				6AC8CA4C1778497100C28191 /* MusicDataManager.m */,
 			);
 			path = Databases;
 			sourceTree = "<group>";
@@ -670,6 +684,8 @@
 		6A7EA8671767F2AA00542515 /* home */ = {
 			isa = PBXGroup;
 			children = (
+				6AC8CA471778422F00C28191 /* radio-checked.png */,
+				6AC8CA481778422F00C28191 /* radio.png */,
 				6AEA6D8017703984005987AF /* nav_back_button.png */,
 				6AEA6D8117703984005987AF /* nav_back_button@2x.png */,
 				6AEA6D7E1770361C005987AF /* nav_background@2x.png */,
@@ -759,6 +775,7 @@
 		6A89F2AC1766D2F600A2EE56 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6AC8CA411778292400C28191 /* Player Music Page */,
 				6AF1316B17745AE6006C2628 /* Category Page */,
 				6A8753CB17741432001382AF /* Search View */,
 				6A52D4B317706CE30071F70C /* Hot Song Page */,
@@ -813,6 +830,16 @@
 				6A905BD31770CA4F0039E090 /* PlayerMusicViewController.h */,
 				6A905BD41770CA4F0039E090 /* PlayerMusicViewController.m */,
 				6A905BD51770CA4F0039E090 /* PlayerMusicViewController.xib */,
+			);
+			name = "Player Music Page";
+			sourceTree = "<group>";
+		};
+		6AC8CA411778292400C28191 /* Player Music Page */ = {
+			isa = PBXGroup;
+			children = (
+				6AC8CA4217782A4900C28191 /* PlayerMusicViewCell.h */,
+				6AC8CA4317782A4900C28191 /* PlayerMusicViewCell.m */,
+				6AC8CA4517782A5D00C28191 /* PlayerMusicViewCell.xib */,
 			);
 			name = "Player Music Page";
 			sourceTree = "<group>";
@@ -1020,6 +1047,9 @@
 				6A6688611775DF37007CF12B /* PurchaseViewController.xib in Resources */,
 				6A668866177600C5007CF12B /* loidich_v1.sqlite in Resources */,
 				6A66886817760518007CF12B /* player_view.png in Resources */,
+				6AC8CA4617782A5D00C28191 /* PlayerMusicViewCell.xib in Resources */,
+				6AC8CA491778422F00C28191 /* radio-checked.png in Resources */,
+				6AC8CA4A1778422F00C28191 /* radio.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1052,6 +1082,8 @@
 				6A66885B1775DEAB007CF12B /* FavoritesViewController.m in Sources */,
 				6A6688601775DF37007CF12B /* PurchaseViewController.m in Sources */,
 				6A6688641775FCCC007CF12B /* MBProgressHUD.m in Sources */,
+				6AC8CA4417782A4900C28191 /* PlayerMusicViewCell.m in Sources */,
+				6AC8CA4D1778497100C28191 /* MusicDataManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

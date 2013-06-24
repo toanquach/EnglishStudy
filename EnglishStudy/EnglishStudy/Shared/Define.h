@@ -11,8 +11,8 @@
 
 #define kRadioButton_Singer                 1
 #define kRadioButton_Song                   2
-#define kRadion_UnChecked_Image             @"radio.png"
-#define kRadion_Checked_Image               @"radio-checked.png"
+#define kRadio_UnChecked_Image             @"radio.png"
+#define kRadio_Checked_Image               @"radio-checked.png"
 
 
 // ---------------------------------------------------
@@ -31,4 +31,20 @@
 #define kCategoryType_Category              1
 #define kCategoryType_Singer                2
 #define kCategoryType_Song                  3
+
+#define kAccount_Amount                     @"Account_Amount"
+
+
+#define kKEY1                               5
+#define kKEY2                               9
+#define kKEY3                               17
+
+#define kColor_Purple                       [UIColor colorWithRed:137.0f/255.0f green:53.0f/255.0f blue:152.0f/255.0f alpha:1.0]
+
+
+
+#define kSetting_Display_Type               @"Display_Type"
+#define kSetting_Display_Style              @"Display_Style"
+#define kSetting_Text_Size                  @"Display_Size_Type"
+
 #endif

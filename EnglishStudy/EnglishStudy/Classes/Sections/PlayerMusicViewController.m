@@ -10,6 +10,8 @@
 
 #import "Category.h"
 #import "Singer.h"
+#import <Pods/Category/NSData+Base64.h>
+#import "PlayerMusicViewCell.h"
 
 @interface PlayerMusicViewController ()
 {
@@ -30,6 +32,8 @@
     __unsafe_unretained IBOutlet UIButton *pauseButton;
     __unsafe_unretained IBOutlet UILabel *singerLabel;
     __unsafe_unretained IBOutlet UILabel *categoryLabel;
+    
+    NSMutableArray *listItems;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -113,6 +117,9 @@
 
 - (void)setupView
 {
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+    myTableView.tableFooterView = footerView;
+    footerView = nil;
     // -----------------------
     //      Set Back Button
     //
@@ -142,7 +149,15 @@
     
     self.navigationItem.titleView = titleLabel;
     
-    //---- player
+    //
+    //      set delegate for tableview
+    //
+    
+    myTableView.delegate = self;
+    myTableView.dataSource = self;
+    
+    
+    //----------    player --------------------
     [self setupMusicPlay];
     
     //
@@ -161,11 +176,35 @@
     singerLabel.text = [NSString stringWithFormat:@"Sáng tác: %@",singer.name];
     categoryLabel.text= [NSString stringWithFormat:@"Thể loại: %@", cate.name];
     
-    singerLabel.textColor = [UIColor colorWithRed:171.0f/255.0f green:171.0f/255.0f blue:171.0f/255.0f alpha:1.0];
-    categoryLabel.textColor = [UIColor colorWithRed:171.0f/255.0f green:171.0f/255.0f blue:171.0f/255.0f alpha:1.0];
+    singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+    categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
     
     singerLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     categoryLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+    
+    int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
+    NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
+    NSData *enSongEncodeData = [NSData dataFromBase64String:enSongEncodeStr];
+    NSString *enSongDecodeStr = [[NSString alloc] initWithData:enSongEncodeData encoding:NSUTF8StringEncoding];
+    
+    NSString *vnSongEncodeStr = [playerSong.vietnamese substringFromIndex:num];
+    NSData *vnSongEncodeData = [NSData dataFromBase64String:vnSongEncodeStr];
+    NSString *vnSongDecodeStr = [[NSString alloc] initWithData:vnSongEncodeData encoding:NSUTF8StringEncoding];
+    
+    NSArray *arrEn = [enSongDecodeStr componentsSeparatedByString:@"\n"];
+    NSArray *arrVn = [vnSongDecodeStr componentsSeparatedByString:@"\n"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF !=''"];
+    arrEn = [arrEn filteredArrayUsingPredicate:predicate];
+    arrVn = [arrVn filteredArrayUsingPredicate:predicate];
+    
+    listItems = [NSMutableArray array];
+    for (int i = 0; i < [arrEn count]; i++)
+    {
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[arrEn objectAtIndex:i], @"en",
+                              [arrVn objectAtIndex:i], @"vn",
+                               nil];
+        [listItems addObject:dict];
+    }
 }
 
 - (void)setupMusicPlay
@@ -299,6 +338,45 @@
     NSLog(@"%s error=%@", __PRETTY_FUNCTION__, error);
     [self stopTimer];
     [self updateDisplay];
+}
+
+#pragma mark - UITableViewCell
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 44;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [listItems count];
+}
+
+// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"CellIdentifier";
+    
+    PlayerMusicViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (cell == nil)
+    {
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"PlayerMusicViewCell" owner:self options:nil] objectAtIndex:0];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    
+    NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
+    [cell setupView:dict];
+    [cell setDetailTextColor:kColor_Purple];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+ 
 }
 
 @end

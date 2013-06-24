@@ -22,4 +22,8 @@
 
 - (void)hiddenConnectionView;
 
+- (void)showFooterView;
+
+- (void)hiddenFooterView;
+
 @end
