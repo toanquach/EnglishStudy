@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#include "SearchControlView.h"
+#import "SearchControlView.h"
 
-@interface CategoryViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface CategoryViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, SearchControlViewDelegate>
 
 @property (nonatomic) int categotyType;
 

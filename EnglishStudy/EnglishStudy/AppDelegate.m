@@ -11,6 +11,7 @@
 #import "Reachability.h"
 
 #import "ESFooterView.h"
+#import "MBProgressHUD.h"
 
 @implementation UINavigationBar (CustomImage)
 
@@ -25,6 +26,7 @@
 @interface AppDelegate()
 {
     ESFooterView *footerView;
+    MBProgressHUD *hud;
 }
 
 - (void)setupView;
@@ -96,6 +98,10 @@
     
     [self setupView];
     
+    hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    hud.labelText = @"Tải dữ liệu...";
+    [hud hide:YES];
+    
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -159,5 +165,16 @@
     [alertView show];
     alertView = nil;
 }
+
+- (void)showConnectionView
+{
+    [hud show:YES];
+}
+
+- (void)hiddenConnectionView
+{
+    [hud hide:YES];
+}
+
 
 @end

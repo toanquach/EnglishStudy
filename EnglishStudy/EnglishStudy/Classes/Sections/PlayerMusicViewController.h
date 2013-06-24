@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Song.h"
 
-@interface PlayerMusicViewController : UIViewController
+#import <AVFoundation/AVFoundation.h>
+
+@interface PlayerMusicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate>
+
+@property (nonatomic, retain) Song *playerSong;
 
 @end

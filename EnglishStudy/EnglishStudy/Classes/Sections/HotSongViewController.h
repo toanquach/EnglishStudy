@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SearchControlView.h"
+#import "SongViewCell.h"
 
-@interface HotSongViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+#import "Song.h"
+
+@interface HotSongViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, SearchControlViewDelegate>
+
+@property (nonatomic) int type;
+@property (nonatomic) int typeId;
 
 @end

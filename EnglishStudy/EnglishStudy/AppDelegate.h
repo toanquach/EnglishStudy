@@ -18,4 +18,8 @@
 
 - (void)showAlertView:(NSString *)title andMessage:(NSString *)message;
 
+- (void)showConnectionView;
+
+- (void)hiddenConnectionView;
+
 @end

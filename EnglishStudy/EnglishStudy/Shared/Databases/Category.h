@@ -19,8 +19,9 @@
 @property(nonatomic) int num_song;
 
 - (NSString *)insert:(sqlite3 *)db;
-- (NSString*)update:(sqlite3*)db;
-- (NSMutableArray*)getCategory:(sqlite3*)db;
+- (NSString *)update:(sqlite3 *)db;
+- (NSString *)deleteCategory:(sqlite3 *)db;
+- (NSMutableArray *)getCategory:(sqlite3*)db;
 - (Category *)getCategoryById:(sqlite3*)db;
 
 @end

@@ -30,5 +30,5 @@
 
 #define kCategoryType_Category              1
 #define kCategoryType_Singer                2
-
+#define kCategoryType_Song                  3
 #endif
