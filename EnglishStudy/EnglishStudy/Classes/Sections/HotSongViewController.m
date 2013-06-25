@@ -21,6 +21,8 @@
     NSMutableArray *listTableItems;
     NSArray *listSearch;
     int isSearch;
+    __unsafe_unretained IBOutlet UIView *loadingBgView;
+    __unsafe_unretained IBOutlet UIActivityIndicatorView *loadingIndicator;
 }
 
 - (void)setupView;
@@ -29,7 +31,7 @@
 
 @implementation HotSongViewController
 
-@synthesize type, typeId;
+@synthesize type, typeId, titleString;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -70,8 +72,10 @@
         listTableItems = [song getSongByCategoryId:db.database];
     }
     [myTableView reloadData];
-    
-    //[UIAppDelegate hiddenConnectionView];
+    if ([listTableItems count] == 0)
+    {
+        [UIAppDelegate hiddenConnectionView];   
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -91,6 +95,7 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
     
     isSearch = 0;
+    [loadingIndicator stopAnimating];
     
     myTableView.dataSource = self;
     myTableView.delegate = self;
@@ -117,7 +122,7 @@
     //      custom title label
     //
     UILabel *titleLabel= [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
-    titleLabel.text = @"Danh Sách Bài Hát";
+    titleLabel.text = titleString;//@"Danh Sách Bài Hát";
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -125,6 +130,20 @@
     titleLabel.textColor =[UIColor whiteColor];
     
     self.navigationItem.titleView = titleLabel;
+    
+    // add right button
+    
+    UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
+    [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
+    [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonBar;
+    
+    rightMenuImage = nil;
+    rightButton = nil;
+    rightButtonBar = nil;
 }
 
 #pragma mark - Keyboard will show
@@ -158,7 +177,27 @@
 
 - (void)backButtonPressed:(id)sender
 {
+    if (UIAppDelegate.isMenuShow == 1)
+    {
+        UIAppDelegate.isMenuShow = 0;
+        UIAppDelegate.navDropDownMenu.hidden = YES;
+    }
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)showMenuButtonClicked:(id)sender
+{
+    if (UIAppDelegate.isMenuShow == 0)
+    {
+        UIAppDelegate.navDropDownMenu.hidden = NO;
+        [UIAppDelegate.navDropDownMenu menuAnimateShow];
+        UIAppDelegate.isMenuShow = 1;
+    }
+    else
+    {
+        [UIAppDelegate.navDropDownMenu menuAnimateHide];
+        UIAppDelegate.isMenuShow = 0;
+    }
 }
 
 - (void)viewDidUnload
@@ -169,25 +208,40 @@
     searchControlView = nil;
     listTableItems = nil;
     myTableView = nil;
+    loadingIndicator = nil;
+    loadingBgView = nil;
     [super viewDidUnload];
+}
+
+- (void)searchSongWithKeyword:(NSString *)keyword
+{
+    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+    Song *song = [[Song alloc] init];
+    listSearch = [song searchSong:db.database WithText:keyword];
+    isSearch = 1;
+    [myTableView reloadData];
 }
 
 - (void)SearchControlViewWithKeyword:(NSString *)keyword
 {
     if (keyword == nil || [keyword isEqualToString:@""] == TRUE)
     {
+        [loadingIndicator stopAnimating];
         isSearch = 0;
         [myTableView reloadData];
     }
     else
     {
+        [loadingIndicator startAnimating];
+        
         if (self.type == kCategoryType_Song)
         {
-            DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-            Song *song = [[Song alloc] init];
-            listSearch = [song searchSong:db.database WithText:keyword];
-            isSearch = 1;
-            [myTableView reloadData];
+            loadingBgView.hidden = NO;
+            [[DatabaseManager databaseQueue] cancelAllOperations];
+            NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(searchSongWithKeyword:) object:keyword];
+            [[DatabaseManager databaseQueue] cancelAllOperations];
+            [[DatabaseManager databaseQueue] addOperation:operation];
+            operation = nil;
         }
         else
         {
@@ -250,7 +304,12 @@
 {
     if([indexPath row] == ((NSIndexPath*)[[tableView indexPathsForVisibleRows] lastObject]).row)
     {
+        if (self.type == kCategoryType_Song)
+        {
+            loadingBgView.hidden = YES;
+        }
         [UIAppDelegate hiddenConnectionView];
+        [loadingIndicator stopAnimating];
     }
 }
 

@@ -168,6 +168,21 @@
 		6AAAF083176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */; };
 		6AAAF084176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */; };
 		6AAAF086176F7F200022BB6A /* Klavika-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */; };
+		6AC38D7C17798BA000D0B538 /* icon_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D6D17798BA000D0B538 /* icon_account.png */; };
+		6AC38D7D17798BA000D0B538 /* icon_favourite_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D6E17798BA000D0B538 /* icon_favourite_song.png */; };
+		6AC38D7E17798BA000D0B538 /* icon_hot_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D6F17798BA000D0B538 /* icon_hot_song.png */; };
+		6AC38D7F17798BA000D0B538 /* icon_menu.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7017798BA000D0B538 /* icon_menu.png */; };
+		6AC38D8017798BA000D0B538 /* icon_other_app.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7117798BA000D0B538 /* icon_other_app.png */; };
+		6AC38D8117798BA000D0B538 /* icon_purchased_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7217798BA000D0B538 /* icon_purchased_song.png */; };
+		6AC38D8217798BA000D0B538 /* icon_setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7317798BA000D0B538 /* icon_setting.png */; };
+		6AC38D8317798BA000D0B538 /* menu_account.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7417798BA000D0B538 /* menu_account.png */; };
+		6AC38D8417798BA000D0B538 /* menu_favourite_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7517798BA000D0B538 /* menu_favourite_song.png */; };
+		6AC38D8517798BA000D0B538 /* menu_hot_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7617798BA000D0B538 /* menu_hot_song.png */; };
+		6AC38D8617798BA000D0B538 /* menu_item_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7717798BA000D0B538 /* menu_item_bottom.png */; };
+		6AC38D8717798BA000D0B538 /* menu_item.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7817798BA000D0B538 /* menu_item.png */; };
+		6AC38D8817798BA000D0B538 /* menu_other_app.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7917798BA000D0B538 /* menu_other_app.png */; };
+		6AC38D8917798BA000D0B538 /* menu_purchased_song.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7A17798BA000D0B538 /* menu_purchased_song.png */; };
+		6AC38D8A17798BA000D0B538 /* menu_setting.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC38D7B17798BA000D0B538 /* menu_setting.png */; };
 		6AC8CA4417782A4900C28191 /* PlayerMusicViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC8CA4317782A4900C28191 /* PlayerMusicViewCell.m */; };
 		6AC8CA4617782A5D00C28191 /* PlayerMusicViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6AC8CA4517782A5D00C28191 /* PlayerMusicViewCell.xib */; };
 		6AC8CA491778422F00C28191 /* radio-checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AC8CA471778422F00C28191 /* radio-checked.png */; };
@@ -367,6 +382,21 @@
 		6AAAF07B176F7D620022BB6A /* hoctienganh_640x960_taikhoan1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan1.jpg; sourceTree = "<group>"; };
 		6AAAF07C176F7D620022BB6A /* hoctienganh_640x960_taikhoan2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hoctienganh_640x960_taikhoan2.jpg; sourceTree = "<group>"; };
 		6AAAF085176F7F200022BB6A /* Klavika-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Klavika-Regular.otf"; sourceTree = "<group>"; };
+		6AC38D6D17798BA000D0B538 /* icon_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_account.png; sourceTree = "<group>"; };
+		6AC38D6E17798BA000D0B538 /* icon_favourite_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_favourite_song.png; sourceTree = "<group>"; };
+		6AC38D6F17798BA000D0B538 /* icon_hot_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_hot_song.png; sourceTree = "<group>"; };
+		6AC38D7017798BA000D0B538 /* icon_menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_menu.png; sourceTree = "<group>"; };
+		6AC38D7117798BA000D0B538 /* icon_other_app.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_other_app.png; sourceTree = "<group>"; };
+		6AC38D7217798BA000D0B538 /* icon_purchased_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_purchased_song.png; sourceTree = "<group>"; };
+		6AC38D7317798BA000D0B538 /* icon_setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_setting.png; sourceTree = "<group>"; };
+		6AC38D7417798BA000D0B538 /* menu_account.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_account.png; sourceTree = "<group>"; };
+		6AC38D7517798BA000D0B538 /* menu_favourite_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_favourite_song.png; sourceTree = "<group>"; };
+		6AC38D7617798BA000D0B538 /* menu_hot_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_hot_song.png; sourceTree = "<group>"; };
+		6AC38D7717798BA000D0B538 /* menu_item_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_item_bottom.png; sourceTree = "<group>"; };
+		6AC38D7817798BA000D0B538 /* menu_item.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_item.png; sourceTree = "<group>"; };
+		6AC38D7917798BA000D0B538 /* menu_other_app.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_other_app.png; sourceTree = "<group>"; };
+		6AC38D7A17798BA000D0B538 /* menu_purchased_song.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_purchased_song.png; sourceTree = "<group>"; };
+		6AC38D7B17798BA000D0B538 /* menu_setting.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu_setting.png; sourceTree = "<group>"; };
 		6AC8CA4217782A4900C28191 /* PlayerMusicViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerMusicViewCell.h; sourceTree = "<group>"; };
 		6AC8CA4317782A4900C28191 /* PlayerMusicViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerMusicViewCell.m; sourceTree = "<group>"; };
 		6AC8CA4517782A5D00C28191 /* PlayerMusicViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerMusicViewCell.xib; sourceTree = "<group>"; };
@@ -728,6 +758,21 @@
 		6A8753D217741511001382AF /* Baihotnhat */ = {
 			isa = PBXGroup;
 			children = (
+				6AC38D6D17798BA000D0B538 /* icon_account.png */,
+				6AC38D6E17798BA000D0B538 /* icon_favourite_song.png */,
+				6AC38D6F17798BA000D0B538 /* icon_hot_song.png */,
+				6AC38D7017798BA000D0B538 /* icon_menu.png */,
+				6AC38D7117798BA000D0B538 /* icon_other_app.png */,
+				6AC38D7217798BA000D0B538 /* icon_purchased_song.png */,
+				6AC38D7317798BA000D0B538 /* icon_setting.png */,
+				6AC38D7417798BA000D0B538 /* menu_account.png */,
+				6AC38D7517798BA000D0B538 /* menu_favourite_song.png */,
+				6AC38D7617798BA000D0B538 /* menu_hot_song.png */,
+				6AC38D7717798BA000D0B538 /* menu_item_bottom.png */,
+				6AC38D7817798BA000D0B538 /* menu_item.png */,
+				6AC38D7917798BA000D0B538 /* menu_other_app.png */,
+				6AC38D7A17798BA000D0B538 /* menu_purchased_song.png */,
+				6AC38D7B17798BA000D0B538 /* menu_setting.png */,
 				6A3F083C177557100009B1C1 /* icon_singer.png */,
 				6A7E28E2177535CE006F1767 /* hoctienganh_640x960_baihotnhat_03.png */,
 				6A42590B1774ABB90055F554 /* bgd_textbox_2.png */,
@@ -1059,6 +1104,21 @@
 				6AC8CA491778422F00C28191 /* radio-checked.png in Resources */,
 				6AC8CA4A1778422F00C28191 /* radio.png in Resources */,
 				6A485C7B17789A5D00B2D195 /* NavDropDownMenuView.xib in Resources */,
+				6AC38D7C17798BA000D0B538 /* icon_account.png in Resources */,
+				6AC38D7D17798BA000D0B538 /* icon_favourite_song.png in Resources */,
+				6AC38D7E17798BA000D0B538 /* icon_hot_song.png in Resources */,
+				6AC38D7F17798BA000D0B538 /* icon_menu.png in Resources */,
+				6AC38D8017798BA000D0B538 /* icon_other_app.png in Resources */,
+				6AC38D8117798BA000D0B538 /* icon_purchased_song.png in Resources */,
+				6AC38D8217798BA000D0B538 /* icon_setting.png in Resources */,
+				6AC38D8317798BA000D0B538 /* menu_account.png in Resources */,
+				6AC38D8417798BA000D0B538 /* menu_favourite_song.png in Resources */,
+				6AC38D8517798BA000D0B538 /* menu_hot_song.png in Resources */,
+				6AC38D8617798BA000D0B538 /* menu_item_bottom.png in Resources */,
+				6AC38D8717798BA000D0B538 /* menu_item.png in Resources */,
+				6AC38D8817798BA000D0B538 /* menu_other_app.png in Resources */,
+				6AC38D8917798BA000D0B538 /* menu_purchased_song.png in Resources */,
+				6AC38D8A17798BA000D0B538 /* menu_setting.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

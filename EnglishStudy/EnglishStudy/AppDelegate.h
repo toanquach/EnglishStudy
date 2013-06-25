@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NavDropDownMenuView.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UINavigationBarDelegate>
 
@@ -14,7 +15,11 @@
 
 @property (strong, nonatomic) UINavigationController *navigationController;
 
-@property (nonatomic) BOOL  isNetworkAvailable;
+@property (nonatomic) BOOL isNetworkAvailable;
+
+@property (nonatomic) int isMenuShow;
+
+@property (nonatomic, strong) NavDropDownMenuView *navDropDownMenu;
 
 - (void)showAlertView:(NSString *)title andMessage:(NSString *)message;
 

@@ -34,6 +34,9 @@
     __unsafe_unretained IBOutlet UILabel *categoryLabel;
     
     NSMutableArray *listItems;
+    
+    int displayType;
+    int displayStyle;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -45,6 +48,7 @@
 - (void)updateSliderLabels;
 - (void)stopTimer;
 - (void)stopPlaying;
+- (void)setupNavigationBar;
 
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)downloadButtonClicked:(id)sender;
@@ -117,9 +121,107 @@
 
 - (void)setupView
 {
+    //
+    //  load setting from userdefaults
+    //
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    displayType = [userDefaults integerForKey:kSetting_Display_Type];
+    displayStyle = [userDefaults integerForKey:kSetting_Display_Style];
+    
+    if (displayStyle == kSetting_BanNgay)
+    {
+        backgroundImageView.hidden = YES;
+        singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+    }
+    else
+    {
+        backgroundImageView.hidden = NO;
+        singerLabel.textColor = [UIColor whiteColor];
+        categoryLabel.textColor = [UIColor whiteColor];
+    }
+    
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     myTableView.tableFooterView = footerView;
     footerView = nil;
+
+    //
+    //      set delegate for tableview
+    //
+    
+    myTableView.delegate = self;
+    myTableView.dataSource = self;
+    
+    
+    //----------    player --------------------
+    [self setupMusicPlay];
+    
+    //
+    //      load singer
+    //
+    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+    Category *cate = [[Category alloc] init];
+    Singer *singer = [[Singer alloc] init];
+
+    cate.tblID = playerSong.category_id;
+    cate = [cate getCategoryById:db.database];
+    
+    singer.tblID = playerSong.singer_id;
+    singer = [singer getSingerById:db.database];
+    
+    singerLabel.text = [NSString stringWithFormat:@"Sáng tác: %@",singer.name];
+    categoryLabel.text= [NSString stringWithFormat:@"Thể loại: %@", cate.name];
+    
+    singerLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+    categoryLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+    
+    int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
+    NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
+    NSData *enSongEncodeData = [NSData dataFromBase64String:enSongEncodeStr];
+    NSString *enSongDecodeStr = [[NSString alloc] initWithData:enSongEncodeData encoding:NSUTF8StringEncoding];
+    
+    NSString *vnSongEncodeStr = [playerSong.vietnamese substringFromIndex:num];
+    NSData *vnSongEncodeData = [NSData dataFromBase64String:vnSongEncodeStr];
+    NSString *vnSongDecodeStr = [[NSString alloc] initWithData:vnSongEncodeData encoding:NSUTF8StringEncoding];
+    
+    NSArray *arrEn = [enSongDecodeStr componentsSeparatedByString:@"\n"];
+    NSArray *arrVn = [vnSongDecodeStr componentsSeparatedByString:@"\n"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF !=''"];
+    arrEn = [arrEn filteredArrayUsingPredicate:predicate];
+    arrVn = [arrVn filteredArrayUsingPredicate:predicate];
+    
+    listItems = [NSMutableArray array];
+    for (int i = 0; i < [arrEn count]; i++)
+    {
+        NSString *vnStr = (i >= [arrVn count])? @"":[arrVn objectAtIndex:i];
+        NSString *enStr = [arrEn objectAtIndex:i];
+        
+        NSArray *arr = [enStr componentsSeparatedByString:@"]"];
+        NSString *seekTime = @"";
+        NSString *enSplitStr = @"";
+        
+        if ([arr count] > 1)
+        {
+            seekTime = [[arr objectAtIndex:0] substringFromIndex:1];
+            enSplitStr = [arr objectAtIndex:1];
+        }
+        else if([arr count] > 0)
+        {
+            enSplitStr = [arr objectAtIndex:0];
+        }
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:enSplitStr, @"en",
+                              vnStr, @"vn",
+                              seekTime, @"seekTime",
+                               nil];
+        [listItems addObject:dict];
+    }
+    [myTableView reloadData];
+    
+    [self setupNavigationBar];
+}
+
+- (void)setupNavigationBar
+{
     // -----------------------
     //      Set Back Button
     //
@@ -149,62 +251,19 @@
     
     self.navigationItem.titleView = titleLabel;
     
-    //
-    //      set delegate for tableview
-    //
+    // add right button
     
-    myTableView.delegate = self;
-    myTableView.dataSource = self;
+    UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
+    [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
+    [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
+    UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    self.navigationItem.rightBarButtonItem = rightButtonBar;
     
-    //----------    player --------------------
-    [self setupMusicPlay];
-    
-    //
-    //      load singer
-    //
-    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-    Category *cate = [[Category alloc] init];
-    Singer *singer = [[Singer alloc] init];
-
-    cate.tblID = playerSong.category_id;
-    cate = [cate getCategoryById:db.database];
-    
-    singer.tblID = playerSong.singer_id;
-    singer = [singer getSingerById:db.database];
-    
-    singerLabel.text = [NSString stringWithFormat:@"Sáng tác: %@",singer.name];
-    categoryLabel.text= [NSString stringWithFormat:@"Thể loại: %@", cate.name];
-    
-    singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
-    categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
-    
-    singerLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
-    categoryLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
-    
-    int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
-    NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
-    NSData *enSongEncodeData = [NSData dataFromBase64String:enSongEncodeStr];
-    NSString *enSongDecodeStr = [[NSString alloc] initWithData:enSongEncodeData encoding:NSUTF8StringEncoding];
-    
-    NSString *vnSongEncodeStr = [playerSong.vietnamese substringFromIndex:num];
-    NSData *vnSongEncodeData = [NSData dataFromBase64String:vnSongEncodeStr];
-    NSString *vnSongDecodeStr = [[NSString alloc] initWithData:vnSongEncodeData encoding:NSUTF8StringEncoding];
-    
-    NSArray *arrEn = [enSongDecodeStr componentsSeparatedByString:@"\n"];
-    NSArray *arrVn = [vnSongDecodeStr componentsSeparatedByString:@"\n"];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF !=''"];
-    arrEn = [arrEn filteredArrayUsingPredicate:predicate];
-    arrVn = [arrVn filteredArrayUsingPredicate:predicate];
-    
-    listItems = [NSMutableArray array];
-    for (int i = 0; i < [arrEn count]; i++)
-    {
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:[arrEn objectAtIndex:i], @"en",
-                              [arrVn objectAtIndex:i], @"vn",
-                               nil];
-        [listItems addObject:dict];
-    }
+    rightMenuImage = nil;
+    rightButton = nil;
+    rightButtonBar = nil;
 }
 
 - (void)setupMusicPlay
@@ -242,8 +301,27 @@
 
 - (void)backButtonPressed:(id)sender
 {
-//    [self stopPlaying];
+    if (UIAppDelegate.isMenuShow == 1)
+    {
+        UIAppDelegate.isMenuShow = 0;
+        UIAppDelegate.navDropDownMenu.hidden = YES;
+    }
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)showMenuButtonClicked:(id)sender
+{
+    if (UIAppDelegate.isMenuShow == 0)
+    {
+        UIAppDelegate.navDropDownMenu.hidden = NO;
+        [UIAppDelegate.navDropDownMenu menuAnimateShow];
+        UIAppDelegate.isMenuShow = 1;
+    }
+    else
+    {
+        [UIAppDelegate.navDropDownMenu menuAnimateHide];
+        UIAppDelegate.isMenuShow = 0;
+    }
 }
 
 - (IBAction)playButtonClicked:(id)sender
@@ -370,7 +448,16 @@
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
     [cell setupView:dict];
-    [cell setDetailTextColor:kColor_Purple];
+    if (displayStyle == kSetting_BanNgay)
+    {
+        [cell setDetailTextColor:kColor_CustomGray];
+    }
+    else
+    {
+        [cell setDetailTextColor:[UIColor whiteColor]];
+    }
+    
+    //[cell setDetailTextColor:kColor_Purple];
     return cell;
 }
 

@@ -16,5 +16,5 @@
 
 @property (nonatomic) int type;
 @property (nonatomic) int typeId;
-
+@property (nonatomic, retain) NSString *titleString;
 @end

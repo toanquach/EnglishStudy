@@ -28,16 +28,16 @@
 
 - (void)setupView:(NSDictionary *)dict
 {
+    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
     enTextLabel.text = [dict objectForKey:@"en"];
     vnTextLabel.text = [dict objectForKey:@"vn"];
 }
 
 - (void)setDetailTextColor:(UIColor *)color
 {
-    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     enTextLabel.textColor = color;
     
-    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     vnTextLabel.textColor = color;
 }
 @end

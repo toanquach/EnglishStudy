@@ -18,4 +18,6 @@
 
 + (DatabaseManager *)sharedDatabaseManager;
 
++ (NSOperationQueue *)databaseQueue;
+
 @end

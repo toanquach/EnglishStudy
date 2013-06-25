@@ -48,6 +48,9 @@
     dispatch_time_t delaySearchUntilQueryUnchangedForTimeOffset;
     
     NSMutableArray *listItem;
+    
+    
+    __unsafe_unretained IBOutlet UILabel *noResultLabel;
 }
 
 - (void)setupView;
@@ -67,6 +70,8 @@
 - (IBAction)purchaseButtonClicked:(id)sender;
 - (IBAction)otherAppButtonClicked:(id)sender;
 
+- (IBAction)backgroundButtonClicked:(id)sender;
+- (IBAction)clearTextButtonClicked:(id)sender;
 @end
 
 @implementation HomeViewController
@@ -133,6 +138,7 @@
     searchBgView = nil;
     searchTableView = nil;
     loadingIndicator = nil;
+    noResultLabel = nil;
     [super viewDidUnload];
 }
 
@@ -154,7 +160,10 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
     searchTableView.tableFooterView = footerView;
     
-    delaySearchUntilQueryUnchangedForTimeOffset = 0.4 * NSEC_PER_SEC;
+    delaySearchUntilQueryUnchangedForTimeOffset = 0.0 * NSEC_PER_SEC;
+    
+    noResultLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
+    noResultLabel.textColor = [UIColor whiteColor];
 }
 
 - (void)sendButtonToBack
@@ -260,6 +269,7 @@
     [self slideOnOffMenuButton:YES];
     HotSongViewController *viewController = [[HotSongViewController alloc]init];
     viewController.type = kCategoryType_Song;
+    viewController.titleString = @"Danh Sách Bài Hát";
     [self.navigationController pushViewController:viewController animated:YES];
     viewController = nil;
 }
@@ -300,6 +310,19 @@
     //
 }
 
+- (IBAction)backgroundButtonClicked:(id)sender
+{
+    [searchTextField resignFirstResponder];
+    searchBgView.hidden = YES;
+}
+
+- (IBAction)clearTextButtonClicked:(id)sender
+{
+    searchTextField.text = @"";
+    [searchTextField becomeFirstResponder];
+    searchTableView.hidden = YES;
+}
+
 #pragma mark - UITextfield Delegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -322,13 +345,34 @@
     //
     // waiting when user pressing
     //
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delaySearchUntilQueryUnchangedForTimeOffset);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
-   {
-       [self searchSongWithText:resultStr];
-   });
-    
+//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delaySearchUntilQueryUnchangedForTimeOffset);
+//    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+//   {
+//       [self searchSongWithText:resultStr];
+//   });
+    [self searchSongWithText:resultStr];
     return YES;
+}
+
+- (void)searchSongWithKeyword:(NSString *)keyword
+{
+    DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
+    Song *song = [[Song alloc] init];
+    listItem = [song searchSong:db.database WithText:keyword];
+    
+    if ([listItem count] > 0)
+    {
+        noResultLabel.hidden = YES;
+        searchTableView.hidden = NO;
+    }
+    else
+    {
+        searchTableView.hidden = YES;
+        noResultLabel.hidden = NO;
+        [loadingIndicator stopAnimating];
+    }
+    
+    [searchTableView reloadData];
 }
 
 - (void)searchSongWithText:(NSString *)keyword
@@ -340,17 +384,11 @@
     else
     {
         searchBgView.hidden = NO;
-        DatabaseManager *db = [DatabaseManager sharedDatabaseManager];
-        Song *song = [[Song alloc] init];
-        listItem = [song searchSong:db.database WithText:keyword];
-        
-        if ([listItem count] > 0)
-        {
-            searchTableView.hidden = NO;
-        }
-        
-        [searchTableView reloadData];
-        //[loadingIndicator stopAnimating];
+        [[DatabaseManager databaseQueue] cancelAllOperations];
+        NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(searchSongWithKeyword:) object:keyword];
+        //[[DatabaseManager databaseQueue] cancelAllOperations];
+        [[DatabaseManager databaseQueue] addOperation:operation];
+        operation = nil;
     }
 }
 
@@ -399,12 +437,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
-//    viewController.playerSong = [listTableItems objectAtIndex:indexPath.row];
-//    [self.navigationController pushViewController:viewController animated:YES];
-//    viewController = nil;
-//    
-//    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
+    viewController.playerSong = [listItem objectAtIndex:indexPath.row];
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Keyboard will show

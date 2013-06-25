@@ -40,7 +40,7 @@
 #define kKEY3                               17
 
 #define kColor_Purple                       [UIColor colorWithRed:137.0f/255.0f green:53.0f/255.0f blue:152.0f/255.0f alpha:1.0]
-
+#define kColor_CustomGray                   [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0]
 
 
 #define kSetting_Display_Type               @"Display_Type"

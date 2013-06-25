@@ -82,4 +82,26 @@
 	return [cacheDir stringByAppendingPathComponent:kDabase_Name];
 }
 
+static NSOperationQueue * DatabaseQueue = nil;
+
++ (void)initialize
+{
+    [super initialize];
+    
+    DatabaseQueue = [[NSOperationQueue alloc] init];
+    [DatabaseQueue setMaxConcurrentOperationCount:1];
+}
+
++ (NSOperationQueue *)databaseQueue
+{
+    return DatabaseQueue;
+}
+
+//- (void)writeToDatabase
+//{
+//    NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(FUNCTION_THAT_WRITES_TO_DATABASE) object:nil];
+//    [operation setQueuePriority:NSOperationQueuePriorityHigh];
+//    [[DatabaseManager databaseQueue] addOperations:[NSArray arrayWithObject:operation] waitUntilFinished:YES];
+//}
+
 @end

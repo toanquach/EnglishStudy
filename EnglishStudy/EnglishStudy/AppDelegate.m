@@ -38,6 +38,8 @@
 @implementation AppDelegate
 
 @synthesize navigationController;
+@synthesize navDropDownMenu;
+@synthesize isMenuShow;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -157,6 +159,21 @@
     [self.navigationController.view addSubview:footerView];
     footerView.frame = CGRectMake(0, kMainScreenHeight - 30, 320, 30);
     [footerView setupView];
+    
+    self.navDropDownMenu = [[[NSBundle mainBundle] loadNibNamed:@"NavDropDownMenuView" owner:self options:nil] objectAtIndex:0];
+    [self.navDropDownMenu setupView];
+    if (IS_IPHONE_5)
+    {
+        self.navDropDownMenu.frame = CGRectMake(0, 0, 320, 480 + 88);
+    }
+    else
+    {
+        self.navDropDownMenu.frame = CGRectMake(0, 0, 320, 480);
+    }
+    [self.navigationController.view addSubview:self.navDropDownMenu];
+
+    self.navDropDownMenu.hidden = YES;
+    self.isMenuShow = 0;
 }
 
 - (void)showAlertView:(NSString *)title andMessage:(NSString *)message
