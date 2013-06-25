@@ -47,4 +47,14 @@
 #define kSetting_Display_Style              @"Display_Style"
 #define kSetting_Text_Size                  @"Display_Size_Type"
 
+#define kSetting_Display_List               0
+#define kSetting_Display_TungCau            1
+
+#define kSetting_BanDem                     1
+#define kSetting_BanNgay                    0
+
+#define kSetting_CoNho                      2
+#define kSetting_CoVua                      1
+#define kSetting_CoLon                      0
+
 #endif

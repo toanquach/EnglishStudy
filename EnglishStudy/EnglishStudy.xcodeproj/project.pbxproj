@@ -32,6 +32,8 @@
 		6A42590A1774AA6A0055F554 /* CategoryViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A4259091774AA6A0055F554 /* CategoryViewCell.xib */; };
 		6A42590D1774ABB90055F554 /* bgd_textbox_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A42590B1774ABB90055F554 /* bgd_textbox_2.png */; };
 		6A42590E1774ABB90055F554 /* hot_line.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A42590C1774ABB90055F554 /* hot_line.png */; };
+		6A485C7917789A4300B2D195 /* NavDropDownMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A485C7817789A4300B2D195 /* NavDropDownMenuView.m */; };
+		6A485C7B17789A5D00B2D195 /* NavDropDownMenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A485C7A17789A5D00B2D195 /* NavDropDownMenuView.xib */; };
 		6A5B078517720B8500C52894 /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5B078417720B8500C52894 /* DatabaseManager.m */; };
 		6A5B078717720CC500C52894 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A5B078617720CC500C52894 /* libsqlite3.dylib */; };
 		6A5B078A1772102400C52894 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A5B07891772102400C52894 /* Category.m */; };
@@ -210,6 +212,9 @@
 		6A4259091774AA6A0055F554 /* CategoryViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryViewCell.xib; sourceTree = "<group>"; };
 		6A42590B1774ABB90055F554 /* bgd_textbox_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgd_textbox_2.png; sourceTree = "<group>"; };
 		6A42590C1774ABB90055F554 /* hot_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hot_line.png; sourceTree = "<group>"; };
+		6A485C7717789A4300B2D195 /* NavDropDownMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavDropDownMenuView.h; sourceTree = "<group>"; };
+		6A485C7817789A4300B2D195 /* NavDropDownMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavDropDownMenuView.m; sourceTree = "<group>"; };
+		6A485C7A17789A5D00B2D195 /* NavDropDownMenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NavDropDownMenuView.xib; sourceTree = "<group>"; };
 		6A5B078317720B8400C52894 /* DatabaseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
 		6A5B078417720B8500C52894 /* DatabaseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
 		6A5B078617720CC500C52894 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -782,6 +787,9 @@
 				6A89F2AD1766D31100A2EE56 /* ESFooterView.h */,
 				6A89F2AE1766D31100A2EE56 /* ESFooterView.m */,
 				6A89F2B21766D32D00A2EE56 /* ESFooterView.xib */,
+				6A485C7717789A4300B2D195 /* NavDropDownMenuView.h */,
+				6A485C7817789A4300B2D195 /* NavDropDownMenuView.m */,
+				6A485C7A17789A5D00B2D195 /* NavDropDownMenuView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1050,6 +1058,7 @@
 				6AC8CA4617782A5D00C28191 /* PlayerMusicViewCell.xib in Resources */,
 				6AC8CA491778422F00C28191 /* radio-checked.png in Resources */,
 				6AC8CA4A1778422F00C28191 /* radio.png in Resources */,
+				6A485C7B17789A5D00B2D195 /* NavDropDownMenuView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1084,6 +1093,7 @@
 				6A6688641775FCCC007CF12B /* MBProgressHUD.m in Sources */,
 				6AC8CA4417782A4900C28191 /* PlayerMusicViewCell.m in Sources */,
 				6AC8CA4D1778497100C28191 /* MusicDataManager.m in Sources */,
+				6A485C7917789A4300B2D195 /* NavDropDownMenuView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -166,10 +166,12 @@
 
 - (IBAction)group01ButtonClicked:(id)sender
 {
-    if (displayType == 0)
+    UIButton *button = (UIButton *)sender;
+    
+    if (button == dangTungCauButton)
     {
         // set to dang tung cau display
-        displayType = 1;
+        displayType = kSetting_Display_TungCau;
         dangTungCauButton.selected = YES;
         dangTungCauImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         dangListButton.selected = NO;
@@ -177,7 +179,7 @@
     }
     else
     {
-        displayType = 0;
+        displayType = kSetting_Display_List;
         dangTungCauButton.selected = NO;
         dangTungCauImageView.image = [UIImage imageNamed:kRadio_UnChecked_Image];
         dangListButton.selected = YES;
@@ -191,10 +193,12 @@
 
 - (IBAction)group02ButtonClicked:(id)sender
 {
-    if (displayStyle == 0)
+    UIButton *button = (UIButton *)sender;
+    
+    if (button == banDemButton)
     {
         // set to dang tung cau display
-        displayStyle = 1;
+        displayStyle = kSetting_BanDem;
         banDemButton.selected = YES;
         banDemImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         banNgayButton.selected = NO;
@@ -202,7 +206,7 @@
     }
     else
     {
-        displayStyle = 0;
+        displayStyle = kSetting_BanNgay;
         banDemButton.selected = NO;
         banDemImageView.image = [UIImage imageNamed:kRadio_UnChecked_Image];
         banNgayButton.selected = YES;
@@ -220,7 +224,7 @@
     
     if (button == coNhoTextButton)
     {
-        displayTextSizeType = 2;
+        displayTextSizeType = kSetting_CoNho;
         coNhoTextButton.selected = YES;
         coNhoImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coVuaTextButton.selected = NO;
@@ -230,7 +234,7 @@
     }
     else if(button == coVuaTextButton)
     {
-        displayTextSizeType = 1;
+        displayTextSizeType = kSetting_CoVua;
         coVuaTextButton.selected = YES;
         coVuaImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coNhoTextButton.selected = NO;
@@ -240,7 +244,7 @@
     }
     else
     {
-        displayTextSizeType = 0;
+        displayTextSizeType = kSetting_CoLon;
         coLonTextButton.selected = YES;
         coLonImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coVuaTextButton.selected = NO;
@@ -261,7 +265,8 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
     title01Label = nil;
     title02Label = nil;
     title02Label = nil;
