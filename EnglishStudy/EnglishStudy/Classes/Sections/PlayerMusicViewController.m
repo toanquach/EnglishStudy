@@ -11,6 +11,7 @@
 #import "Category.h"
 #import "Singer.h"
 #import <Pods/Category/NSData+Base64.h>
+#import <Pods/Category/UILabel+Custom.h>
 #import "PlayerMusicViewCell.h"
 
 @interface PlayerMusicViewController ()
@@ -49,6 +50,8 @@
 - (void)stopTimer;
 - (void)stopPlaying;
 - (void)setupNavigationBar;
+
+- (NSString*)formattedStringForDuration:(NSTimeInterval)duration;
 
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)downloadButtonClicked:(id)sender;
@@ -175,6 +178,9 @@
     singerLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     categoryLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     
+    remainingTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
+    elapsedTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
+    
     int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
     NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
     NSData *enSongEncodeData = [NSData dataFromBase64String:enSongEncodeStr];
@@ -246,19 +252,67 @@
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-    titleLabel.textAlignment = UITextAlignmentCenter;
     titleLabel.textColor =[UIColor whiteColor];
+    [UILabel setWidthForLabel:titleLabel widthLimit:0 isCenter:NO];
     
-    self.navigationItem.titleView = titleLabel;
+    CGRect frame = titleLabel.frame;
+    frame.origin.y = 22 - frame.size.height/2;
+    titleLabel.frame = frame;
+    if (frame.size.width > 160)
+    {
+        titleLabel.textAlignment = UITextAlignmentLeft;
+    }
+    else
+    {
+        titleLabel.textAlignment = UITextAlignmentCenter;
+    }
+    
+    UIScrollView *titleBgView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 44)];
+    titleBgView.backgroundColor = [UIColor clearColor];
+    [titleBgView addSubview:titleLabel];
+    
+    titleBgView.showsHorizontalScrollIndicator = NO;
+    titleBgView.showsVerticalScrollIndicator = NO;
+    
+    titleBgView.contentSize = CGSizeMake(titleLabel.frame.size.width, 44);
+    
+    self.navigationItem.titleView = titleBgView;
     
     // add right button
     
     UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(90 - rightMenuImage.size.width/2, 22 -  rightMenuImage.size.height/4, rightMenuImage.size.width/2 + 2, rightMenuImage.size.height/2)];
     [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightButton];
+    //
+    //          Add menu right button
+    //
+    UIView  *rightBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 44)];
+    [rightBgView setBackgroundColor:[UIColor clearColor]];
+    [rightBgView addSubview:rightButton];
+    //
+    //          Add Coin Icon
+    //
+    UIImageView *coinImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_coin.png"]];
+    coinImageView.frame = CGRectMake(0, 15, 15, 15);
+    [rightBgView addSubview:coinImageView];
+    //
+    //          Add coin button
+    //
+    UIButton *coinButton = [[UIButton alloc] initWithFrame:CGRectMake(16, 0,60,44)];
+    [coinButton setTitle:@"5000" forState:UIControlStateNormal];
+    [coinButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [rightBgView addSubview:coinButton];
+    //
+    //      Add line image
+    //
+    UIImageView *lineImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"player_nav_line.png"]];
+    lineImageView.frame = CGRectMake(90 - rightMenuImage.size.width/2 - 8, 11, 2, 18);
+    
+    [rightBgView addSubview:lineImageView];
+    
+    UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightBgView];
     self.navigationItem.rightBarButtonItem = rightButtonBar;
     
     rightMenuImage = nil;
@@ -381,12 +435,18 @@
 - (void)updateSliderLabels
 {
     NSTimeInterval currentTime = currentTimeSlider.value;
-    NSString* currentTimeString = [NSString stringWithFormat:@"%.02f", currentTime];
+    NSString* currentTimeString = [self formattedStringForDuration:currentTime];//[NSString stringWithFormat:@"%.02f", currentTime];
 
     elapsedTimeLabel.text =  currentTimeString;
-    remainingTimeLabel.text = [NSString stringWithFormat:@"%.02f", self.player.duration - currentTime];
+    remainingTimeLabel.text = [self formattedStringForDuration:self.player.duration - currentTime];
 }
 
+- (NSString*)formattedStringForDuration:(NSTimeInterval)duration
+{
+    NSInteger minutes = floor(duration/60);
+    NSInteger seconds = round(duration - minutes * 60);
+    return [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+}
 
 #pragma mark - Timer
 

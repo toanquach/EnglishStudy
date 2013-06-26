@@ -239,7 +239,6 @@
             loadingBgView.hidden = NO;
             [[DatabaseManager databaseQueue] cancelAllOperations];
             NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(searchSongWithKeyword:) object:keyword];
-            [[DatabaseManager databaseQueue] cancelAllOperations];
             [[DatabaseManager databaseQueue] addOperation:operation];
             operation = nil;
         }

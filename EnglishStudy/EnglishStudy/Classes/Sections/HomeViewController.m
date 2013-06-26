@@ -160,7 +160,7 @@
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
     searchTableView.tableFooterView = footerView;
     
-    delaySearchUntilQueryUnchangedForTimeOffset = 0.0 * NSEC_PER_SEC;
+    delaySearchUntilQueryUnchangedForTimeOffset = 0.4 * NSEC_PER_SEC;
     
     noResultLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     noResultLabel.textColor = [UIColor whiteColor];
@@ -341,16 +341,17 @@
     
     searchBgView.hidden = NO;
     searchTableView.hidden = YES;
+    noResultLabel.hidden = YES;
     [loadingIndicator startAnimating];
     //
     // waiting when user pressing
     //
-//    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delaySearchUntilQueryUnchangedForTimeOffset);
-//    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
-//   {
-//       [self searchSongWithText:resultStr];
-//   });
-    [self searchSongWithText:resultStr];
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delaySearchUntilQueryUnchangedForTimeOffset);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void)
+   {
+       [self searchSongWithText:resultStr];
+   });
+    //[self searchSongWithText:resultStr];
     return YES;
 }
 
@@ -386,7 +387,9 @@
         searchBgView.hidden = NO;
         [[DatabaseManager databaseQueue] cancelAllOperations];
         NSInvocationOperation * operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(searchSongWithKeyword:) object:keyword];
-        //[[DatabaseManager databaseQueue] cancelAllOperations];
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        //[operation start];
+        
         [[DatabaseManager databaseQueue] addOperation:operation];
         operation = nil;
     }

@@ -20,6 +20,7 @@
 		6A7DAE991760E319005F4267 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE981760E319005F4267 /* CoreGraphics.framework */; };
 		6A7DAE9F1760E8F7005F4267 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE9E1760E8F7005F4267 /* QuartzCore.framework */; };
 		6A7DAEA31760E948005F4267 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAEA21760E948005F4267 /* Security.framework */; };
+		6A832D52177A754C00692F5D /* UILabel+Custom.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A832D51177A754C00692F5D /* UILabel+Custom.m */; };
 		6AC8CA4017781B1400C28191 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC8CA3F17781B1400C28191 /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,8 @@
 		6A7DAE981760E319005F4267 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6A7DAE9E1760E8F7005F4267 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6A7DAEA21760E948005F4267 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6A832D50177A754C00692F5D /* UILabel+Custom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+Custom.h"; sourceTree = "<group>"; };
+		6A832D51177A754C00692F5D /* UILabel+Custom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+Custom.m"; sourceTree = "<group>"; };
 		6AC8CA3E17781B1400C28191 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		6AC8CA3F17781B1400C28191 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +133,8 @@
 		6A7DAE7B1760E253005F4267 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				6A832D50177A754C00692F5D /* UILabel+Custom.h */,
+				6A832D51177A754C00692F5D /* UILabel+Custom.m */,
 				6AC8CA3E17781B1400C28191 /* NSData+Base64.h */,
 				6AC8CA3F17781B1400C28191 /* NSData+Base64.m */,
 				6A7DAE951760E2A9005F4267 /* NSString+MD5.h */,
@@ -214,6 +219,7 @@
 				6A7DAE921760E253005F4267 /* Utils.m in Sources */,
 				6A7DAE971760E2A9005F4267 /* NSString+MD5.m in Sources */,
 				6AC8CA4017781B1400C28191 /* NSData+Base64.m in Sources */,
+				6A832D52177A754C00692F5D /* UILabel+Custom.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
