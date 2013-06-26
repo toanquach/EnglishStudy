@@ -10,6 +10,8 @@
 #import "Song.h"
 
 #import <AVFoundation/AVFoundation.h>
+#import "ASIHTTPRequest.h"
+#import "YLProgressBar.h"
 
 @interface PlayerMusicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate>
 

@@ -274,13 +274,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *cellIdentifier = @"CellIdentifier";
+    static NSString *cellIdentifier = @"CellIdentifier2";
     
     SongViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil)
     {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SongViewCell" owner:self options:nil] objectAtIndex:0];
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
@@ -294,8 +295,15 @@
         song = [listTableItems objectAtIndex:indexPath.row];
     }
     
-    [cell setupViewWithSong:song];
 
+    
+    int xu = song.num_view/1000 + 10;
+    if (xu > 100)
+    {
+        xu = 100;
+    }
+    [cell setupViewWithSong:song];
+    [cell setPurchaseButtonValue:xu];
     return cell;
 }
 

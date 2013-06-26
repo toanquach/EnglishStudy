@@ -57,13 +57,20 @@
     numViewLabel.text = [NSString stringWithFormat:@"Số lượt xem: %d", song.num_view];
     
     purchaseButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
-    purchaseButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+    purchaseButton.titleEdgeInsets = UIEdgeInsetsMake(0, 30, 0, 0);
     [purchaseButton setTitleColor:[UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0] forState:UIControlStateNormal];
-    [purchaseButton setTitle:@"5000" forState:UIControlStateNormal];
+//    
     //singer = nil;
+}
+
+- (void)setPurchaseButtonValue:(int)price
+{
+    [purchaseButton setBackgroundImage:[UIImage imageNamed:@"btn_Muabaihat.png"] forState:UIControlStateNormal];
+    [purchaseButton setTitle:[NSString stringWithFormat:@"%d",price] forState:UIControlStateNormal];
 }
 
 - (IBAction)purchaseButtonClicked:(id)sender
 {
 }
+
 @end

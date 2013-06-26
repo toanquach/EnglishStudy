@@ -38,6 +38,13 @@
     
     int displayType;
     int displayStyle;
+    
+    UIScrollView *titleBgView;
+    
+    BOOL canPlay;
+    __unsafe_unretained IBOutlet YLProgressBar *progressDownloadBar;
+    NSString *mediaPath;
+    long long currentLength;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -50,8 +57,11 @@
 - (void)stopTimer;
 - (void)stopPlaying;
 - (void)setupNavigationBar;
-
+- (NSInteger)getHeightForCell:(NSDictionary *)dict;
 - (NSString*)formattedStringForDuration:(NSTimeInterval)duration;
+- (void)animateScrollTitleRight;
+- (void)animateScrollTitleLeft;
+
 
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)downloadButtonClicked:(id)sender;
@@ -59,11 +69,13 @@
 - (IBAction)currentTimeSliderTouchUpInside:(id)sender;
 - (IBAction)expandPauseButtonClicked:(id)sender;
 
+
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player
                        successfully:(BOOL)flag;
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player
                                  error:(NSError *)error;
 
+- (void)downloadMediaWithPath:(NSString *)filePath;
 
 @end
 
@@ -95,6 +107,7 @@
 
 - (void)viewDidUnload
 {
+    titleBgView = nil;
     myTableView = nil;
     backgroundImageView = nil;
     musicPlayerView = nil;
@@ -110,6 +123,7 @@
     pauseButton = nil;
     singerLabel = nil;
     categoryLabel = nil;
+    progressDownloadBar = nil;
     [super viewDidUnload];
 }
 
@@ -154,10 +168,6 @@
     
     myTableView.delegate = self;
     myTableView.dataSource = self;
-    
-    
-    //----------    player --------------------
-    [self setupMusicPlay];
     
     //
     //      load singer
@@ -224,6 +234,63 @@
     [myTableView reloadData];
     
     [self setupNavigationBar];
+    
+    //
+    //      check media file exist
+    //
+    pauseButton.hidden = YES;
+    expandPauseButton.hidden = YES;
+    
+    mediaPath = [NSString stringWithFormat:@"%@/%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:mediaPath])
+    {
+        [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
+        download2Button.userInteractionEnabled = NO;
+        downloadButton.userInteractionEnabled = NO;
+        canPlay = YES;
+        //----------    player --------------------
+        [self setupMusicPlay];
+    }
+    else
+    {
+        [download2Button setImage:[UIImage imageNamed:@"icon_download.png"] forState:UIControlStateNormal];
+        canPlay = NO;
+    }
+    progressDownloadBar.progressTintColor = [UIColor greenColor];
+    progressDownloadBar.progress = 0.0;
+}
+
+- (void)animateScrollTitleRight
+{
+    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width;
+    if (distance <= 0)
+    {
+        return;
+    }
+    double time = distance/30;
+    [UIView animateWithDuration:time animations:^{
+        titleBgView.contentOffset = CGPointMake(distance, 0);
+    }completion:^(BOOL finished)
+    {
+        [self performSelector:@selector(animateScrollTitleLeft) withObject:nil afterDelay:1.0];
+    }];
+}
+
+- (void)animateScrollTitleLeft
+{
+    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width;
+    if (distance <= 0)
+    {
+        return;
+    }
+    double time = distance/30;
+    [UIView animateWithDuration:time animations:^{
+        titleBgView.contentOffset = CGPointMake(0, 0);
+    }completion:^(BOOL finished)
+    {
+        [self performSelector:@selector(animateScrollTitleRight) withObject:nil afterDelay:1.0];
+    }];
 }
 
 - (void)setupNavigationBar
@@ -267,12 +334,13 @@
         titleLabel.textAlignment = UITextAlignmentCenter;
     }
     
-    UIScrollView *titleBgView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 44)];
+    titleBgView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 160, 44)];
     titleBgView.backgroundColor = [UIColor clearColor];
     [titleBgView addSubview:titleLabel];
     
     titleBgView.showsHorizontalScrollIndicator = NO;
     titleBgView.showsVerticalScrollIndicator = NO;
+    titleBgView.scrollEnabled = NO;
     
     titleBgView.contentSize = CGSizeMake(titleLabel.frame.size.width, 44);
     
@@ -281,7 +349,7 @@
     // add right button
     
     UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(90 - rightMenuImage.size.width/2, 22 -  rightMenuImage.size.height/4, rightMenuImage.size.width/2 + 2, rightMenuImage.size.height/2)];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(90 - rightMenuImage.size.width/2, 22 -  rightMenuImage.size.height/4, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
     [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -318,6 +386,11 @@
     rightMenuImage = nil;
     rightButton = nil;
     rightButtonBar = nil;
+    
+    //
+    //      update scroll view
+    //
+    [self animateScrollTitleRight];
 }
 
 - (void)setupMusicPlay
@@ -337,9 +410,6 @@
     currentTimeSlider.minimumValue = 0.0f;
     currentTimeSlider.maximumValue = self.player.duration;
     [self updateDisplay];
-    
-    pauseButton.hidden = YES;
-    expandPauseButton.hidden = YES;
 }
 
 - (void)stopPlaying
@@ -349,6 +419,19 @@
     self.player.currentTime = 0;
     [self.player prepareToPlay];
     [self updateDisplay];
+}
+
+- (void)downloadMediaWithPath:(NSString *)filePath
+{
+    NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+    ASIHTTPRequest *request;
+	request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+	[request setDownloadDestinationPath:filePath];
+	[request setDownloadProgressDelegate:self];
+    [request setShowAccurateProgress:YES];
+    request.delegate = self;
+    [request startAsynchronous];
 }
 
 #pragma mark - Button Clicked
@@ -380,8 +463,15 @@
 
 - (IBAction)playButtonClicked:(id)sender
 {
+    if (canPlay == NO)
+    {
+        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng tải file trước"];
+        return;
+    }
+    
     [self.player play];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
     
     playButton.hidden = YES;
     expandPlayButton.hidden = YES;
@@ -392,6 +482,7 @@
 
 - (IBAction)downloadButtonClicked:(id)sender
 {
+    [self downloadMediaWithPath:mediaPath];
 }
 
 - (IBAction)currentTimeSliderValueChanged:(id)sender
@@ -478,11 +569,38 @@
     [self updateDisplay];
 }
 
+- (NSInteger )getHeightForCell:(NSDictionary *)dict
+{
+    UILabel *enTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 305, 21)];
+    UILabel *vnTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 305, 21)];
+    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    enTextLabel.text = [dict objectForKey:@"en"];
+    vnTextLabel.text = [dict objectForKey:@"vn"];
+    
+    enTextLabel.numberOfLines = 0;
+    [enTextLabel sizeToFit];
+    
+    CGRect frame = vnTextLabel.frame;
+    frame.origin.y = enTextLabel.frame.origin.y + enTextLabel.frame.size.height + 5;
+    vnTextLabel.frame = frame;
+    
+    vnTextLabel.numberOfLines = 0;
+    [vnTextLabel sizeToFit];
+    
+    int Height = vnTextLabel.frame.origin.y + vnTextLabel.frame.size.height + 10;
+    enTextLabel = nil;
+    vnTextLabel = nil;
+    
+    return Height;
+    
+}
 #pragma mark - UITableViewCell
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 44;
+    NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
+    return [self getHeightForCell:dict];
 }
 
 
@@ -524,6 +642,54 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
  
+}
+
+// Download file delegate
+
+
+- (void)request:(ASIHTTPRequest *)request incrementDownloadSizeBy:(long long)newLength
+{
+    //    NSLog(@"%@",[NSString stringWithFormat:@"incrementDownloadSizeBy %quKb", newLength/1024]);
+    //
+    NSLog(@"file size: %llu",request.partialDownloadSize);
+    
+    NSLog(@"file size: %llu",request.contentLength);
+    
+    NSLog(@"NewLength:%lld",newLength);
+    // NSLog(@"X-Powered-By %@",[[request responseHeaders] objectForKey:@"X-Powered-By"]);
+    // NSLog([[request responseHeaders] objectForKey:@"Content-Type"]);
+    NSLog(@"Content-Length %@",[[request responseHeaders] objectForKey:@"Content-Length"]);
+    NSLog(@"Content-Range %@",[[request responseHeaders] objectForKey:@"Content-Range"]);
+    //NSLog(@"Range %@",[[request responseHeaders] objectForKey:@"Range"]);
+    NSLog(@"Response code %d",[request responseStatusCode]);
+}
+
+- (void)request:(ASIHTTPRequest *)request didReceiveBytes:(long long)bytes
+{
+    //  NSLog(@"%@",[NSString stringWithFormat:@"didReceiveBytes %quKb", bytes/1024]);
+    currentLength += bytes;
+    //[lblTotal setText:[NSString    stringWithFormat:@"%quKb/%@",currentLength/1024,self.TotalFileDimension]];
+    
+    NSString *aaa = [NSString    stringWithFormat:@"%quKb",currentLength/1024];
+    
+    NSLog(@">>>> %@",aaa);
+}
+
+- (void)setProgress:(float)newProgress
+{
+    NSLog(@"%f",newProgress);
+    progressDownloadBar.progress = newProgress;
+}
+
+
+-(void) requestFinished:(ASIHTTPRequest *)request
+{
+    // code ...
+}
+
+-(void) requestFailed:(ASIHTTPRequest *)request
+{
+    // code ...
 }
 
 @end

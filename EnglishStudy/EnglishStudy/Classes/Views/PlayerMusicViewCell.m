@@ -32,6 +32,16 @@
     vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
     enTextLabel.text = [dict objectForKey:@"en"];
     vnTextLabel.text = [dict objectForKey:@"vn"];
+    
+    enTextLabel.numberOfLines = 0;
+    [enTextLabel sizeToFit];
+    
+    CGRect frame = vnTextLabel.frame;
+    frame.origin.y = enTextLabel.frame.origin.y + enTextLabel.frame.size.height + 5;
+    vnTextLabel.frame = frame;
+    
+    vnTextLabel.numberOfLines = 0;
+    [vnTextLabel sizeToFit];
 }
 
 - (void)setDetailTextColor:(UIColor *)color

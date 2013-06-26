@@ -25,4 +25,6 @@
 
 - (IBAction)purchaseButtonClicked:(id)sender;
 
+- (void)setPurchaseButtonValue:(int)price;
+
 @end

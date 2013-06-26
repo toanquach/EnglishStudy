@@ -57,4 +57,7 @@
 #define kSetting_CoVua                      1
 #define kSetting_CoLon                      0
 
+
+#define kServerMedia                    @"http://download.tflat.vn/loidich/mp3/"
+
 #endif

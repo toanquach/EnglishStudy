@@ -45,6 +45,14 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDir;
+    NSString *mediaFolder = [NSString stringWithFormat:@"%@/Media",LIBRARY_CATCHES_DIRECTORY];
+    [fileManager fileExistsAtPath:mediaFolder isDirectory:&isDir];
+    if (!isDir)
+    {
+        [fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
+    }
     // ------------------------------------------
     //      Check network available
     //
