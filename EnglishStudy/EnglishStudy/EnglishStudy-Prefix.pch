@@ -13,6 +13,7 @@
     #import <Foundation/Foundation.h>
     #import "Define.h"
     #import "DatabaseManager.h"
+    #import "UserDataManager.h"
     //
     //      UIAppdelegate for Global Use
     //

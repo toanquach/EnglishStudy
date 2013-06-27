@@ -182,6 +182,8 @@
 
     self.navDropDownMenu.hidden = YES;
     self.isMenuShow = 0;
+    
+    [[UserDataManager sharedManager] takeOff];
 }
 
 - (void)showAlertView:(NSString *)title andMessage:(NSString *)message

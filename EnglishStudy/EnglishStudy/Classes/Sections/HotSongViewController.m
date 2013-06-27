@@ -88,6 +88,7 @@
 
 - (void)setupView
 {
+    
     searchControlView = [[[NSBundle mainBundle] loadNibNamed:@"SearchControlView" owner:self options:nil] objectAtIndex:0];
     searchControlView.frame = CGRectMake(0, 0, 320, 39);
     [searchControlView setupView];
@@ -303,7 +304,14 @@
         xu = 100;
     }
     [cell setupViewWithSong:song];
-    [cell setPurchaseButtonValue:xu];
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:YES];
+    }
+    else
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:NO];
+    }
     return cell;
 }
 

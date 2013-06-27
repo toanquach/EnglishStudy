@@ -60,4 +60,8 @@
 
 #define kServerMedia                    @"http://download.tflat.vn/loidich/mp3/"
 
+#define KArray_Purcharse                    @"Purcharse_Array"
+#define kArray_Favorite                     @"Favorite_Array"
+#define kUser_Coin                          @"CoinOfUser"
+
 #endif

@@ -19,12 +19,15 @@
     
     __unsafe_unretained IBOutlet UILabel *desLabel;
     __unsafe_unretained IBOutlet UIButton *favoriteButton;
+    
+    int songId;
+    int songPrice;
 }
 
 - (void)setupViewWithSong:(Song *)song;
 
 - (IBAction)purchaseButtonClicked:(id)sender;
 
-- (void)setPurchaseButtonValue:(int)price;
+- (void)setPurchaseButtonValue:(int)price andPurcharse:(BOOL)isPurcharse;
 
 @end

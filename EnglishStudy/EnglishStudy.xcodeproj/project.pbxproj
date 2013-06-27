@@ -107,6 +107,7 @@
 		6A82F07C1771B8F8005A4414 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F07A1771B8F8005A4414 /* icon.png */; };
 		6A82F07D1771B8F8005A4414 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A82F07B1771B8F8005A4414 /* icon@2x.png */; };
 		6A832D4F177A71BB00692F5D /* player_nav_line.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A832D4E177A71BB00692F5D /* player_nav_line.png */; };
+		6A836B73177BB00D00F0C2E4 /* UserDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A836B72177BB00D00F0C2E4 /* UserDataManager.m */; };
 		6A8753C91774133D001382AF /* CategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8753C71774133D001382AF /* CategoryViewController.m */; };
 		6A8753CA1774133D001382AF /* CategoryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A8753C81774133D001382AF /* CategoryViewController.xib */; };
 		6A8753CE17741455001382AF /* SearchControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8753CD17741455001382AF /* SearchControlView.m */; };
@@ -342,6 +343,8 @@
 		6A82F07A1771B8F8005A4414 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		6A82F07B1771B8F8005A4414 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		6A832D4E177A71BB00692F5D /* player_nav_line.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = player_nav_line.png; sourceTree = "<group>"; };
+		6A836B71177BB00D00F0C2E4 /* UserDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDataManager.h; sourceTree = "<group>"; };
+		6A836B72177BB00D00F0C2E4 /* UserDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDataManager.m; sourceTree = "<group>"; };
 		6A8753C61774133D001382AF /* CategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryViewController.h; sourceTree = "<group>"; };
 		6A8753C71774133D001382AF /* CategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryViewController.m; sourceTree = "<group>"; };
 		6A8753C81774133D001382AF /* CategoryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryViewController.xib; sourceTree = "<group>"; };
@@ -579,6 +582,8 @@
 				6A3F083A177552430009B1C1 /* Song.m */,
 				6AC8CA4B1778497100C28191 /* MusicDataManager.h */,
 				6AC8CA4C1778497100C28191 /* MusicDataManager.m */,
+				6A836B71177BB00D00F0C2E4 /* UserDataManager.h */,
+				6A836B72177BB00D00F0C2E4 /* UserDataManager.m */,
 			);
 			path = Databases;
 			sourceTree = "<group>";
@@ -1356,6 +1361,7 @@
 				6AB6C3DB177B0C8600ACB1A3 /* ASIS3Request.m in Sources */,
 				6AB6C3DC177B0C8600ACB1A3 /* ASIS3ServiceRequest.m in Sources */,
 				6AB6C3DF177B0D0100ACB1A3 /* YLProgressBar.m in Sources */,
+				6A836B73177BB00D00F0C2E4 /* UserDataManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
