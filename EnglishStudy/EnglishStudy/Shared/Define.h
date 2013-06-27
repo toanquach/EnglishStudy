@@ -59,9 +59,19 @@
 
 
 #define kServerMedia                    @"http://download.tflat.vn/loidich/mp3/"
+#define kServerCardChecking             @"http://loidich.tflat.vn/service/app/check_card"
 
 #define KArray_Purcharse                    @"Purcharse_Array"
 #define kArray_Favorite                     @"Favorite_Array"
 #define kUser_Coin                          @"CoinOfUser"
 
+// ***************************************************************
+//
+//          kMessage
+//
+#define kAlert_Message_Purcharse_Title      @"Bài này giá %d xu"
+
+#define kAlert_Message_Purcharse_Message    @"Bạn có muốn mua không?"
+
+#define kAlert_Message_Enough_Coin          @"Bài này giá %d xu\nTài khoản của bạn còn %d xu do đó bạn chưa đủ xu để mua. Để nạp xu bạn có thể nạp thẻ cào mobi, vina, viettel hoặc share facebook bài hát này"
 #endif

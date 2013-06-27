@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "NavDropDownMenuView.h"
+#import "FBConnect.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UINavigationBarDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UINavigationBarDelegate, FBSessionDelegate, FBDialogDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
@@ -30,5 +31,7 @@
 - (void)showFooterView;
 
 - (void)hiddenFooterView;
+
+- (void)checkFBSession;
 
 @end

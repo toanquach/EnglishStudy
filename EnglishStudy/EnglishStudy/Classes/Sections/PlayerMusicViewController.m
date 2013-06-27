@@ -45,6 +45,31 @@
     __unsafe_unretained IBOutlet YLProgressBar *progressDownloadBar;
     NSString *mediaPath;
     long long currentLength;
+    
+    //
+    //          Favorite button clicked
+    //
+    __unsafe_unretained IBOutlet UIButton *favoriteBgButton;
+    __unsafe_unretained IBOutlet UIButton *favoriteButton;
+    //
+    //          Right menu view
+    //
+    __unsafe_unretained IBOutlet UIView *rightMenuView;
+    
+    __unsafe_unretained IBOutlet UIImageView *enIconImageView;
+    __unsafe_unretained IBOutlet UIButton *enIconButton;
+    __unsafe_unretained IBOutlet UIImageView *listIconImageView;
+    __unsafe_unretained IBOutlet UIButton *listIconButton;
+    __unsafe_unretained IBOutlet UIImageView *switchIconImageView;
+    __unsafe_unretained IBOutlet UIButton *switchIconButton;
+    
+    ASIHTTPRequest *mediaRequest;
+    
+    // -----
+    BOOL isDownloading;
+    __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
+    int lastIndex;
+    __unsafe_unretained IBOutlet UIImageView *downloadBarImageView;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -61,13 +86,17 @@
 - (NSString*)formattedStringForDuration:(NSTimeInterval)duration;
 - (void)animateScrollTitleRight;
 - (void)animateScrollTitleLeft;
-
+- (NSString *)byteToMegaByte:(double)size;
 
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)downloadButtonClicked:(id)sender;
 - (IBAction)currentTimeSliderValueChanged:(id)sender;
 - (IBAction)currentTimeSliderTouchUpInside:(id)sender;
 - (IBAction)expandPauseButtonClicked:(id)sender;
+- (IBAction)favoriteButtonClicked:(id)sender;
+- (IBAction)enIconButtonClicked:(id)sender;
+- (IBAction)listIconButtonClicked:(id)sender;
+- (IBAction)switchIconButtonClicked:(id)sender;
 
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player
@@ -124,6 +153,17 @@
     singerLabel = nil;
     categoryLabel = nil;
     progressDownloadBar = nil;
+    favoriteBgButton = nil;
+    favoriteButton = nil;
+    rightMenuView = nil;
+    enIconImageView = nil;
+    enIconButton = nil;
+    listIconImageView = nil;
+    listIconButton = nil;
+    switchIconImageView = nil;
+    switchIconButton = nil;
+    mediaSizeLabel = nil;
+    downloadBarImageView = nil;
     [super viewDidUnload];
 }
 
@@ -150,12 +190,20 @@
         backgroundImageView.hidden = YES;
         singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        
+        enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
+        listIconImageView.image = [UIImage imageNamed:@"icon_select_unselect.png"];
+        switchIconImageView.image = [UIImage imageNamed:@"icon_status.png"];
     }
     else
     {
         backgroundImageView.hidden = NO;
         singerLabel.textColor = [UIColor whiteColor];
         categoryLabel.textColor = [UIColor whiteColor];
+        
+        enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
+        listIconImageView.image = [UIImage imageNamed:@"btn_unselect.png"];
+        switchIconImageView.image = [UIImage imageNamed:@"btn_mode.png"];
     }
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -225,9 +273,20 @@
         {
             enSplitStr = [arr objectAtIndex:0];
         }
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:enSplitStr, @"en",
+        NSNumber *number;
+        NSArray *arrSeekTime = [seekTime componentsSeparatedByString:@":"];
+        if  ([arrSeekTime count] > 1)
+        {
+            float timePlay = [[arrSeekTime objectAtIndex:0] floatValue]*60 + [[arrSeekTime objectAtIndex:1] floatValue];
+            seekTime = [NSString stringWithFormat:@"%f",timePlay];
+            
+            number = [NSNumber numberWithFloat:timePlay];
+        }
+        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                              enSplitStr, @"en",
                               vnStr, @"vn",
-                              seekTime, @"seekTime",
+                              number, @"seekTime",
+                              [NSString stringWithFormat:@"%d",i],@"id",
                                nil];
         [listItems addObject:dict];
     }
@@ -241,10 +300,17 @@
     pauseButton.hidden = YES;
     expandPauseButton.hidden = YES;
     
+    [currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
+    UIImage *sliderLeftTrackImage = [[UIImage imageNamed: @"playing_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
+    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"empty_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
+    [currentTimeSlider setMinimumTrackImage: sliderLeftTrackImage forState: UIControlStateNormal];
+    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
+
     mediaPath = [NSString stringWithFormat:@"%@/%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:mediaPath])
     {
+        progressDownloadBar.hidden = YES;
         [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
         download2Button.userInteractionEnabled = NO;
         downloadButton.userInteractionEnabled = NO;
@@ -263,7 +329,7 @@
 
 - (void)animateScrollTitleRight
 {
-    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width;
+    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width + 2;
     if (distance <= 0)
     {
         return;
@@ -368,15 +434,16 @@
     //
     //          Add coin button
     //
+    NSString *userCoin = [NSString stringWithFormat:@"%d",[[UserDataManager sharedManager] getCoinUser]];
     UIButton *coinButton = [[UIButton alloc] initWithFrame:CGRectMake(16, 0,60,44)];
-    [coinButton setTitle:@"5000" forState:UIControlStateNormal];
+    [coinButton setTitle:userCoin forState:UIControlStateNormal];
     [coinButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     [rightBgView addSubview:coinButton];
     //
     //      Add line image
     //
     UIImageView *lineImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"player_nav_line.png"]];
-    lineImageView.frame = CGRectMake(90 - rightMenuImage.size.width/2 - 8, 11, 2, 18);
+    lineImageView.frame = CGRectMake(90 - rightMenuImage.size.width/2 - 8, 13, 2, 18);
     
     [rightBgView addSubview:lineImageView];
     
@@ -396,7 +463,8 @@
 - (void)setupMusicPlay
 {
     // Do any additional setup after loading the view, typically from a nib.
-    NSURL* url = [[NSBundle mainBundle] URLForResource:@"Burn It Down - Linkin Park" withExtension:@"mp3"];
+//    NSURL* url = [NSURL URLWithString:mediaPath];
+    NSURL *url = [[NSURL alloc] initFileURLWithPath:mediaPath];
     NSAssert(url, @"URL is valid.");
     NSError* error = nil;
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
@@ -408,6 +476,9 @@
     [self.player prepareToPlay];
     
     currentTimeSlider.minimumValue = 0.0f;
+    
+    NSLog(@"time >>> %f",self.player.duration);
+    
     currentTimeSlider.maximumValue = self.player.duration;
     [self updateDisplay];
 }
@@ -423,15 +494,33 @@
 
 - (void)downloadMediaWithPath:(NSString *)filePath
 {
+    CGRect frame = downloadBarImageView.frame;
+    frame.origin.x = currentTimeSlider.frame.origin.x - frame.size.width;
+    downloadBarImageView.frame = frame;
+    isDownloading = YES;
     NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+   // NSString *url = @"http://download.sutrix.com/pocari/a.mp4";
+    NSLog(@"File URL: %@", url);
+	mediaRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+	[mediaRequest setDownloadDestinationPath:filePath];
+	[mediaRequest setDownloadProgressDelegate:self];
+    [mediaRequest setShowAccurateProgress:YES];
+    mediaRequest.delegate = self;
+    [mediaRequest startAsynchronous];
+}
+
+- (NSString *)byteToMegaByte:(double)value
+{
+    double convertedValue = value;
+    int multiplyFactor = 0;
     
-    ASIHTTPRequest *request;
-	request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
-	[request setDownloadDestinationPath:filePath];
-	[request setDownloadProgressDelegate:self];
-    [request setShowAccurateProgress:YES];
-    request.delegate = self;
-    [request startAsynchronous];
+    NSArray *tokens = [NSArray arrayWithObjects:@"B",@"KB",@"MB",@"GB",@"TB",nil];
+    
+    while (convertedValue > 1024) {
+        convertedValue /= 1024;
+        multiplyFactor++;
+    }
+    return [NSString stringWithFormat:@"%4.2f %@",convertedValue, [tokens objectAtIndex:multiplyFactor]];
 }
 
 #pragma mark - Button Clicked
@@ -513,6 +602,26 @@
     expandPauseButton.hidden = YES;
 }
 
+- (IBAction)favoriteButtonClicked:(id)sender
+{
+    
+}
+
+- (IBAction)enIconButtonClicked:(id)sender
+{
+    
+}
+
+- (IBAction)listIconButtonClicked:(id)sender
+{
+    
+}
+
+- (IBAction)switchIconButtonClicked:(id)sender
+{
+    
+}
+
 #pragma mark - Display Update
 
 - (void)updateDisplay
@@ -521,6 +630,33 @@
     
     currentTimeSlider.value = currentTime;
     [self updateSliderLabels];
+    
+    //NSLog(@"%f",currentTime);
+    NSNumber *timePlay = [NSNumber numberWithFloat:currentTime];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"seekTime <= %@",timePlay];
+    
+    NSArray *arrFilter = [listItems filteredArrayUsingPredicate:predicate];
+    //NSLog(@"Filter found >>>>> %@",arrFilter);
+    for (int i=lastIndex; i < [arrFilter count]; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
+        [cell setDetailTextColor:kColor_Purple];
+    }
+    
+    if ([arrFilter count] > lastIndex)
+    {
+        lastIndex = [arrFilter count];
+        int index = [arrFilter count];
+        
+        if (index > 0)
+        {
+            index = [arrFilter count]-1;
+        }
+        
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    }
 }
 
 - (void)updateSliderLabels
@@ -644,52 +780,55 @@
  
 }
 
-// Download file delegate
 
+#pragma mark - ASIHttprequest
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    progressDownloadBar.hidden = YES;
+    
+    mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
+    isDownloading = NO;
+    [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
+    download2Button.userInteractionEnabled = NO;
+    downloadButton.userInteractionEnabled = NO;
+    canPlay = YES;
+    //----------    player --------------------
+    [self setupMusicPlay];
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    isDownloading = NO;
+    [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
+}
+
+// Download file delegate
 
 - (void)request:(ASIHTTPRequest *)request incrementDownloadSizeBy:(long long)newLength
 {
-    //    NSLog(@"%@",[NSString stringWithFormat:@"incrementDownloadSizeBy %quKb", newLength/1024]);
-    //
-    NSLog(@"file size: %llu",request.partialDownloadSize);
-    
-    NSLog(@"file size: %llu",request.contentLength);
-    
-    NSLog(@"NewLength:%lld",newLength);
-    // NSLog(@"X-Powered-By %@",[[request responseHeaders] objectForKey:@"X-Powered-By"]);
-    // NSLog([[request responseHeaders] objectForKey:@"Content-Type"]);
-    NSLog(@"Content-Length %@",[[request responseHeaders] objectForKey:@"Content-Length"]);
-    NSLog(@"Content-Range %@",[[request responseHeaders] objectForKey:@"Content-Range"]);
-    //NSLog(@"Range %@",[[request responseHeaders] objectForKey:@"Range"]);
-    NSLog(@"Response code %d",[request responseStatusCode]);
+
 }
 
 - (void)request:(ASIHTTPRequest *)request didReceiveBytes:(long long)bytes
 {
-    //  NSLog(@"%@",[NSString stringWithFormat:@"didReceiveBytes %quKb", bytes/1024]);
     currentLength += bytes;
-    //[lblTotal setText:[NSString    stringWithFormat:@"%quKb/%@",currentLength/1024,self.TotalFileDimension]];
+    mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:currentLength],[self byteToMegaByte:request.contentLength]];
     
-    NSString *aaa = [NSString    stringWithFormat:@"%quKb",currentLength/1024];
+    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
+    float percent = (currentLength*100)/request.contentLength;
+    int width = currentTimeSlider.frame.size.width;
+    int posX = (width*percent)/100;
+    CGRect frame = downloadBarImageView.frame;
+    frame.origin.x +=posX;
+    downloadBarImageView.frame = frame;
     
-    NSLog(@">>>> %@",aaa);
+    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
 }
 
 - (void)setProgress:(float)newProgress
 {
-    NSLog(@"%f",newProgress);
     progressDownloadBar.progress = newProgress;
-}
-
-
--(void) requestFinished:(ASIHTTPRequest *)request
-{
-    // code ...
-}
-
--(void) requestFailed:(ASIHTTPRequest *)request
-{
-    // code ...
 }
 
 @end

@@ -204,6 +204,29 @@
 - (IBAction)napXuButtonClicked:(id)sender
 {
     // Call service
+    /*
+     
+     http://loidich.tflat.vn/service/app/check_card
+     {"product":"loidich_android","userid":"","cardseri":"etu","cardcode":"wty","provider":"VMS","method":"check_card","deviceid":"357265045254354"}
+     method: POST
+     
+     */
+    
+//    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+//                          @"loidich_iphone",@"product",
+//                          @"",@"userid",
+//                          soSeriesTextField.text,@"cardseri",
+//                          theCaoTextField.text,@"cardcode",
+//                          @"",@"VMS",
+//                          @"check_card",@"method",
+//                          @"1111",@"deviceid",
+//                          nil];
+    
+    //call check card
+    NSURL *url = [NSURL URLWithString:kServerCardChecking];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
+    
+    [request startAsynchronous];
 }
 
 - (IBAction)closeButtonClicked:(id)sender

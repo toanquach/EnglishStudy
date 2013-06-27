@@ -12,7 +12,7 @@
 
 #import "Song.h"
 
-@interface HotSongViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, SearchControlViewDelegate>
+@interface HotSongViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, SearchControlViewDelegate, SongViewCellDelegate>
 
 @property (nonatomic) int type;
 @property (nonatomic) int typeId;

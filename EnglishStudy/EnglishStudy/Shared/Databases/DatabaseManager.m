@@ -78,7 +78,7 @@
 	//NSString *documentsDir = [paths objectAtIndex:0];
     
     NSString *cacheDir = LIBRARY_CATCHES_DIRECTORY;
-    NSLog(@"%@",cacheDir);
+    //NSLog(@"%@",cacheDir);
 	return [cacheDir stringByAppendingPathComponent:kDabase_Name];
 }
 

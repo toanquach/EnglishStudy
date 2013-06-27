@@ -34,7 +34,7 @@ static sqlite3_stmt* delete_statement = nil;
     NSMutableArray *list = [NSMutableArray array];
     query = @"SELECT * FROM singer";
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
@@ -110,7 +110,7 @@ static sqlite3_stmt* delete_statement = nil;
     database = db;
     NSString * query = [NSString stringWithFormat:@"SELECT * FROM singer where id=%d",self.tblID];
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)

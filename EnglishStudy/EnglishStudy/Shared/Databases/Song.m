@@ -34,7 +34,7 @@ static sqlite3_stmt* delete_statement = nil;
     NSMutableArray *list = [NSMutableArray array];
     query = @"SELECT * FROM song_encode LIMIT 50";
     
-    NSLog(@"%@", query);
+   // NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
@@ -160,7 +160,7 @@ static sqlite3_stmt* delete_statement = nil;
     NSString * query = [NSString stringWithFormat:@"SELECT * FROM song_encode where category_id=%d",self.category_id];
     NSMutableArray *list = [NSMutableArray array];
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
@@ -286,7 +286,7 @@ static sqlite3_stmt* delete_statement = nil;
     NSString * query = [NSString stringWithFormat:@"SELECT * FROM song_encode where singer_id=%d",self.singer_id];
     NSMutableArray *list = [NSMutableArray array];
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
@@ -412,7 +412,7 @@ static sqlite3_stmt* delete_statement = nil;
     database = db;
     NSString * query = [NSString stringWithFormat:@"SELECT * FROM song_encode where id=%d",self.tblID];
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)
@@ -536,7 +536,7 @@ static sqlite3_stmt* delete_statement = nil;
     NSString * query = [NSString stringWithFormat:@"SELECT * FROM song_encode where name LIKE '%%%@%%'",keyword];
     NSMutableArray *list = [NSMutableArray array];
     
-    NSLog(@"%@", query);
+    //NSLog(@"%@", query);
     const char *sql = [query UTF8String];
     
     if(sqlite3_prepare_v2(database,sql,-1,&select_statement,NULL)!=SQLITE_OK)

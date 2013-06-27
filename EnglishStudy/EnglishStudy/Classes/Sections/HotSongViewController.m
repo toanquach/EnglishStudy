@@ -12,6 +12,7 @@
 #import "Song.h"
 
 #import "PlayerMusicViewController.h"
+#import "LoadMoneyViewController.h"
 
 @interface HotSongViewController ()
 {
@@ -23,6 +24,8 @@
     int isSearch;
     __unsafe_unretained IBOutlet UIView *loadingBgView;
     __unsafe_unretained IBOutlet UIActivityIndicatorView *loadingIndicator;
+    int songId;
+    int songPrice;
 }
 
 - (void)setupView;
@@ -284,6 +287,7 @@
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SongViewCell" owner:self options:nil] objectAtIndex:0];
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
     }
     
     Song *song = nil;
@@ -330,21 +334,102 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
-    
+    Song *song;
     if (isSearch == 0)
     {
-        viewController.playerSong = [listTableItems objectAtIndex:indexPath.row];
+        song = [listTableItems objectAtIndex:indexPath.row];
     }
     else
     {
-        viewController.playerSong = [listSearch objectAtIndex:indexPath.row];
+        song = [listSearch objectAtIndex:indexPath.row];
     }
-   
-    [self.navigationController pushViewController:viewController animated:YES];
-    viewController = nil;
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
+        
+        if (isSearch == 0)
+        {
+            viewController.playerSong = [listTableItems objectAtIndex:indexPath.row];
+        }
+        else
+        {
+            viewController.playerSong = [listSearch objectAtIndex:indexPath.row];
+        }
+        
+        [self.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    else
+    {
+        int xu = song.num_view/1000 + 10;
+        if (xu > 100)
+        {
+            xu = 100;
+        }
+        songId = song.tblID;
+        songPrice = xu;
+        NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,songPrice];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+        alertView.tag = 1;
+        [alertView show];
+        alertView= nil;
+    }
+}
+
+#pragma mark - song view cell delegate
+
+- (void)purcharseSongWithId:(int)tblId andPrice:(int)price
+{
+    songId = tblId;
+    songPrice = price;
+    NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,price];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+    alertView.tag = 1;
+    [alertView show];
+    alertView= nil;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1)
+    {
+        if (buttonIndex == 1)
+        {
+            int coinUser = [[UserDataManager sharedManager] getCoinUser];
+            if ((coinUser - songPrice) < 0)
+            {
+                NSString *message = [NSString stringWithFormat:kAlert_Message_Enough_Coin,songPrice,[[UserDataManager sharedManager] getCoinUser]];
+                UIAlertView *mAlertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Đóng" otherButtonTitles:@"Nạp Xu",@"Share Facebook", nil];
+                mAlertView.tag = 2;
+                [mAlertView show];
+                mAlertView = nil;
+            }
+            else
+            {
+                //
+                //      Insert song to  UserDataManager
+                //
+                [[UserDataManager sharedManager] insertPurcharseSong:songId];
+                [[UserDataManager sharedManager] minusCoinUser:songPrice];
+                [myTableView reloadData];
+            }
+        }
+    }
+    else if(alertView.tag == 2)
+    {
+        if (buttonIndex == 1)
+        {
+            LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
+            [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        }
+        else
+        {
+            // share facebook
+        }
+    }
 }
 
 @end

@@ -10,6 +10,14 @@
 
 @class Song;
 
+@protocol SongViewCellDelegate <NSObject>
+
+@optional
+
+- (void)purcharseSongWithId:(int)tblId andPrice:(int)price;
+
+@end
+
 @interface SongViewCell : UITableViewCell
 {
     __unsafe_unretained IBOutlet UILabel *songNameLabel;
@@ -22,12 +30,19 @@
     
     int songId;
     int songPrice;
+    __unsafe_unretained IBOutlet UIButton *facebookButton;
 }
+
+@property (nonatomic, assign) id<SongViewCellDelegate> delegate;
 
 - (void)setupViewWithSong:(Song *)song;
 
 - (IBAction)purchaseButtonClicked:(id)sender;
 
 - (void)setPurchaseButtonValue:(int)price andPurcharse:(BOOL)isPurcharse;
+
+- (IBAction)facebookButtonClicked:(id)sender;
+
+- (IBAction)favoriteButtonClicked:(id)sender;
 
 @end

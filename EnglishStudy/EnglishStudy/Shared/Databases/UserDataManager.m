@@ -60,6 +60,10 @@
             [usersDefault setObject:coin forKey:kUser_Coin];
             coinUser = 200;
         }
+        else
+        {
+            coinUser = [coin intValue];
+        }
         
         [usersDefault synchronize];
     }
@@ -121,9 +125,22 @@
     [userDefaults synchronize];
 }
 
+- (void)insertPurcharseSong:(int)songID
+{
+    [self.listPurcharse addObject:[NSString stringWithFormat:@"%d",songID]];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:self.listPurcharse forKey:KArray_Purcharse];
+    [userDefaults synchronize];
+}
+
 - (void)takeOff
 {
         // init data
+}
+
+- (int)getNumSongPurcharse
+{
+    return [self.listPurcharse count];
 }
 
 @end

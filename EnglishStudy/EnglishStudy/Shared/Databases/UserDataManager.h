@@ -24,4 +24,8 @@
 
 - (void)takeOff;
 
+- (void)insertPurcharseSong:(int)songID;
+
+- (int)getNumSongPurcharse;
+
 @end

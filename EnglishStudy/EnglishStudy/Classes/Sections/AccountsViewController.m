@@ -99,9 +99,8 @@
     title03Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:17];
     
     title011Label.textColor = [UIColor colorWithRed:255.0f/255.0f green:211.0f/255.0f blue:3.0f/255.0f alpha:1];
-    //title01Label.textColor = [UIColor redColor];
-    //title02Label.textColor = [UIColor redColor];
-    //title03Label.textColor = [UIColor redColor];
+    title011Label.text = [NSString stringWithFormat:@"%d",[[UserDataManager sharedManager] getCoinUser]];
+    title02Label.text = [NSString stringWithFormat:@"Bạn đã mua %d bài hát",[[UserDataManager sharedManager] getNumSongPurcharse]];
     
     loadMoneyButton.titleEdgeInsets = UIEdgeInsetsMake(0, 50, 0, 0);
     loadMoneyButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
