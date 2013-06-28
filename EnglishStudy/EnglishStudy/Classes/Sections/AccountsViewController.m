@@ -26,6 +26,8 @@
 - (void)setupView;
 
 - (IBAction)loadMoneyButtonClicked:(id)sender;
+
+- (IBAction)shareFacebookButtonClicked:(id)sender;
 @end
 
 @implementation AccountsViewController
@@ -99,7 +101,7 @@
     title03Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:17];
     
     title011Label.textColor = [UIColor colorWithRed:255.0f/255.0f green:211.0f/255.0f blue:3.0f/255.0f alpha:1];
-    title011Label.text = [NSString stringWithFormat:@"%d",[[UserDataManager sharedManager] getCoinUser]];
+    title011Label.text = [NSString stringWithFormat:@"%dxu",[[UserDataManager sharedManager] getCoinUser]];
     title02Label.text = [NSString stringWithFormat:@"Bạn đã mua %d bài hát",[[UserDataManager sharedManager] getNumSongPurcharse]];
     
     loadMoneyButton.titleEdgeInsets = UIEdgeInsetsMake(0, 50, 0, 0);
@@ -148,6 +150,11 @@
 {
     LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
     [self.navigationController pushViewController:viewController animated:YES];
+}
+
+- (IBAction)shareFacebookButtonClicked:(id)sender
+{
+    [UIAppDelegate checkFBSession];
 }
 
 - (void)viewDidUnload

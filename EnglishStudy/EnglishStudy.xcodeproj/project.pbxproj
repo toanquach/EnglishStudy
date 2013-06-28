@@ -86,6 +86,7 @@
 		6A6F00C21770B0C600BAF81E /* btn_block.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00BF1770B0C600BAF81E /* btn_block.png */; };
 		6A6F00C31770B0C600BAF81E /* btn_nap_the_cao.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00C01770B0C600BAF81E /* btn_nap_the_cao.png */; };
 		6A6F00C41770B0C600BAF81E /* btn_share_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00C11770B0C600BAF81E /* btn_share_fb.png */; };
+		6A7A393D177D5CC100412EE1 /* transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7A393C177D5CC100412EE1 /* transparent.png */; };
 		6A7DAE2E1760D6C2005F4267 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2D1760D6C2005F4267 /* UIKit.framework */; };
 		6A7DAE301760D6C2005F4267 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2F1760D6C2005F4267 /* Foundation.framework */; };
 		6A7DAE321760D6C2005F4267 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE311760D6C2005F4267 /* CoreGraphics.framework */; };
@@ -335,6 +336,7 @@
 		6A6F00BF1770B0C600BAF81E /* btn_block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_block.png; sourceTree = "<group>"; };
 		6A6F00C01770B0C600BAF81E /* btn_nap_the_cao.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_nap_the_cao.png; sourceTree = "<group>"; };
 		6A6F00C11770B0C600BAF81E /* btn_share_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_share_fb.png; sourceTree = "<group>"; };
+		6A7A393C177D5CC100412EE1 /* transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transparent.png; sourceTree = "<group>"; };
 		6A7DAE2A1760D6C2005F4267 /* EnglishStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnglishStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7DAE2D1760D6C2005F4267 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6A7DAE2F1760D6C2005F4267 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -637,7 +639,9 @@
 		6A6688151775A30B007CF12B /* choinhac1_iphone */ = {
 			isa = PBXGroup;
 			children = (
+				6A7A393C177D5CC100412EE1 /* transparent.png */,
 				6A56C4F5177BF2290005408D /* empty_bar@2x.png */,
+				6A6688211775A30B007CF12B /* empty_bar.png */,
 				6A56C4F6177BF22B0005408D /* icon_seek@2x.png */,
 				6A56C4F7177BF22D0005408D /* playing_bar@2x.png */,
 				6AB6C390177AF84600ACB1A3 /* bg_player_view.png */,
@@ -653,7 +657,6 @@
 				6A66881E1775A30B007CF12B /* btn_unselect.png */,
 				6A66881F1775A30B007CF12B /* btn_VN.png */,
 				6A6688201775A30B007CF12B /* download_bar.png */,
-				6A6688211775A30B007CF12B /* empty_bar.png */,
 				6A6688221775A30B007CF12B /* icon_check.png */,
 				6A6688231775A30B007CF12B /* icon_coin.png */,
 				6A6688241775A30B007CF12B /* icon_download.png */,
@@ -1357,6 +1360,7 @@
 				6A56C4F9177BF22E0005408D /* icon_seek@2x.png in Resources */,
 				6A56C4FA177BF22E0005408D /* playing_bar@2x.png in Resources */,
 				6A56C579177C3D2A0005408D /* FBDialog.bundle in Resources */,
+				6A7A393D177D5CC100412EE1 /* transparent.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

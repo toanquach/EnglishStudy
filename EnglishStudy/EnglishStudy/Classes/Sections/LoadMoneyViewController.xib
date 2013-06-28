@@ -508,7 +508,7 @@
 							<object class="IBUIPickerView" id="2988370">
 								<reference key="NSNextResponder" ref="740857153"/>
 								<int key="NSvFlags">266</int>
-								<string key="NSFrame">{{0, 171}, {320, 216}}</string>
+								<string key="NSFrame">{{0, 201}, {320, 216}}</string>
 								<reference key="NSSuperview" ref="740857153"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -517,7 +517,7 @@
 							<object class="IBUIToolbar" id="992868956">
 								<reference key="NSNextResponder" ref="740857153"/>
 								<int key="NSvFlags">266</int>
-								<string key="NSFrame">{{0, 127}, {320, 44}}</string>
+								<string key="NSFrame">{{0, 157}, {320, 44}}</string>
 								<reference key="NSSuperview" ref="740857153"/>
 								<reference key="NSNextKeyView" ref="2988370"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>

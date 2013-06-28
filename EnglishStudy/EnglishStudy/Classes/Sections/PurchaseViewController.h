@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Song.h"
+#import "SongViewCell.h"
 
-@interface PurchaseViewController : UIViewController
+@interface PurchaseViewController : UIViewController<UITableViewDelegate, UITableViewDataSource, SongViewCellDelegate>
 
 @end

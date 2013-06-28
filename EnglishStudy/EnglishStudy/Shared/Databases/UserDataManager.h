@@ -10,6 +10,10 @@
 
 @interface UserDataManager : NSObject
 
+@property (nonatomic, strong) NSMutableArray *listFavorites;
+
+@property (nonatomic, strong) NSMutableArray *listPurcharse;
+
 + (UserDataManager *)sharedManager;
 
 - (BOOL)filterPurcharseSongWithKey:(int)key;
@@ -27,5 +31,7 @@
 - (void)insertPurcharseSong:(int)songID;
 
 - (int)getNumSongPurcharse;
+
+- (int)getNumSongFavorite;
 
 @end

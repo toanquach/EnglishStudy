@@ -13,13 +13,13 @@
     int coinUser;
 }
 
-@property (nonatomic, strong) NSMutableArray *listFavorites;
 
-@property (nonatomic, strong) NSMutableArray *listPurcharse;
 
 @end
 
 @implementation UserDataManager
+
+@synthesize listFavorites, listPurcharse;
 
 + (UserDataManager *)sharedManager
 {
@@ -141,6 +141,11 @@
 - (int)getNumSongPurcharse
 {
     return [self.listPurcharse count];
+}
+
+- (int)getNumSongFavorite
+{
+    return [self.listFavorites count];
 }
 
 @end

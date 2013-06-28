@@ -70,10 +70,6 @@
     __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
     int lastIndex;
     __unsafe_unretained IBOutlet UIImageView *downloadBarImageView;
-    
-    
-    IBOutlet UIView *playingView;
-    IBOutlet UIView *downloadingView;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -168,8 +164,6 @@
     switchIconButton = nil;
     mediaSizeLabel = nil;
     downloadBarImageView = nil;
-    playingView = nil;
-    downloadingView = nil;
     [super viewDidUnload];
 }
 
@@ -245,8 +239,6 @@
     remainingTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     elapsedTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     
-    mediaSizeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
-    
     int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
     NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
     NSData *enSongEncodeData = [NSData dataFromBase64String:enSongEncodeStr];
@@ -309,11 +301,38 @@
     expandPauseButton.hidden = YES;
     
     [currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
-    UIImage *sliderLeftTrackImage = [[UIImage imageNamed: @"playing_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"empty_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-    [currentTimeSlider setMinimumTrackImage: sliderLeftTrackImage forState: UIControlStateNormal];
-    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
+//    UIImage *sliderLeftTrackImage = [[UIImage imageNamed: @"empty_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
+//    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
+//    [currentTimeSlider setMinimumTrackImage: sliderLeftTrackImage forState: UIControlStateNormal];
+//    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
 
+    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
+    
+    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
+    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateHighlighted];
+    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateSelected];
+
+    
+    [currentTimeSlider setContinuous:YES];
+    //[currentTimeSlider setHighlighted:YES];
+    // remove the slider filling default blue color
+    //[currentTimeSlider setMaximumTrackTintColor:[UIColor clearColor]];
+    //[currentTimeSlider setMinimumTrackTintColor:[UIColor yellowColor]];
+    // Chose your frame
+    //playerSlider.frame = CGRectMake(--- , -- , yourSliderWith , ----);
+    
+    // 2
+    // create a UIView that u can access and make it the shadow of your slider
+//    shadowSlider = [[UIView alloc] init];
+//    shadowSlider.backgroundColor = [UIColor lightTextColor];
+//    shadowSlider.frame = CGRectMake(playerSlider.frame.origin.x , playerSlider.frame.origin.y , playerSlider.frame.size.width , playerSlider.frame.origin.size.height);
+//    shadowSlider.layer.cornerRadius = 4;
+//    shadowSlider.layer.masksToBounds = YES;
+//    [playerSlider addSubview:shadowSlider];
+//    [playerSlider sendSubviewToBack:shadowSlider];
+    
+    
+    
     mediaPath = [NSString stringWithFormat:@"%@/%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:mediaPath])
@@ -333,9 +352,6 @@
     }
     progressDownloadBar.progressTintColor = [UIColor greenColor];
     progressDownloadBar.progress = 0.0;
-    currentTimeSlider.value = 0.0;
-    playingView.hidden = NO;
-    downloadingView.hidden = YES;
 }
 
 - (void)animateScrollTitleRight
@@ -505,6 +521,9 @@
 
 - (void)downloadMediaWithPath:(NSString *)filePath
 {
+    CGRect frame = downloadBarImageView.frame;
+    frame.origin.x = currentTimeSlider.frame.origin.x - frame.size.width;
+    downloadBarImageView.frame = frame;
     isDownloading = YES;
     NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
    // NSString *url = @"http://download.sutrix.com/pocari/a.mp4";
@@ -579,22 +598,7 @@
 
 - (IBAction)downloadButtonClicked:(id)sender
 {
-//    [self downloadMediaWithPath:mediaPath];
-    downloadingView.hidden = NO;
-    playingView.hidden = NO;
-    [UIView transitionFromView:playingView
-                        toView:downloadingView
-                      duration:1.0
-                       options:UIViewAnimationOptionTransitionFlipFromTop
-                    completion:^(BOOL finished)
-    {
-        
-                        if (finished)
-                        {
-                         [self downloadMediaWithPath:mediaPath];
-                        }
-                    }
-     ];
+    [self downloadMediaWithPath:mediaPath];
 }
 
 - (IBAction)currentTimeSliderValueChanged:(id)sender
@@ -794,10 +798,7 @@
         [cell setDetailTextColor:[UIColor whiteColor]];
     }
     
-    if(indexPath.row < lastIndex)
-    {
-        [cell setDetailTextColor:kColor_Purple];
-    }
+    //[cell setDetailTextColor:kColor_Purple];
     return cell;
 }
 
@@ -811,31 +812,16 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    //progressDownloadBar.hidden = YES;
+    progressDownloadBar.hidden = YES;
     
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
     isDownloading = NO;
     [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
     download2Button.userInteractionEnabled = NO;
     downloadButton.userInteractionEnabled = NO;
-
-    [UIView transitionFromView:downloadingView
-                        toView:playingView
-                      duration:1.0
-                       options:UIViewAnimationOptionTransitionFlipFromBottom
-                    completion:^(BOOL finished)
-     {
-         
-         if (finished)
-         {
-             canPlay = YES;
-             //----------    player --------------------
-             [self setupMusicPlay];
-             downloadingView.hidden = YES;
-         }
-     }
-     ];
-
+    canPlay = YES;
+    //----------    player --------------------
+    [self setupMusicPlay];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -855,6 +841,16 @@
 {
     currentLength += bytes;
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:currentLength],[self byteToMegaByte:request.contentLength]];
+    
+    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
+    float percent = (currentLength*100)/request.contentLength;
+    int width = currentTimeSlider.frame.size.width;
+    int posX = (width*percent)/100;
+    CGRect frame = downloadBarImageView.frame;
+    frame.origin.x +=posX;
+    downloadBarImageView.frame = frame;
+    
+    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
 }
 
 - (void)setProgress:(float)newProgress

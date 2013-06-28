@@ -9,7 +9,10 @@
 #import "PurchaseViewController.h"
 
 @interface PurchaseViewController ()
-
+{
+    __unsafe_unretained IBOutlet UITableView *myTableView;
+    
+}
 - (void)setupView;
 
 @end
@@ -38,11 +41,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [myTableView reloadData];
+}
 
 #pragma mark - setup View
 
 - (void)setupView
 {
+    myTableView.delegate = self;
+    myTableView.dataSource = self;
     
     // -----------------------
     //      Set Back Button
@@ -88,6 +98,7 @@
     rightButtonBar = nil;
 }
 
+
 #pragma mark - UIBUtton event
 
 - (void)backButtonPressed:(id)sender
@@ -115,4 +126,61 @@
     }
 }
 
+- (void)viewDidUnload
+{
+    myTableView = nil;
+    [super viewDidUnload];
+}
+
+
+#pragma mark - UITable Datasource
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 105;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [[UserDataManager sharedManager] getNumSongPurcharse];
+}
+
+// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"CellIdentifier2";
+    
+    SongViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (cell == nil)
+    {
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"SongViewCell" owner:self options:nil] objectAtIndex:0];
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
+    }
+    
+    Song *song = [[Song alloc] init];
+    song.tblID = [[[UserDataManager sharedManager].listPurcharse objectAtIndex:indexPath.row] intValue];
+    song = [song getSongById:[DatabaseManager sharedDatabaseManager].database];
+    
+    int xu = song.num_view/1000 + 10;
+    if (xu > 100)
+    {
+        xu = 100;
+    }
+    [cell setupViewWithSong:song];
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:YES];
+    }
+    else
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:NO];
+    }
+    return cell;
+}
 @end

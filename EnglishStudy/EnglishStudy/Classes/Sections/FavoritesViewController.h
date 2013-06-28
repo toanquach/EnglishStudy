@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SongViewCell.h"
+#import "Song.h"
 
-@interface FavoritesViewController : UIViewController
+@interface FavoritesViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, SongViewCellDelegate>
 
 @end

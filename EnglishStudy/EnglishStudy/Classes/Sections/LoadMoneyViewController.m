@@ -7,6 +7,7 @@
 //
 
 #import "LoadMoneyViewController.h"
+#import "JSON.h"
 
 @interface LoadMoneyViewController ()
 {
@@ -137,8 +138,10 @@
     [napXuButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     pickerBGView.hidden = YES;
-    
-    listNhaMang = [NSMutableArray arrayWithObjects:@"Vinaphone",@"Mobiphone",@"Viettel", nil];
+    NSDictionary *vnDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Vinaphone",@"name", @"VNP",@"code", nil];
+    NSDictionary *mbDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Mobiphone",@"name", @"VMS",@"code", nil];
+    NSDictionary *vtDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Viettel",@"name", @"VIETTEL",@"code", nil];
+    listNhaMang = [NSMutableArray arrayWithObjects:vnDict,mbDict,vtDict,nil];
     selectNhaMangIndex = 0;
     [nhaMangButton setTitle:@"Vinaphone" forState:UIControlStateNormal];
     [napXuButton setTitle:@"NẠP XU" forState:UIControlStateNormal];
@@ -203,6 +206,30 @@
 
 - (IBAction)napXuButtonClicked:(id)sender
 {
+    NSString *soSeriesStr = [soSeriesTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    NSString *soCardCodeStr = [theCaoTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    NSString *providerCode = [[listNhaMang objectAtIndex:selectNhaMangIndex] objectForKey:@"code"];
+    
+    if ([soCardCodeStr isEqualToString:@""] == TRUE)
+    {
+        [theCaoTextField becomeFirstResponder];
+        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng nhập số thẻ cào dưới lớp bạc."];
+        return;
+    }
+    
+    if ([soSeriesStr isEqualToString:@""] == TRUE)
+    {
+        [soSeriesTextField becomeFirstResponder];
+        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng nhập số series trên thẻ cào."];
+        return;
+    }
+    
+    if(agreeCheckBoxButton.selected == NO)
+    {
+        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng đồng ý với các điều khoản nạp thẻ."];
+        return;
+    }
     // Call service
     /*
      
@@ -212,20 +239,38 @@
      
      */
     
-//    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-//                          @"loidich_iphone",@"product",
-//                          @"",@"userid",
-//                          soSeriesTextField.text,@"cardseri",
-//                          theCaoTextField.text,@"cardcode",
-//                          @"",@"VMS",
-//                          @"check_card",@"method",
-//                          @"1111",@"deviceid",
-//                          nil];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                          @"loidich_iphone",@"product",
+                          @"userid",@"userid",
+                          soSeriesStr,@"cardseri",
+                          soCardCodeStr,@"cardcode",
+                          providerCode,@"provider",
+                          @"check_card",@"method",
+                          @"iphone_device",@"deviceid",
+                          nil];
+
+
     
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:dict
+                                                       options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
+                                                         error:&error];
+    
+    if (!jsonData)
+    {
+        return;
+    }
+    
+    [UIAppDelegate showConnectionView];
     //call check card
     NSURL *url = [NSURL URLWithString:kServerCardChecking];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    
+    [request setRequestMethod:@"POST"];
+    [request addRequestHeader:@"Accept" value:@"application/json"];
+    [request addRequestHeader:@"content-type" value:@"application/json"];
+    [request appendPostData:jsonData];
+    [request setDelegate:self];
+    [request setResponseEncoding:NSUTF8StringEncoding];
     [request startAsynchronous];
 }
 
@@ -233,7 +278,7 @@
 {
     selectNhaMangIndex = [nhaMangPickerView selectedRowInComponent:0];
     pickerBGView.hidden = YES;
-    [nhaMangButton setTitle:[listNhaMang objectAtIndex:selectNhaMangIndex] forState:UIControlStateNormal];
+    [nhaMangButton setTitle:[[listNhaMang objectAtIndex:selectNhaMangIndex] objectForKey:@"name"] forState:UIControlStateNormal];
 }
 
 - (IBAction)checkArgeeButtonClicked:(id)sender
@@ -283,7 +328,7 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
 {
-    return [listNhaMang objectAtIndex:row];
+    return [[listNhaMang objectAtIndex:row] objectForKey:@"name"];
 }
 
 - (void)viewDidUnload
@@ -309,4 +354,39 @@
     mainScrollView = nil;
     [super viewDidUnload];
 }
+
+#pragma mark - ASIHttpRequest Delegate
+
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    [UIAppDelegate hiddenConnectionView];
+    
+    //NSLog(@"Success: %@",request.responseString);
+    NSDictionary *dict = [request.responseString JSONValue];
+    if (dict == nil)
+    {
+        [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
+        return;
+    }
+    else
+    {
+        if ([[dict objectForKey:@"status"] intValue] == 0) // Nhap thanh cong
+        {
+            //
+            //      Cong tien vao tai khoan
+            //
+        }
+        
+        [UIAppDelegate showAlertView:nil andMessage:[dict objectForKey:@"message"]];
+    }
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request
+{
+    [UIAppDelegate hiddenConnectionView];
+    [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
+    //NSLog(@"Fail");
+}
+
 @end
