@@ -70,6 +70,10 @@
     __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
     int lastIndex;
     __unsafe_unretained IBOutlet UIImageView *downloadBarImageView;
+    
+    
+    IBOutlet UIView *playingView;
+    IBOutlet UIView *downloadingView;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -164,6 +168,8 @@
     switchIconButton = nil;
     mediaSizeLabel = nil;
     downloadBarImageView = nil;
+    playingView = nil;
+    downloadingView = nil;
     [super viewDidUnload];
 }
 
@@ -238,6 +244,8 @@
     
     remainingTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     elapsedTimeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
+    
+    mediaSizeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     
     int num = playerSong.category_id % kKEY1 + playerSong.tblID % kKEY2 + kKEY3;
     NSString *enSongEncodeStr = [playerSong.english substringFromIndex:num];
@@ -325,6 +333,9 @@
     }
     progressDownloadBar.progressTintColor = [UIColor greenColor];
     progressDownloadBar.progress = 0.0;
+    currentTimeSlider.value = 0.0;
+    playingView.hidden = NO;
+    downloadingView.hidden = YES;
 }
 
 - (void)animateScrollTitleRight
@@ -494,9 +505,6 @@
 
 - (void)downloadMediaWithPath:(NSString *)filePath
 {
-    CGRect frame = downloadBarImageView.frame;
-    frame.origin.x = currentTimeSlider.frame.origin.x - frame.size.width;
-    downloadBarImageView.frame = frame;
     isDownloading = YES;
     NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
    // NSString *url = @"http://download.sutrix.com/pocari/a.mp4";
@@ -571,7 +579,22 @@
 
 - (IBAction)downloadButtonClicked:(id)sender
 {
-    [self downloadMediaWithPath:mediaPath];
+//    [self downloadMediaWithPath:mediaPath];
+    downloadingView.hidden = NO;
+    playingView.hidden = NO;
+    [UIView transitionFromView:playingView
+                        toView:downloadingView
+                      duration:1.0
+                       options:UIViewAnimationOptionTransitionFlipFromTop
+                    completion:^(BOOL finished)
+    {
+        
+                        if (finished)
+                        {
+                         [self downloadMediaWithPath:mediaPath];
+                        }
+                    }
+     ];
 }
 
 - (IBAction)currentTimeSliderValueChanged:(id)sender
@@ -771,7 +794,10 @@
         [cell setDetailTextColor:[UIColor whiteColor]];
     }
     
-    //[cell setDetailTextColor:kColor_Purple];
+    if(indexPath.row < lastIndex)
+    {
+        [cell setDetailTextColor:kColor_Purple];
+    }
     return cell;
 }
 
@@ -785,16 +811,31 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    progressDownloadBar.hidden = YES;
+    //progressDownloadBar.hidden = YES;
     
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
     isDownloading = NO;
     [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
     download2Button.userInteractionEnabled = NO;
     downloadButton.userInteractionEnabled = NO;
-    canPlay = YES;
-    //----------    player --------------------
-    [self setupMusicPlay];
+
+    [UIView transitionFromView:downloadingView
+                        toView:playingView
+                      duration:1.0
+                       options:UIViewAnimationOptionTransitionFlipFromBottom
+                    completion:^(BOOL finished)
+     {
+         
+         if (finished)
+         {
+             canPlay = YES;
+             //----------    player --------------------
+             [self setupMusicPlay];
+             downloadingView.hidden = YES;
+         }
+     }
+     ];
+
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
@@ -814,16 +855,6 @@
 {
     currentLength += bytes;
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:currentLength],[self byteToMegaByte:request.contentLength]];
-    
-    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
-    float percent = (currentLength*100)/request.contentLength;
-    int width = currentTimeSlider.frame.size.width;
-    int posX = (width*percent)/100;
-    CGRect frame = downloadBarImageView.frame;
-    frame.origin.x +=posX;
-    downloadBarImageView.frame = frame;
-    
-    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
 }
 
 - (void)setProgress:(float)newProgress
