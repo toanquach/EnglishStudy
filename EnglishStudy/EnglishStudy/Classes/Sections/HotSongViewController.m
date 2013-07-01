@@ -356,7 +356,7 @@
         song = [listSearch objectAtIndex:indexPath.row];
     }
     
-    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES || 1)
     {
         PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
         

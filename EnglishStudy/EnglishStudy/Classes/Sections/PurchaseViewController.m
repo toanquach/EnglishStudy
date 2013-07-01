@@ -206,7 +206,7 @@
     song.tblID = tblId;
     song = [song getSongById:[DatabaseManager sharedDatabaseManager].database];
     
-    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES || 1)
     {
         PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
         

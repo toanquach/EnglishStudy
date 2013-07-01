@@ -44,7 +44,7 @@
     UIScrollView *titleBgView;
     
     BOOL canPlay;
-    __unsafe_unretained IBOutlet YLProgressBar *progressDownloadBar;
+    __unsafe_unretained IBOutlet UIProgressView *progressDownloadBar;
     NSString *mediaPath;
     long long currentLength;
     
@@ -75,6 +75,8 @@
     
     int currentTypeDisplay;
     __unsafe_unretained IBOutlet UIScrollView *mainScrollView;
+    
+    NSMutableData *receivedData;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -177,6 +179,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [mediaRequest cancel];
     [self stopPlaying];
     [super viewWillDisappear:animated];
 }
@@ -309,43 +312,22 @@
     expandPauseButton.hidden = YES;
     
     [currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
-//    UIImage *sliderLeftTrackImage = [[UIImage imageNamed: @"empty_bar.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-//    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-//    [currentTimeSlider setMinimumTrackImage: sliderLeftTrackImage forState: UIControlStateNormal];
-//    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
 
-    UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-    
-    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
-    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateHighlighted];
-    [currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateSelected];
 
+    //UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
     
-    [currentTimeSlider setContinuous:YES];
-    //[currentTimeSlider setHighlighted:YES];
-    // remove the slider filling default blue color
-    //[currentTimeSlider setMaximumTrackTintColor:[UIColor clearColor]];
-    //[currentTimeSlider setMinimumTrackTintColor:[UIColor yellowColor]];
-    // Chose your frame
-    //playerSlider.frame = CGRectMake(--- , -- , yourSliderWith , ----);
-    
-    // 2
-    // create a UIView that u can access and make it the shadow of your slider
-//    shadowSlider = [[UIView alloc] init];
-//    shadowSlider.backgroundColor = [UIColor lightTextColor];
-//    shadowSlider.frame = CGRectMake(playerSlider.frame.origin.x , playerSlider.frame.origin.y , playerSlider.frame.size.width , playerSlider.frame.origin.size.height);
-//    shadowSlider.layer.cornerRadius = 4;
-//    shadowSlider.layer.masksToBounds = YES;
-//    [playerSlider addSubview:shadowSlider];
-//    [playerSlider sendSubviewToBack:shadowSlider];
-    
-    
-    
+    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
+    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateHighlighted];
+    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateSelected];
+
+    // ***********************************
+    //      Check media file exist
+    //
     mediaPath = [NSString stringWithFormat:@"%@%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:mediaPath])
     {
-        progressDownloadBar.hidden = YES;
+        //progressDownloadBar.hidden = YES;
         [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
         download2Button.userInteractionEnabled = NO;
         downloadButton.userInteractionEnabled = NO;
@@ -358,9 +340,9 @@
         [download2Button setImage:[UIImage imageNamed:@"icon_download.png"] forState:UIControlStateNormal];
         canPlay = NO;
     }
-    progressDownloadBar.progressTintColor = [UIColor greenColor];
     progressDownloadBar.progress = 0.0;
-    
+    currentTimeSlider.value = 0.0;
+    [currentTimeSlider setSize:MTZTiltReflectionSliderSizeSmall];
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
 }
 
@@ -501,7 +483,12 @@
 {
     // Do any additional setup after loading the view, typically from a nib.
 //    NSURL* url = [NSURL URLWithString:mediaPath];
-    NSURL *url = [[NSURL alloc] initFileURLWithPath:mediaPath];
+    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+    
+    NSURL *url = [NSURL URLWithString:urlStr];
+    
+    //NSURL *url = [[NSURL alloc] initFileURLWithPath:mediaPath];
     NSAssert(url, @"URL is valid.");
     NSError* error = nil;
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
@@ -589,11 +576,13 @@
 
 - (IBAction)playButtonClicked:(id)sender
 {
-    if (canPlay == NO)
-    {
-        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng tải file trước"];
-        return;
-    }
+//    if (canPlay == NO)
+//    {
+//        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng tải file trước"];
+//        return;
+//    }
+
+    [self setupMusicPlay];
     
     [self.player play];
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
@@ -883,8 +872,6 @@
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
         [cell setDetailTextColor:kColor_CustomGray];
     }
-    
-//    [myTableView reloadData];
 }
 
 
@@ -892,8 +879,6 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    //progressDownloadBar.hidden = YES;
-    
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
     isDownloading = NO;
     [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
@@ -933,6 +918,20 @@
     downloadBarImageView.frame = frame;
     
     NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
+}
+
+-(void)request:(ASIHTTPRequest *)request didReceiveData:(NSData *)data
+{
+    if (receivedData == nil)
+    {
+        receivedData = [NSMutableData data];
+    }
+    
+    [receivedData  appendData:data];
+    
+    [receivedData writeToFile:mediaPath atomically:NO];
+    [self setupMusicPlay];
+    canPlay = YES;
 }
 
 - (void)setProgress:(float)newProgress

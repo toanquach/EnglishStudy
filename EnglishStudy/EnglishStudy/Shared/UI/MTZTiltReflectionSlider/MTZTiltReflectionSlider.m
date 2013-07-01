@@ -111,14 +111,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Sets up the initial state of the view.
 - (void)setup
 {
-    UIImage *sliderTrackImage = [[UIImage imageNamed: @"MTZTiltReflectionSliderTrackFill"]stretchableImageWithLeftCapWidth: 6 topCapHeight: 0];
-    
-	// Set the slider track images
-	[self setMinimumTrackImage:sliderTrackImage
-					  forState:UIControlStateNormal];
-	
-	[self setMaximumTrackImage:[UIImage imageNamed:@"MTZTiltReflectionSliderTrackEmpty"]
-					  forState:UIControlStateNormal];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"5.0"))
+    {
+        [self setMinimumTrackImage:[[UIImage imageNamed:@"MTZTiltReflectionSliderTrackFill"]
+                                    resizableImageWithCapInsets:UIEdgeInsetsMake(0, 6, 0, 0)]
+                          forState:UIControlStateNormal];
+        
+        [self setMaximumTrackImage:[[UIImage imageNamed:@"MTZTiltReflectionSliderTrackEmpty"]
+                                    resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 6)]
+                          forState:UIControlStateNormal];
+    }
+    else
+    {
+        UIImage *sliderTrackImage = [[UIImage imageNamed: @"MTZTiltReflectionSliderTrackFill"]stretchableImageWithLeftCapWidth: 6 topCapHeight: 0];
+        
+        // Set the slider track images
+        [self setMinimumTrackImage:sliderTrackImage
+                          forState:UIControlStateNormal];
+        
+        [self setMaximumTrackImage:[UIImage imageNamed:@"MTZTiltReflectionSliderTrackEmpty"]
+                          forState:UIControlStateNormal];
+    }
 	
 	_shine1 = [[UIImageView alloc] init];
 	_shine2 = [[UIImageView alloc] init];
@@ -141,28 +154,28 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	
 	_size = size;
 	
-	CGSize oldSize = CGSizeZero;
-	CGSize newSize = CGSizeZero;
+	//CGSize oldSize = CGSizeZero;
+	//CGSize newSize = CGSizeZero;
 	
 	// Set the base image
 	switch ( size ) {
 		case MTZTiltReflectionSliderSizeRegular:
-			oldSize = self.shine1.image.size;
-			newSize = [UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"].size;
-			[self.shine1 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"]];
-			[self.shine2 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"]];
-			[self.shine1 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
-			[self.shine2 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
-			[self setThumbImageForAllStates:[[UIImage imageNamed:@"MTZTiltReflectionSliderKnobBase"] imageWithShadowOfSize:2.0f]];
+			//oldSize = self.shine1.image.size;
+			//newSize = [UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"].size;
+			//[self.shine1 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"]];
+			//[self.shine2 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear"]];
+			//[self.shine1 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
+			//[self.shine2 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
+			[self setThumbImageForAllStates:[[UIImage imageNamed:@"icon_seek.png"] imageWithShadowOfSize:2.0f]];
 			break;
 		case MTZTiltReflectionSliderSizeSmall:
-			oldSize = self.shine1.image.size;
-			newSize = [UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"].size;
-			[self.shine1 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"]];
-			[self.shine2 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"]];
-			[self.shine1 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
-			[self.shine2 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
-			[self setThumbImageForAllStates:[[UIImage imageNamed:@"MTZTiltReflectionSliderKnobBase-Small"] imageWithShadowOfSize:2.0f]];
+			//oldSize = self.shine1.image.size;
+			//newSize = [UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"].size;
+			//[self.shine1 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"]];
+			//[self.shine2 setImage:[UIImage imageNamed:@"MTZTiltReflectionSliderShineClear-Small"]];
+			//[self.shine1 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
+			//[self.shine2 setBounds:(CGRect){0,0,newSize.width,newSize.height}];
+			[self setThumbImageForAllStates:[[UIImage imageNamed:@"icon_seek.png"] imageWithShadowOfSize:2.0f]];
 			break;
 		default:
 			break;

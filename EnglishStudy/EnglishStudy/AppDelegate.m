@@ -53,7 +53,7 @@ static NSString* kAppId = @"463470557051319";
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL isDir;
+    BOOL isDir = NO;
     NSString *mediaFolder = [NSString stringWithFormat:@"%@Media",LIBRARY_CATCHES_DIRECTORY];
     [fileManager fileExistsAtPath:mediaFolder isDirectory:&isDir];
     if (!isDir)
@@ -295,154 +295,148 @@ static NSString* kAppId = @"463470557051319";
 
 - (void)checkFBSession
 {
+    NSArray *permissions = [NSArray arrayWithObjects:@"user_photos",@"user_videos",@"publish_stream",@"offline_access",@"user_checkins",@"friends_checkins",@"email",@"user_location" ,nil];
+    
     if (![facebook isSessionValid])
     {
-        //[facebook fbDialogLogin:@"" expirationDate:nil];
-        
-         NSArray *_permissions =  [NSArray arrayWithObjects:
-                                 @"read_stream", @"offline_access",nil] ;
-        [facebook authorize:_permissions];
-        
+        [facebook authorize:permissions];
     }
     else
     {
-       // [self feedDialogButtonClicked];
+        // get User Info
+        [self feedDialogButtonClicked];
     }
 }
 
 // Method that gets called when the feed dialog button is pressed
 - (void)feedDialogButtonClicked
 {
-//    NSMutableDictionary *params =
-//    [NSMutableDictionary dictionaryWithObjectsAndKeys:
-//           @"Testing Feed Dialog", @"name",
-//            @"Feed Dialogs are Awesome.", @"caption",
-//            @"Check out how to use Facebook Dialogs.", @"description",
-//            @"http://www.example.com/", @"link",
-//            @"http://fbrell.com/f8.jpg", @"picture",
-//            nil];
-//    [facebook dialog:@"feed"
-//        andParams:params
-//        andDelegate:self];
-    
-   // NSArray *_permissions =  [NSArray arrayWithObjects:
-      //                         @"read_stream", @"offline_access",nil] ;
-    //[facebook authorize:_permissions];
-    
-//    NSString *message = @"This is the message I want to post";
-//    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-//                                   message, @"message",
+//
+//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                   @"SELECT uid, name, pic, email FROM user WHERE uid=me()", @"query",
 //                                   nil];
-//    
-//    [facebook requestWithMethodName:@"stream.publish"
-//                           andParams:params
-//                       andHttpMethod:@"POST"
-//                         andDelegate:self];
-  
-//    NSArray *_permissions =  [NSArray arrayWithObjects:@"read_stream", @"offline_access",nil] ;
-//    [facebook authorize:_permissions];
-//    
-//    NSString *message = @"Test from Hello English App!!! - Auto Post";
-//    NSArray *obj = [NSArray arrayWithObjects:message, nil];
-//    NSArray *keys = [NSArray arrayWithObjects:@"message", nil];
-//    
-//    // There are many other params you can use, check the API
-//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:obj forKeys:keys];
-//
-//   FBRequest *request = [facebook requestWithGraphPath:@"me/feed" andParams:params andHttpMethod:@"POST" andDelegate:self];
-//
-//   [request connect];
+//    [facebook requestWithMethodName:@"fql.query"
+//                                            andParams:params
+//                                        andHttpMethod:@"POST"
+//                                          andDelegate:self];
     
-    
-}
-
-- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response
-{
-    NSLog(@"aaa");
-}
-
-- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
-    NSLog(@"%@",error.description);
-}
-
-- (void)request:(FBRequest *)request didLoad:(id)result {
-    // result may be a dictionary, an array, a string, or a number,
-    // depending on the format of the API response
-    
-     NSLog(@"aaa");
-}
-
-- (void)fbDidExtendToken:(NSString*)accessToken
-               expiresAt:(NSDate*)expiresAt
-{
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-    
-    NSString *message = @"This is the message I want to post";
+    NSString *message = @"This is auto message I want to post";
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    message, @"message",
                                    nil];
     
-    [facebook requestWithMethodName:@"stream.publish"
-                          andParams:params
-                      andHttpMethod:@"POST"
-                        andDelegate:self];
-
-}
-
-
-- (void)fbSessionInvalidated
-{
-}
-- (void)fbDidLogin
-{
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-    
-    // show form post to fb
-   // [self feedDialogButtonClicked];
-    
-    NSString *message = @"This is the message I want to post";
-    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                   message, @"message",
-                                   nil];
-
     [facebook requestWithMethodName:@"stream.publish"
                            andParams:params
                        andHttpMethod:@"POST"
                          andDelegate:self];
+    
 }
 
-- (void)fbDidNotLogin:(BOOL)cancelled
+
+- (void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt
 {
-    //NSlog
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
 }
 
+#pragma mark - FBSessionDelegate Methods
+/**
+ * Called when the user has logged in successfully.
+ */
+- (void)fbDidLogin
+{
+    // get User Info
+    [self feedDialogButtonClicked];
+    
+    [self storeAuthData:[facebook accessToken] expiresAt:[facebook expirationDate]];
+}
+
+-(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt
+{
+    DLog(@"token extended");
+    [self storeAuthData:accessToken expiresAt:expiresAt];
+}
+
+/**
+ * Called when the user canceled the authorization dialog.
+ */
+-(void)fbDidNotLogin:(BOOL)cancelled
+{
+    
+}
+
+/**
+ * Called when the request logout has succeeded.
+ */
 - (void)fbDidLogout
 {
-    // Remove saved authorization information if it exists
+    // Remove saved authorization information if it exists and it is
+    // ok to clear it (logout, session invalid, app unauthorized)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"])
-    {
-        [defaults removeObjectForKey:@"FBAccessTokenKey"];
-        [defaults removeObjectForKey:@"FBExpirationDateKey"];
-        [defaults synchronize];
-    }
+    [defaults removeObjectForKey:@"FBAccessTokenKey"];
+    [defaults removeObjectForKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
 }
 
-
-// FBDialogDelegate
-- (void)dialogDidComplete:(FBDialog *)dialog
+/**
+ * Called when the session has expired.
+ */
+- (void)fbSessionInvalidated
 {
-    NSLog(@"dialog completed successfully");
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:@"Auth Exception"
+                              message:@"Your session has expired."
+                              delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil,
+                              nil];
+    [alertView show];
+    [self fbDidLogout];
+}
+
+#pragma mark - FBRequestDelegate Methods
+/**
+ * Called when the Facebook API request has returned a response.
+ *
+ * This callback gives you access to the raw response. It's called before
+ * (void)request:(FBRequest *)request didLoad:(id)result,
+ * which is passed the parsed response object.
+ */
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response
+{
+    DLog(@"received response");
+}
+
+/**
+ * Called when a request returns and its response has been parsed into
+ * an object.
+ *
+ * The resulting object may be a dictionary, an array or a string, depending
+ * on the format of the API response. If you need access to the raw response,
+ * use:
+ *
+ * (void)request:(FBRequest *)request
+ *      didReceiveResponse:(NSURLResponse *)response
+ */
+- (void)request:(FBRequest *)request didLoad:(id)result
+{
+    if ([result isKindOfClass:[NSArray class]])
+    {
+        result = [result objectAtIndex:0];
+    }
+    
+}
+
+/**
+ * Called when an error prevents the Facebook API request from completing
+ * successfully.
+ */
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error
+{
+    NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
+    NSLog(@"Err code: %d", [error code]);
 }
 
 @end
