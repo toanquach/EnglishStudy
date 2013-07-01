@@ -61,7 +61,7 @@ static NSString* kAppId = @"463470557051319";
         [fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
     }
     
-    [fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
+    //[fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
     // ------------------------------------------
     //      Check network available
     //

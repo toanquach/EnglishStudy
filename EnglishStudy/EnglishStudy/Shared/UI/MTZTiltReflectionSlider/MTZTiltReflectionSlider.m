@@ -110,9 +110,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // Sets up the initial state of the view.
 - (void)setup
-{	
+{
+    UIImage *sliderTrackImage = [[UIImage imageNamed: @"MTZTiltReflectionSliderTrackFill"]stretchableImageWithLeftCapWidth: 6 topCapHeight: 0];
+    
 	// Set the slider track images
-	[self setMinimumTrackImage:[UIImage imageNamed:@"MTZTiltReflectionSliderTrackFill"]
+	[self setMinimumTrackImage:sliderTrackImage
 					  forState:UIControlStateNormal];
 	
 	[self setMaximumTrackImage:[UIImage imageNamed:@"MTZTiltReflectionSliderTrackEmpty"]
