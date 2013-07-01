@@ -13,6 +13,7 @@
 #import <Pods/Category/NSData+Base64.h>
 #import <Pods/Category/UILabel+Custom.h>
 #import "PlayerMusicViewCell.h"
+#import "MTZTiltReflectionSlider.h"
 
 @interface PlayerMusicViewController ()
 {
@@ -24,7 +25,8 @@
     __unsafe_unretained IBOutlet UIButton *expandPlayButton;
     __unsafe_unretained IBOutlet UIButton *downloadButton;
     __unsafe_unretained IBOutlet UIButton *download2Button;
-    __unsafe_unretained IBOutlet UISlider *currentTimeSlider;
+//    __unsafe_unretained IBOutlet UISlider *currentTimeSlider;
+    __unsafe_unretained IBOutlet MTZTiltReflectionSlider *currentTimeSlider;
     __unsafe_unretained IBOutlet UILabel *elapsedTimeLabel;
     __unsafe_unretained IBOutlet UILabel *remainingTimeLabel;
     
@@ -70,6 +72,9 @@
     __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
     int lastIndex;
     __unsafe_unretained IBOutlet UIImageView *downloadBarImageView;
+    
+    int currentTypeDisplay;
+    __unsafe_unretained IBOutlet UIScrollView *mainScrollView;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -164,6 +169,8 @@
     switchIconButton = nil;
     mediaSizeLabel = nil;
     downloadBarImageView = nil;
+    mainScrollView = nil;
+    currentTimeSlider = nil;
     [super viewDidUnload];
 }
 
@@ -178,6 +185,7 @@
 
 - (void)setupView
 {
+    currentTypeDisplay = kPlayerMusic_ENVN;
     //
     //  load setting from userdefaults
     //
@@ -333,7 +341,7 @@
     
     
     
-    mediaPath = [NSString stringWithFormat:@"%@/%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
+    mediaPath = [NSString stringWithFormat:@"%@%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     if ([fileManager fileExistsAtPath:mediaPath])
     {
@@ -352,6 +360,8 @@
     }
     progressDownloadBar.progressTintColor = [UIColor greenColor];
     progressDownloadBar.progress = 0.0;
+    
+    mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
 }
 
 - (void)animateScrollTitleRight
@@ -636,7 +646,20 @@
 
 - (IBAction)enIconButtonClicked:(id)sender
 {
+    if (currentTypeDisplay == kPlayerMusic_ENVN)
+    {
+        currentTypeDisplay = kPlayerMusic_EN;
+    }
+    else if(currentTypeDisplay == kPlayerMusic_EN)
+    {
+        currentTypeDisplay = kPlayerMusic_VN;
+    }
+    else
+    {
+        currentTypeDisplay = kPlayerMusic_ENVN;
+    }
     
+    [myTableView reloadData];
 }
 
 - (IBAction)listIconButtonClicked:(id)sender
@@ -647,6 +670,16 @@
 - (IBAction)switchIconButtonClicked:(id)sender
 {
     
+    if (switchIconButton.selected == YES)
+    {
+        [mainScrollView setContentOffset:CGPointMake(320, 0) animated:YES];
+    }
+    else
+    {
+        [mainScrollView setContentOffset:CGPointMake(0, 0) animated:YES];
+    }
+    
+    switchIconButton.selected = !switchIconButton.selected;
 }
 
 #pragma mark - Display Update
@@ -751,7 +784,20 @@
     vnTextLabel.numberOfLines = 0;
     [vnTextLabel sizeToFit];
     
-    int Height = vnTextLabel.frame.origin.y + vnTextLabel.frame.size.height + 10;
+    int Height = 0;
+    if (currentTypeDisplay == kPlayerMusic_ENVN)
+    {
+        Height = vnTextLabel.frame.origin.y + vnTextLabel.frame.size.height + 10;
+    }
+    else if(currentTypeDisplay == kPlayerMusic_EN)
+    {
+        Height = enTextLabel.frame.origin.y + enTextLabel.frame.size.height + 10;
+    }
+    else
+    {
+        Height = 0 + vnTextLabel.frame.size.height + 10;
+    }
+    
     enTextLabel = nil;
     vnTextLabel = nil;
     
@@ -788,7 +834,7 @@
     }
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
-    [cell setupView:dict];
+    [cell setupView:dict andDisplayType:currentTypeDisplay];
     if (displayStyle == kSetting_BanNgay)
     {
         [cell setDetailTextColor:kColor_CustomGray];
@@ -797,14 +843,48 @@
     {
         [cell setDetailTextColor:[UIColor whiteColor]];
     }
-    
-    //[cell setDetailTextColor:kColor_Purple];
+
+    if (indexPath.row < lastIndex)
+    {
+        [cell setDetailTextColor:kColor_Purple];
+    }
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
- 
+    [self.player play];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    
+    playButton.hidden = YES;
+    expandPlayButton.hidden = YES;
+    
+    pauseButton.hidden = NO;
+    expandPauseButton.hidden = NO;
+
+    
+    NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
+    self.player.currentTime = [[dict objectForKey:@"seekTime"] doubleValue];
+    int extraIndex = lastIndex;
+    lastIndex = [[dict objectForKey:@"id"] intValue];
+  
+    for (int i = 0; i < lastIndex; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
+        [cell setDetailTextColor:kColor_Purple];
+    }
+    
+    for (int i = lastIndex; i < extraIndex; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
+        [cell setDetailTextColor:kColor_CustomGray];
+    }
+    
+//    [myTableView reloadData];
 }
 
 
@@ -812,7 +892,7 @@
 
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-    progressDownloadBar.hidden = YES;
+    //progressDownloadBar.hidden = YES;
     
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
     isDownloading = NO;
@@ -828,6 +908,8 @@
 {
     isDownloading = NO;
     [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
+
+    NSLog(@"%@",request.error.description);
 }
 
 // Download file delegate

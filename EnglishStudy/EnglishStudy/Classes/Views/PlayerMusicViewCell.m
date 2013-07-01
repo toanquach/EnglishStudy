@@ -26,7 +26,7 @@
     // Configure the view for the selected state
 }
 
-- (void)setupView:(NSDictionary *)dict
+- (void)setupView:(NSDictionary *)dict andDisplayType:(int)displayType
 {
     enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
     vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
@@ -42,6 +42,18 @@
     
     vnTextLabel.numberOfLines = 0;
     [vnTextLabel sizeToFit];
+    
+    if (displayType == kPlayerMusic_EN)
+    {
+        vnTextLabel.hidden = YES;
+    }
+    else if(displayType == kPlayerMusic_VN)
+    {
+        frame = vnTextLabel.frame;
+        frame.origin.y = 5;
+        vnTextLabel.frame = frame;
+        enTextLabel.hidden = YES;
+    }
 }
 
 - (void)setDetailTextColor:(UIColor *)color

@@ -34,4 +34,8 @@
 
 - (int)getNumSongFavorite;
 
+- (void)insertFavoriteSong:(int)songID;
+
+- (void)deleteFavoriteSong:(int)songID;
+
 @end

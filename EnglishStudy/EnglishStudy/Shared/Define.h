@@ -26,7 +26,7 @@
 #define kFont_Klavika_Bold                  @"Klavika-Bold"
 #define kFont_Klavika_Medium                @"Klavika-Medium"
 
-#define kDabase_Name                        @"loidich_v1.sqlite"
+#define kDabase_Name                        @"loidich_v1.db"
 
 #define kCategoryType_Category              1
 #define kCategoryType_Singer                2
@@ -60,6 +60,7 @@
 
 #define kServerMedia                    @"http://download.tflat.vn/loidich/mp3/"
 #define kServerCardChecking             @"http://loidich.tflat.vn/service/app/check_card"
+#define kServerDatabase                 @"http://download.tflat.vn/loidich/data/loidich.zip"
 
 #define KArray_Purcharse                    @"Purcharse_Array"
 #define kArray_Favorite                     @"Favorite_Array"
@@ -74,4 +75,9 @@
 #define kAlert_Message_Purcharse_Message    @"Bạn có muốn mua không?"
 
 #define kAlert_Message_Enough_Coin          @"Bài này giá %d xu\nTài khoản của bạn còn %d xu do đó bạn chưa đủ xu để mua. Để nạp xu bạn có thể nạp thẻ cào mobi, vina, viettel hoặc share facebook bài hát này"
+
+#define kPlayerMusic_ENVN                   1
+#define kPlayerMusic_EN                     2
+#define kPlayerMusic_VN                     3
+
 #endif

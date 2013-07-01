@@ -51,6 +51,14 @@
     nameLabel.text = singer.name;
     numSongLabel.text = [NSString stringWithFormat:@"Số bài hát: %d - Code: %d",singer.num_song, singer.tblID];
     numViewLabel.text = [NSString stringWithFormat:@"Số lượt xem: %d",singer.num_view];
+    
+    // check image icon exist
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *filePath = [NSString stringWithFormat:@"%@image/thumb/%d.jpg",LIBRARY_CATCHES_DIRECTORY,singer.tblID];
+    if ([fileManager fileExistsAtPath:filePath])
+    {
+        iconImageView.image = [UIImage imageWithContentsOfFile:filePath];
+    }
 }
 
 @end

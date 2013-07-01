@@ -35,7 +35,8 @@
 
 - (IBAction)shareFBButtonClicked:(id)sender
 {
-    [UIAppDelegate showAlertView:nil andMessage:@"Share FB Button Clicked"];
+    [UIAppDelegate checkFBSession];
+    //[UIAppDelegate showAlertView:nil andMessage:@"Share FB Button Clicked"];
 }
 
 @end

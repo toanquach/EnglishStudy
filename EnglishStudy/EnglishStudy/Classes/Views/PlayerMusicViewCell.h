@@ -15,7 +15,7 @@
     
 }
 
-- (void)setupView:(NSDictionary *)dict;
+- (void)setupView:(NSDictionary *)dict andDisplayType:(int)displayType;
 
 - (void)setDetailTextColor:(UIColor *)color;
 

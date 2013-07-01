@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "NavDropDownMenuView.h"
 #import "FBConnect.h"
+#import "Facebook.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UINavigationBarDelegate, FBSessionDelegate, FBDialogDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UINavigationBarDelegate, FBSessionDelegate, FBDialogDelegate, FBRequestDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 

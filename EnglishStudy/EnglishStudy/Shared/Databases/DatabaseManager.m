@@ -38,7 +38,7 @@
     self = [super init];
 	if(self)
 	{
-        [self createEditableCopyOfDataBaseIfNeeded];
+        //[self createEditableCopyOfDataBaseIfNeeded];
 		NSString *path = [self getDBPath];
 		NSLog(@"%@",path);
 		if(sqlite3_open([path UTF8String], &database)==SQLITE_OK)
@@ -74,12 +74,8 @@
 
 - (NSString *) getDBPath
 {
-	//NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
-	//NSString *documentsDir = [paths objectAtIndex:0];
-    
     NSString *cacheDir = LIBRARY_CATCHES_DIRECTORY;
-    //NSLog(@"%@",cacheDir);
-	return [cacheDir stringByAppendingPathComponent:kDabase_Name];
+	return [cacheDir stringByAppendingPathComponent:[NSString stringWithFormat:@"data/%@",kDabase_Name]];
 }
 
 static NSOperationQueue * DatabaseQueue = nil;

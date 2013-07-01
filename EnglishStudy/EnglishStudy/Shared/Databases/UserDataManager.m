@@ -87,7 +87,7 @@
 
 - (BOOL)filterFavoriteSongWithKey:(int)key
 {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF = %d",key];
+     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF == %@",[NSString stringWithFormat:@"%d",key]];
     NSArray *arr = [self.listFavorites filteredArrayUsingPredicate:predicate];
     if ([arr count] > 0)
     {
@@ -146,6 +146,22 @@
 - (int)getNumSongFavorite
 {
     return [self.listFavorites count];
+}
+
+- (void)insertFavoriteSong:(int)songID
+{
+    [self.listFavorites addObject:[NSString stringWithFormat:@"%d",songID]];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:self.listFavorites forKey:kArray_Favorite];
+    [userDefaults synchronize];
+}
+
+- (void)deleteFavoriteSong:(int)songID
+{
+    [self.listFavorites removeObject:[NSString stringWithFormat:@"%d",songID]];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:self.listFavorites forKey:kArray_Favorite];
+    [userDefaults synchronize];
 }
 
 @end

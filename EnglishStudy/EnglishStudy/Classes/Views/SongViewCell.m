@@ -50,7 +50,7 @@
     }
     
     desLabel.text = song.des;
-    numViewLabel.text = [NSString stringWithFormat:@"Số lượt xem: %d", song.num_view];
+    numViewLabel.text = [NSString stringWithFormat:@"%d", song.num_view];//Số lượt xem:
     
     purchaseButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     purchaseButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
@@ -77,6 +77,11 @@
     songPrice = price;
 }
 
+- (void)setupFavoriteButton:(BOOL)flag
+{
+    favoriteButton.selected = flag;
+}
+
 - (IBAction)facebookButtonClicked:(id)sender
 {
     [UIAppDelegate checkFBSession];
@@ -84,6 +89,8 @@
 
 - (IBAction)favoriteButtonClicked:(id)sender
 {
+    favoriteButton.selected = !favoriteButton.selected;
+    [delegate favoriteSongChanged:songId andFlag:favoriteButton.selected];
 }
 
 - (IBAction)purchaseButtonClicked:(id)sender

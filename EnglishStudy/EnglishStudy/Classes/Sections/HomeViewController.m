@@ -9,7 +9,6 @@
 #import "HomeViewController.h"
 
 #import "ESButton.h"
-#import "SongViewCell.h"
 
 #import "HotSongViewController.h"
 #import "AccountsViewController.h"
@@ -18,6 +17,10 @@
 #import "FavoritesViewController.h"
 #import "SettingsViewController.h"
 #import "PlayerMusicViewController.h"
+#import "LoadMoneyViewController.h"
+
+#import "DownloadViewController.h"
+
 
 @interface HomeViewController ()
 {
@@ -51,6 +54,9 @@
     
     
     __unsafe_unretained IBOutlet UILabel *noResultLabel;
+    
+    int songId;
+    int songPrice;
 }
 
 - (void)setupView;
@@ -58,6 +64,7 @@
 - (void)bringButtonToFront;
 - (void)slideOnOffMenuButton:(BOOL)flag;
 - (void)searchSongWithText:(NSString *)keyword;
+- (BOOL)checkDatabaseExist;
 
 // ------------------------------------------
 - (IBAction)bestSongButtonClicked:(id)sender;
@@ -93,6 +100,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    [self checkDatabaseExist];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -141,6 +150,7 @@
     noResultLabel = nil;
     [super viewDidUnload];
 }
+
 
 #pragma mark - setup View
 
@@ -232,6 +242,20 @@
     bestSongButton.selected = !bestSongButton.selected;
 }
 
+- (BOOL)checkDatabaseExist
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *dbPath = [NSString stringWithFormat:@"%@data/%@",LIBRARY_CATCHES_DIRECTORY,kDabase_Name];
+    if (![fileManager fileExistsAtPath:dbPath])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"Chưa có dữ liệu mới nhất. Bạn cần phải cập nhật giữ liệu mới để có thể sử dụng phần mềm." delegate:self cancelButtonTitle:@"Huỷ" otherButtonTitles:@"Tải", nil];
+        alertView.tag = 3;
+        [alertView show];
+        alertView = nil;
+        return NO;
+    }
+    return YES;
+}
 #pragma mark - Button Delegate
 
 /*
@@ -245,6 +269,11 @@
 
 - (IBAction)hotCategoryButtonClicked:(id)sender
 {
+    if ([self checkDatabaseExist] == NO)
+    {
+        return;
+    }
+    
     [UIAppDelegate showConnectionView];
     [self slideOnOffMenuButton:YES];
     CategoryViewController *viewController = [[CategoryViewController alloc]init];
@@ -255,6 +284,11 @@
 
 - (IBAction)hotSingerButtonClicked:(id)sender
 {
+    if ([self checkDatabaseExist] == NO)
+    {
+        return;
+    }
+    
     [UIAppDelegate showConnectionView];
     [self slideOnOffMenuButton:YES];
     CategoryViewController *viewController = [[CategoryViewController alloc]init];
@@ -265,6 +299,11 @@
 
 - (IBAction)hotSongButtonClicked:(id)sender
 {
+    if ([self checkDatabaseExist] == NO)
+    {
+        return;
+    }
+    
     [UIAppDelegate showConnectionView];
     [self slideOnOffMenuButton:YES];
     HotSongViewController *viewController = [[HotSongViewController alloc]init];
@@ -378,6 +417,11 @@
 
 - (void)searchSongWithText:(NSString *)keyword
 {
+    if ([self checkDatabaseExist] == NO)
+    {
+        return;
+    }
+    
     if (keyword == nil || [keyword isEqualToString:@""] == TRUE)
     {
         searchBgView.hidden = YES;
@@ -429,23 +473,153 @@
     {
         cell = [[[NSBundle mainBundle] loadNibNamed:@"SongViewCell" owner:self options:nil] objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.delegate = self;
     }
     
     Song *song = nil;
     song = [listItem objectAtIndex:indexPath.row];
     [cell setupViewWithSong:song];
     
+    int xu = song.num_view/1000 + 10;
+    if (xu > 100)
+    {
+        xu = 100;
+    }
+    [cell setupViewWithSong:song];
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:YES];
+    }
+    else
+    {
+        [cell setPurchaseButtonValue:xu andPurcharse:NO];
+    }
+    //
+    //      Check favorite item
+    //
+    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:song.tblID] == YES)
+    {
+        [cell setupFavoriteButton:YES];
+    }
+    else
+    {
+        [cell setupFavoriteButton:NO];
+    }
+
+    
     return cell;
 }
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
-    viewController.playerSong = [listItem objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:viewController animated:YES];
-    viewController = nil;
-    //[tableView deselectRowAtIndexPath:indexPath animated:YES];
+    Song *song = [listItem objectAtIndex:indexPath.row];
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
+        
+        viewController.playerSong = song;
+        
+        [self.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    else
+    {
+        int xu = song.num_view/1000 + 10;
+        if (xu > 100)
+        {
+            xu = 100;
+        }
+        songId = song.tblID;
+        songPrice = xu;
+        NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,songPrice];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+        alertView.tag = 1;
+        [alertView show];
+        alertView= nil;
+    }
 }
+
+#pragma mark - song view cell delegate
+
+- (void)purcharseSongWithId:(int)tblId andPrice:(int)price
+{
+    songId = tblId;
+    songPrice = price;
+    NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,price];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+    alertView.tag = 1;
+    [alertView show];
+    alertView= nil;
+}
+
+- (void)favoriteSongChanged:(int)tblId andFlag:(BOOL)flag
+{
+    if (flag == YES)
+    {
+        // add new item
+        [[UserDataManager sharedManager] insertFavoriteSong:tblId];
+    }
+    else
+    {
+        // remove item
+        [[UserDataManager sharedManager] deleteFavoriteSong:tblId];
+    }
+    
+    [searchTableView reloadData];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1)
+    {
+        if (buttonIndex == 1)
+        {
+            int coinUser = [[UserDataManager sharedManager] getCoinUser];
+            if ((coinUser - songPrice) < 0)
+            {
+                NSString *message = [NSString stringWithFormat:kAlert_Message_Enough_Coin,songPrice,[[UserDataManager sharedManager] getCoinUser]];
+                UIAlertView *mAlertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Đóng" otherButtonTitles:@"Nạp Xu",@"Share Facebook", nil];
+                mAlertView.tag = 2;
+                [mAlertView show];
+                mAlertView = nil;
+            }
+            else
+            {
+                //
+                //      Insert song to  UserDataManager
+                //
+                [[UserDataManager sharedManager] insertPurcharseSong:songId];
+                [[UserDataManager sharedManager] minusCoinUser:songPrice];
+                [searchTableView reloadData];
+            }
+        }
+    }
+    else if(alertView.tag == 2)
+    {
+        if (buttonIndex == 1)
+        {
+            LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
+            [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        }
+        else
+        {
+            // share facebook
+        }
+    }
+    else if(alertView.tag == 3)
+    {
+        
+        if (buttonIndex == 1)
+        {
+            DownloadViewController *downloadController = [[DownloadViewController alloc] init];
+            [self presentModalViewController:downloadController animated:YES];
+        }
+    }
+}
+
 
 #pragma mark - Keyboard will show
 

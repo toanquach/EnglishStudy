@@ -7,11 +7,14 @@
 //
 
 #import "PurchaseViewController.h"
+#import "PlayerMusicViewController.h"
+#import "LoadMoneyViewController.h"
 
 @interface PurchaseViewController ()
 {
     __unsafe_unretained IBOutlet UITableView *myTableView;
-    
+    int songId;
+    int songPrice;
 }
 - (void)setupView;
 
@@ -181,6 +184,123 @@
     {
         [cell setPurchaseButtonValue:xu andPurcharse:NO];
     }
+    //
+    //      Check favorite item
+    //
+    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:song.tblID] == YES)
+    {
+        [cell setupFavoriteButton:YES];
+    }
+    else
+    {
+        [cell setupFavoriteButton:NO];
+    }
     return cell;
 }
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    int tblId = [[[[UserDataManager sharedManager] listPurcharse] objectAtIndex:indexPath.row] intValue];
+    Song *song = [[Song alloc] init];
+    song.tblID = tblId;
+    song = [song getSongById:[DatabaseManager sharedDatabaseManager].database];
+    
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
+    {
+        PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
+        
+        viewController.playerSong = song;
+        
+        [self.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
+        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    }
+    else
+    {
+        int xu = song.num_view/1000 + 10;
+        if (xu > 100)
+        {
+            xu = 100;
+        }
+        songId = song.tblID;
+        songPrice = xu;
+        NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,songPrice];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+        alertView.tag = 1;
+        [alertView show];
+        alertView= nil;
+    }
+}
+
+#pragma mark - song view cell delegate
+
+- (void)purcharseSongWithId:(int)tblId andPrice:(int)price
+{
+    songId = tblId;
+    songPrice = price;
+    NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,price];
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
+    alertView.tag = 1;
+    [alertView show];
+    alertView= nil;
+}
+
+- (void)favoriteSongChanged:(int)tblId andFlag:(BOOL)flag
+{
+    if (flag == YES)
+    {
+        // add new item
+        [[UserDataManager sharedManager] insertFavoriteSong:tblId];
+    }
+    else
+    {
+        // remove item
+        [[UserDataManager sharedManager] deleteFavoriteSong:tblId];
+    }
+    
+    [myTableView reloadData];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1)
+    {
+        if (buttonIndex == 1)
+        {
+            int coinUser = [[UserDataManager sharedManager] getCoinUser];
+            if ((coinUser - songPrice) < 0)
+            {
+                NSString *message = [NSString stringWithFormat:kAlert_Message_Enough_Coin,songPrice,[[UserDataManager sharedManager] getCoinUser]];
+                UIAlertView *mAlertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Đóng" otherButtonTitles:@"Nạp Xu",@"Share Facebook", nil];
+                mAlertView.tag = 2;
+                [mAlertView show];
+                mAlertView = nil;
+            }
+            else
+            {
+                //
+                //      Insert song to  UserDataManager
+                //
+                [[UserDataManager sharedManager] insertPurcharseSong:songId];
+                [[UserDataManager sharedManager] minusCoinUser:songPrice];
+                [myTableView reloadData];
+            }
+        }
+    }
+    else if(alertView.tag == 2)
+    {
+        if (buttonIndex == 1)
+        {
+            LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
+            [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        }
+        else
+        {
+            // share facebook
+        }
+    }
+}
+
 @end

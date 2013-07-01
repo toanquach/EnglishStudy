@@ -41,7 +41,7 @@
 
 @implementation AppDelegate
 
-static NSString* kAppId = @"145698732230891";
+static NSString* kAppId = @"463470557051319";
 
 @synthesize navigationController;
 @synthesize navDropDownMenu;
@@ -54,12 +54,14 @@ static NSString* kAppId = @"145698732230891";
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isDir;
-    NSString *mediaFolder = [NSString stringWithFormat:@"%@/Media",LIBRARY_CATCHES_DIRECTORY];
+    NSString *mediaFolder = [NSString stringWithFormat:@"%@Media",LIBRARY_CATCHES_DIRECTORY];
     [fileManager fileExistsAtPath:mediaFolder isDirectory:&isDir];
     if (!isDir)
     {
         [fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
     }
+    
+    [fileManager createDirectoryAtPath:mediaFolder withIntermediateDirectories:NO attributes:nil error:nil];
     // ------------------------------------------
     //      Check network available
     //
@@ -295,35 +297,101 @@ static NSString* kAppId = @"145698732230891";
 {
     if (![facebook isSessionValid])
     {
-        [facebook fbDialogLogin:@"" expirationDate:nil];
+        //[facebook fbDialogLogin:@"" expirationDate:nil];
+        
+         NSArray *_permissions =  [NSArray arrayWithObjects:
+                                 @"read_stream", @"offline_access",nil] ;
+        [facebook authorize:_permissions];
+        
     }
     else
     {
-        [self feedDialogButtonClicked];
+       // [self feedDialogButtonClicked];
     }
 }
 
 // Method that gets called when the feed dialog button is pressed
 - (void)feedDialogButtonClicked
 {
-    NSMutableDictionary *params =
-    [NSMutableDictionary dictionaryWithObjectsAndKeys:
-           @"Testing Feed Dialog", @"name",
-            @"Feed Dialogs are Awesome.", @"caption",
-            @"Check out how to use Facebook Dialogs.", @"description",
-            @"http://www.example.com/", @"link",
-            @"http://fbrell.com/f8.jpg", @"picture",
-            nil];
-    [facebook dialog:@"feed"
-        andParams:params
-        andDelegate:self];
+//    NSMutableDictionary *params =
+//    [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//           @"Testing Feed Dialog", @"name",
+//            @"Feed Dialogs are Awesome.", @"caption",
+//            @"Check out how to use Facebook Dialogs.", @"description",
+//            @"http://www.example.com/", @"link",
+//            @"http://fbrell.com/f8.jpg", @"picture",
+//            nil];
+//    [facebook dialog:@"feed"
+//        andParams:params
+//        andDelegate:self];
+    
+   // NSArray *_permissions =  [NSArray arrayWithObjects:
+      //                         @"read_stream", @"offline_access",nil] ;
+    //[facebook authorize:_permissions];
+    
+//    NSString *message = @"This is the message I want to post";
+//    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+//                                   message, @"message",
+//                                   nil];
+//    
+//    [facebook requestWithMethodName:@"stream.publish"
+//                           andParams:params
+//                       andHttpMethod:@"POST"
+//                         andDelegate:self];
+  
+//    NSArray *_permissions =  [NSArray arrayWithObjects:@"read_stream", @"offline_access",nil] ;
+//    [facebook authorize:_permissions];
+//    
+//    NSString *message = @"Test from Hello English App!!! - Auto Post";
+//    NSArray *obj = [NSArray arrayWithObjects:message, nil];
+//    NSArray *keys = [NSArray arrayWithObjects:@"message", nil];
+//    
+//    // There are many other params you can use, check the API
+//    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjects:obj forKeys:keys];
+//
+//   FBRequest *request = [facebook requestWithGraphPath:@"me/feed" andParams:params andHttpMethod:@"POST" andDelegate:self];
+//
+//   [request connect];
+    
+    
 }
 
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response
+{
+    NSLog(@"aaa");
+}
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+    NSLog(@"%@",error.description);
+}
+
+- (void)request:(FBRequest *)request didLoad:(id)result {
+    // result may be a dictionary, an array, a string, or a number,
+    // depending on the format of the API response
+    
+     NSLog(@"aaa");
+}
 
 - (void)fbDidExtendToken:(NSString*)accessToken
                expiresAt:(NSDate*)expiresAt
 {
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults setObject:[facebook accessToken] forKey:@"FBAccessTokenKey"];
+    [defaults setObject:[facebook expirationDate] forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+    
+    NSString *message = @"This is the message I want to post";
+    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   message, @"message",
+                                   nil];
+    
+    [facebook requestWithMethodName:@"stream.publish"
+                          andParams:params
+                      andHttpMethod:@"POST"
+                        andDelegate:self];
+
 }
 
 
@@ -340,7 +408,17 @@ static NSString* kAppId = @"145698732230891";
     [defaults synchronize];
     
     // show form post to fb
-    [self feedDialogButtonClicked];
+   // [self feedDialogButtonClicked];
+    
+    NSString *message = @"This is the message I want to post";
+    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   message, @"message",
+                                   nil];
+
+    [facebook requestWithMethodName:@"stream.publish"
+                           andParams:params
+                       andHttpMethod:@"POST"
+                         andDelegate:self];
 }
 
 - (void)fbDidNotLogin:(BOOL)cancelled

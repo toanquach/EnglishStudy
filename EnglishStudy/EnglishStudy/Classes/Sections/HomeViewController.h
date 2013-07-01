@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SongViewCell.h"
 
-@interface HomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface HomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, SongViewCellDelegate>
 
 @end

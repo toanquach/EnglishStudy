@@ -316,6 +316,18 @@
     {
         [cell setPurchaseButtonValue:xu andPurcharse:NO];
     }
+    //
+    //      Check favorite item
+    //
+    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:song.tblID] == YES)
+    {
+        [cell setupFavoriteButton:YES];
+    }
+    else
+    {
+        [cell setupFavoriteButton:NO];
+    }
+    
     return cell;
 }
 
@@ -390,6 +402,22 @@
     alertView.tag = 1;
     [alertView show];
     alertView= nil;
+}
+
+- (void)favoriteSongChanged:(int)tblId andFlag:(BOOL)flag
+{
+    if (flag == YES)
+    {
+        // add new item
+        [[UserDataManager sharedManager] insertFavoriteSong:tblId];
+    }
+    else
+    {
+        // remove item
+        [[UserDataManager sharedManager] deleteFavoriteSong:tblId];
+    }
+    
+    [myTableView reloadData];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex

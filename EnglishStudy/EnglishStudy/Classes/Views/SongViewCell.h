@@ -15,7 +15,7 @@
 @optional
 
 - (void)purcharseSongWithId:(int)tblId andPrice:(int)price;
-
+- (void)favoriteSongChanged:(int)tblId andFlag:(BOOL)flag;
 @end
 
 @interface SongViewCell : UITableViewCell
@@ -37,12 +37,13 @@
 
 - (void)setupViewWithSong:(Song *)song;
 
-- (IBAction)purchaseButtonClicked:(id)sender;
-
 - (void)setPurchaseButtonValue:(int)price andPurcharse:(BOOL)isPurcharse;
+
+- (void)setupFavoriteButton:(BOOL)flag;
 
 - (IBAction)facebookButtonClicked:(id)sender;
 
 - (IBAction)favoriteButtonClicked:(id)sender;
 
+- (IBAction)purchaseButtonClicked:(id)sender;
 @end
