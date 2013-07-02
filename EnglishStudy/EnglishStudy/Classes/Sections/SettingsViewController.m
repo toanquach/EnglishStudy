@@ -13,6 +13,7 @@
     __unsafe_unretained IBOutlet UILabel *title01Label;
     __unsafe_unretained IBOutlet UILabel *title02Label;
     __unsafe_unretained IBOutlet UILabel *title03Label;
+    __unsafe_unretained IBOutlet UILabel *title04Label;
     
     __unsafe_unretained IBOutlet UIButton *dangListButton;
     __unsafe_unretained IBOutlet UIButton *dangTungCauButton;
@@ -21,6 +22,8 @@
     __unsafe_unretained IBOutlet UIButton *coNhoTextButton;
     __unsafe_unretained IBOutlet UIButton *coVuaTextButton;
     __unsafe_unretained IBOutlet UIButton *coLonTextButton;
+    __unsafe_unretained IBOutlet UIButton *autoDownloadButton;
+    __unsafe_unretained IBOutlet UIButton *manualDownloadButton;
     
     __unsafe_unretained IBOutlet UIImageView *dangListImageView;
     __unsafe_unretained IBOutlet UIImageView *dangTungCauImageView;
@@ -29,17 +32,20 @@
     __unsafe_unretained IBOutlet UIImageView *coNhoImageView;
     __unsafe_unretained IBOutlet UIImageView *coVuaImageView;
     __unsafe_unretained IBOutlet UIImageView *coLonImageView;
+    __unsafe_unretained IBOutlet UIImageView *autoDownloadImageView;
+    __unsafe_unretained IBOutlet UIImageView *manualDownloadImageView;
     
     int displayType;
     int displayStyle;
     int displayTextSizeType;
-    
+    int autoDownload;
 }
 
 - (void)setupView;
 - (IBAction)group01ButtonClicked:(id)sender;
 - (IBAction)group02ButtonClicked:(id)sender;
 - (IBAction)group03ButtonClicked:(id)sender;
+- (IBAction)group04ButtonClicked:(id)sender;
 
 @end
 
@@ -74,6 +80,7 @@
     title01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     title02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     title03Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
+    title04Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:20];
     
     dangListButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     dangTungCauButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
@@ -82,6 +89,8 @@
     coNhoTextButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     coVuaTextButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     coLonTextButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+    autoDownloadButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+    manualDownloadButton.titleLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     
     dangListButton.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, 0);
     dangTungCauButton.titleEdgeInsets = UIEdgeInsetsMake(0, 7, 0, 0);
@@ -95,6 +104,7 @@
     displayType = [userDefaults integerForKey:kSetting_Display_Type];
     displayStyle = [userDefaults integerForKey:kSetting_Display_Style];
     displayTextSizeType = [userDefaults integerForKey:kSetting_Text_Size];
+    autoDownload = [userDefaults integerForKey:kSetting_Auto_Download];
     
     if (displayType == 0)
     {
@@ -134,6 +144,16 @@
         coNhoTextButton.selected = YES;
     }
     
+    if (autoDownload == 0)
+    {
+        autoDownloadImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
+        autoDownloadButton.selected = YES;
+    }
+    else
+    {
+        manualDownloadImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
+        manualDownloadButton.selected = YES;
+    }
     // -----------------------
     //      Set Back Button
     //
@@ -258,6 +278,33 @@
     [userDefaults synchronize];
 }
 
+- (IBAction)group04ButtonClicked:(id)sender
+{
+    UIButton *button = (UIButton *)sender;
+    
+    if (button == autoDownloadButton)
+    {
+        // set to dang tung cau display
+        autoDownload = kSetting_AutoDL;
+        autoDownloadImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
+        autoDownloadButton.selected = YES;
+        manualDownloadImageView.image = [UIImage imageNamed:kRadio_UnChecked_Image];
+        manualDownloadButton.selected = NO;
+    }
+    else
+    {
+        autoDownload = kSetting_ManualDL;
+        autoDownloadImageView.image = [UIImage imageNamed:kRadio_UnChecked_Image];
+        autoDownloadButton.selected = NO;
+        manualDownloadButton.selected = YES;
+        manualDownloadImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
+    }
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setInteger:autoDownload forKey:kSetting_Auto_Download];
+    [userDefaults synchronize];
+}
+
 #pragma mark - UIBUtton event
 
 - (void)backButtonPressed:(id)sender
@@ -286,6 +333,11 @@
     coNhoImageView = nil;
     coVuaImageView = nil;
     coLonImageView = nil;
+    title04Label = nil;
+    autoDownloadImageView = nil;
+    autoDownloadButton = nil;
+    manualDownloadImageView = nil;
+    manualDownloadButton = nil;
     [super viewDidUnload];
 }
 

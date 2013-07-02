@@ -185,6 +185,10 @@
 		6A905BD11770C9430039E090 /* icon_warning.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A905BCA1770C9430039E090 /* icon_warning.png */; };
 		6A905BD61770CA4F0039E090 /* PlayerMusicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A905BD41770CA4F0039E090 /* PlayerMusicViewController.m */; };
 		6A905BD71770CA4F0039E090 /* PlayerMusicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A905BD51770CA4F0039E090 /* PlayerMusicViewController.xib */; };
+		6AA009211782725E00DBEDDE /* AudioStreamer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AA009201782725E00DBEDDE /* AudioStreamer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		6AA009231782726F00DBEDDE /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA009221782726F00DBEDDE /* CoreMedia.framework */; };
+		6AA009251782727700DBEDDE /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA009241782727700DBEDDE /* MediaPlayer.framework */; };
+		6AA00929178272CB00DBEDDE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AA00928178272CB00DBEDDE /* AudioToolbox.framework */; };
 		6AAAF06C176F77FC0022BB6A /* HelveticaNeue-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF069176F77FB0022BB6A /* HelveticaNeue-Bold.otf */; };
 		6AAAF06D176F77FC0022BB6A /* Stag-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF06A176F77FC0022BB6A /* Stag-Bold.otf */; };
 		6AAAF06E176F77FC0022BB6A /* Stag-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6AAAF06B176F77FC0022BB6A /* Stag-Book.otf */; };
@@ -482,6 +486,11 @@
 		6A905BD31770CA4F0039E090 /* PlayerMusicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerMusicViewController.h; sourceTree = "<group>"; };
 		6A905BD41770CA4F0039E090 /* PlayerMusicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerMusicViewController.m; sourceTree = "<group>"; };
 		6A905BD51770CA4F0039E090 /* PlayerMusicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerMusicViewController.xib; sourceTree = "<group>"; };
+		6AA0091F1782725E00DBEDDE /* AudioStreamer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioStreamer.h; sourceTree = "<group>"; };
+		6AA009201782725E00DBEDDE /* AudioStreamer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioStreamer.m; sourceTree = "<group>"; };
+		6AA009221782726F00DBEDDE /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		6AA009241782727700DBEDDE /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		6AA00928178272CB00DBEDDE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		6AAAF069176F77FB0022BB6A /* HelveticaNeue-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeue-Bold.otf"; sourceTree = "<group>"; };
 		6AAAF06A176F77FC0022BB6A /* Stag-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Stag-Bold.otf"; sourceTree = "<group>"; };
 		6AAAF06B176F77FC0022BB6A /* Stag-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Stag-Book.otf"; sourceTree = "<group>"; };
@@ -588,6 +597,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AA00929178272CB00DBEDDE /* AudioToolbox.framework in Frameworks */,
+				6AA009251782727700DBEDDE /* MediaPlayer.framework in Frameworks */,
+				6AA009231782726F00DBEDDE /* CoreMedia.framework in Frameworks */,
 				6A850446178102BE00F83D8C /* CoreMotion.framework in Frameworks */,
 				6AB6C3F0177B0F3600ACB1A3 /* MobileCoreServices.framework in Frameworks */,
 				6AB6C3EE177B0F0800ACB1A3 /* libz.dylib in Frameworks */,
@@ -807,7 +819,6 @@
 		6A7DAE211760D6C2005F4267 = {
 			isa = PBXGroup;
 			children = (
-				6A850445178102BE00F83D8C /* CoreMotion.framework */,
 				6A7DAE331760D6C2005F4267 /* EnglishStudy */,
 				6A7DAE2C1760D6C2005F4267 /* Frameworks */,
 				6A7DAE2B1760D6C2005F4267 /* Products */,
@@ -825,6 +836,10 @@
 		6A7DAE2C1760D6C2005F4267 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6AA00928178272CB00DBEDDE /* AudioToolbox.framework */,
+				6AA009241782727700DBEDDE /* MediaPlayer.framework */,
+				6AA009221782726F00DBEDDE /* CoreMedia.framework */,
+				6A850445178102BE00F83D8C /* CoreMotion.framework */,
 				6AB6C3EF177B0F3600ACB1A3 /* MobileCoreServices.framework */,
 				6AB6C3ED177B0F0800ACB1A3 /* libz.dylib */,
 				6AB6C3EB177B0EF100ACB1A3 /* libxml2.dylib */,
@@ -1056,6 +1071,8 @@
 		6A89F2961766BEFF00A2EE56 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				6AA0091F1782725E00DBEDDE /* AudioStreamer.h */,
+				6AA009201782725E00DBEDDE /* AudioStreamer.m */,
 				6A850423178101FA00F83D8C /* MTZTiltReflectionSlider */,
 				6AB6C3E0177B0E8600ACB1A3 /* ARCMacro.h */,
 				6AB6C3DD177B0D0100ACB1A3 /* YLProgressBar.h */,
@@ -1560,6 +1577,7 @@
 				6A850436178101FB00F83D8C /* MTZTiltReflectionSlider.m in Sources */,
 				6A850443178101FB00F83D8C /* UIImage+Shadow.m in Sources */,
 				6A850444178101FB00F83D8C /* UISlider+ForAllStates.m in Sources */,
+				6AA009211782725E00DBEDDE /* AudioStreamer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

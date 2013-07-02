@@ -122,7 +122,6 @@
 								<string key="NSFrame">{{0, 3}, {320, 26}}</string>
 								<reference key="NSSuperview" ref="126301164"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">4</int>
@@ -229,7 +228,7 @@
 							<object class="IBUISlider" id="273563861">
 								<reference key="NSNextResponder" ref="126301164"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{36, 16}, {248, 23}}</string>
+								<string key="NSFrame">{{36, 15}, {248, 23}}</string>
 								<reference key="NSSuperview" ref="126301164"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="924171169"/>
@@ -239,22 +238,6 @@
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
 								<float key="IBUIValue">0.5</float>
-							</object>
-							<object class="IBUIImageView" id="372076260">
-								<reference key="NSNextResponder" ref="126301164"/>
-								<int key="NSvFlags">-2147483392</int>
-								<string key="NSFrame">{{34, 19}, {248, 3}}</string>
-								<reference key="NSSuperview" ref="126301164"/>
-								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="273563861"/>
-								<bool key="IBUIOpaque">NO</bool>
-								<bool key="IBUIClipsSubviews">YES</bool>
-								<bool key="IBUIMultipleTouchEnabled">YES</bool>
-								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<object class="NSCustomResource" key="IBUIImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">download_bar.png</string>
-								</object>
 							</object>
 							<object class="IBUIButton" id="861920921">
 								<reference key="NSNextResponder" ref="126301164"/>
@@ -457,7 +440,7 @@
 								<string key="NSFrame">{{34, 13}, {14, 14}}</string>
 								<reference key="NSSuperview" ref="126301164"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="372076260"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -995,14 +978,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">downloadBarImageView</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="372076260"/>
-					</object>
-					<int key="connectionID">90</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">mainScrollView</string>
 						<reference key="source" ref="372490531"/>
 						<reference key="destination" ref="629897568"/>
@@ -1201,7 +1176,6 @@
 							<reference ref="289459989"/>
 							<reference ref="1004803203"/>
 							<reference ref="273563861"/>
-							<reference ref="372076260"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -1386,11 +1360,6 @@
 						<reference key="object" ref="90970151"/>
 						<reference key="parent" ref="126301164"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">89</int>
-						<reference key="object" ref="372076260"/>
-						<reference key="parent" ref="126301164"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1435,7 +1404,6 @@
 				<string key="7.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="84.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="89.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="9.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -1523,7 +1491,6 @@
 			<string key="bgd_menu.png">{65, 153}</string>
 			<string key="btn_pause.png">{12, 19}</string>
 			<string key="btn_play.png">{15, 19}</string>
-			<string key="download_bar.png">{496, 9}</string>
 			<string key="empty_bar.png">{248, 5}</string>
 			<string key="hoctienganh_640x960_Choinhac1.jpg">{640, 960}</string>
 			<string key="icon_EN.png">{44, 40}</string>

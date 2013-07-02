@@ -12,19 +12,19 @@
 
 @synthesize tblID, name, des, num_view, category_id, singer_id, english, vietnamese, explanation, done;
 
-static sqlite3_stmt *insert_statement=nil;
-static sqlite3_stmt* update_statement=nil;
+//static sqlite3_stmt *insert_statement=nil;
+//static sqlite3_stmt* update_statement=nil;
 static sqlite3_stmt* select_statement = nil;
-static sqlite3_stmt* delete_statement = nil;
+//static sqlite3_stmt* delete_statement = nil;
 
 - (NSString *)insert:(sqlite3 *)db
 {
-    
+    return @"";
 }
 
 - (NSString*)update:(sqlite3*)db
 {
-    
+    return @"";
 }
 
 - (NSMutableArray*)getSong:(sqlite3*)db

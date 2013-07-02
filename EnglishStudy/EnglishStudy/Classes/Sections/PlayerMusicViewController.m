@@ -14,6 +14,7 @@
 #import <Pods/Category/UILabel+Custom.h>
 #import "PlayerMusicViewCell.h"
 #import "MTZTiltReflectionSlider.h"
+#import "AudioStreamer.h"
 
 @interface PlayerMusicViewController ()
 {
@@ -25,58 +26,53 @@
     __unsafe_unretained IBOutlet UIButton *expandPlayButton;
     __unsafe_unretained IBOutlet UIButton *downloadButton;
     __unsafe_unretained IBOutlet UIButton *download2Button;
-//    __unsafe_unretained IBOutlet UISlider *currentTimeSlider;
     __unsafe_unretained IBOutlet MTZTiltReflectionSlider *currentTimeSlider;
     __unsafe_unretained IBOutlet UILabel *elapsedTimeLabel;
     __unsafe_unretained IBOutlet UILabel *remainingTimeLabel;
-    
     
     __unsafe_unretained IBOutlet UIButton *expandPauseButton;
     __unsafe_unretained IBOutlet UIButton *pauseButton;
     __unsafe_unretained IBOutlet UILabel *singerLabel;
     __unsafe_unretained IBOutlet UILabel *categoryLabel;
-    
-    NSMutableArray *listItems;
-    
-    int displayType;
-    int displayStyle;
-    
-    UIScrollView *titleBgView;
-    
-    BOOL canPlay;
-    __unsafe_unretained IBOutlet UIProgressView *progressDownloadBar;
-    NSString *mediaPath;
-    long long currentLength;
-    
-    //
-    //          Favorite button clicked
-    //
-    __unsafe_unretained IBOutlet UIButton *favoriteBgButton;
-    __unsafe_unretained IBOutlet UIButton *favoriteButton;
     //
     //          Right menu view
     //
     __unsafe_unretained IBOutlet UIView *rightMenuView;
-    
     __unsafe_unretained IBOutlet UIImageView *enIconImageView;
     __unsafe_unretained IBOutlet UIButton *enIconButton;
     __unsafe_unretained IBOutlet UIImageView *listIconImageView;
     __unsafe_unretained IBOutlet UIButton *listIconButton;
     __unsafe_unretained IBOutlet UIImageView *switchIconImageView;
     __unsafe_unretained IBOutlet UIButton *switchIconButton;
+    __unsafe_unretained IBOutlet UIProgressView *progressDownloadBar;
+    //
+    //          Favorite button clicked
+    //
+    __unsafe_unretained IBOutlet UIButton *favoriteBgButton;
+    __unsafe_unretained IBOutlet UIButton *favoriteButton;
+    __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
+    __unsafe_unretained IBOutlet UIScrollView *mainScrollView;
+    
+    UIScrollView *titleBgView;
+    
+    NSMutableArray *listItems;
+    
+    int displayType;
+    int displayStyle;
+    BOOL canPlay;
+    NSString *mediaPath;
+    long long currentLength;
+    int lastIndex;
+    int currentTypeDisplay;
+    BOOL isDownloading;
     
     ASIHTTPRequest *mediaRequest;
     
-    // -----
-    BOOL isDownloading;
-    __unsafe_unretained IBOutlet UILabel *mediaSizeLabel;
-    int lastIndex;
-    __unsafe_unretained IBOutlet UIImageView *downloadBarImageView;
+    AudioStreamer *streamer;
     
-    int currentTypeDisplay;
-    __unsafe_unretained IBOutlet UIScrollView *mainScrollView;
-    
-    NSMutableData *receivedData;
+    int autoDownloadFile;
+    int fontSize;
+    int typePlay;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -84,6 +80,7 @@
 - (void)setupView;
 
 - (void)setupMusicPlay;
+- (void)setupMusicPlayLive;
 - (void)updateDisplay;
 - (void)updateSliderLabels;
 - (void)stopTimer;
@@ -170,7 +167,6 @@
     switchIconImageView = nil;
     switchIconButton = nil;
     mediaSizeLabel = nil;
-    downloadBarImageView = nil;
     mainScrollView = nil;
     currentTimeSlider = nil;
     [super viewDidUnload];
@@ -179,8 +175,8 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [mediaRequest cancel];
     [self stopPlaying];
+    [self destroyStreamer];
     [super viewWillDisappear:animated];
 }
 
@@ -195,7 +191,27 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     displayType = [userDefaults integerForKey:kSetting_Display_Type];
     displayStyle = [userDefaults integerForKey:kSetting_Display_Style];
+    autoDownloadFile = [userDefaults integerForKey:kSetting_Auto_Download];
+    int textSize = [userDefaults integerForKey:kSetting_Text_Size];
     
+    //
+    //      font size of text
+    //
+    if (textSize == kSetting_CoLon)
+    {
+        fontSize = 20;
+    }
+    else if(textSize == kSetting_CoVua)
+    {
+        fontSize = 15;
+    }
+    else
+    {
+        fontSize = 12;
+    }
+    //
+    // style display ban ngay hay ban dem
+    //
     if (displayStyle == kSetting_BanNgay)
     {
         backgroundImageView.hidden = YES;
@@ -313,21 +329,17 @@
     
     [currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
 
-
-    //UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"transparent.png"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
-    
-    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateNormal];
-    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateHighlighted];
-    //[currentTimeSlider setMaximumTrackImage: sliderRightTrackImage forState: UIControlStateSelected];
-
     // ***********************************
     //      Check media file exist
     //
     mediaPath = [NSString stringWithFormat:@"%@%@/%d.mp3",LIBRARY_CATCHES_DIRECTORY,@"Media",playerSong.tblID];
     NSFileManager *fileManager = [NSFileManager defaultManager];
+    // ***********************************************************
+    //          check play local or live
+    //
     if ([fileManager fileExistsAtPath:mediaPath])
     {
-        //progressDownloadBar.hidden = YES;
+        typePlay = 1;
         [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
         download2Button.userInteractionEnabled = NO;
         downloadButton.userInteractionEnabled = NO;
@@ -337,8 +349,17 @@
     }
     else
     {
+        typePlay = 2;
         [download2Button setImage:[UIImage imageNamed:@"icon_download.png"] forState:UIControlStateNormal];
         canPlay = NO;
+        isDownloading = NO;
+        if (autoDownloadFile == 0)
+        {
+            // Download file
+            [self downloadMediaWithPath:mediaPath];
+        }
+        
+        [self createStreamer];
     }
     progressDownloadBar.progress = 0.0;
     currentTimeSlider.value = 0.0;
@@ -346,36 +367,63 @@
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
 }
 
-- (void)animateScrollTitleRight
+
+#pragma mark - AudioStream download
+
+//
+// destroyStreamer
+//
+// Removes the streamer, the UI update timer and the change notification
+//
+- (void)destroyStreamer
 {
-    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width + 2;
-    if (distance <= 0)
-    {
-        return;
-    }
-    double time = distance/30;
-    [UIView animateWithDuration:time animations:^{
-        titleBgView.contentOffset = CGPointMake(distance, 0);
-    }completion:^(BOOL finished)
-    {
-        [self performSelector:@selector(animateScrollTitleLeft) withObject:nil afterDelay:1.0];
-    }];
+	if (streamer)
+	{
+		[[NSNotificationCenter defaultCenter]
+         removeObserver:self
+         name:ASStatusChangedNotification
+         object:streamer];
+		[self.timer invalidate];
+		self.timer = nil;
+		
+		[streamer stop];
+		//[streamer release];
+		streamer = nil;
+	}
 }
 
-- (void)animateScrollTitleLeft
+//
+// createStreamer
+//
+// Creates or recreates the AudioStreamer object.
+//
+- (void)createStreamer
 {
-    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width;
-    if (distance <= 0)
-    {
-        return;
-    }
-    double time = distance/30;
-    [UIView animateWithDuration:time animations:^{
-        titleBgView.contentOffset = CGPointMake(0, 0);
-    }completion:^(BOOL finished)
-    {
-        [self performSelector:@selector(animateScrollTitleRight) withObject:nil afterDelay:1.0];
-    }];
+	if (streamer)
+	{
+		return;
+	}
+    
+	[self destroyStreamer];
+	
+    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+	NSString *escapedValue =
+    (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                         nil,
+                                                         (CFStringRef)urlStr,
+                                                         NULL,
+                                                         NULL,
+                                                         kCFStringEncodingUTF8));
+    
+	NSURL *url = [NSURL URLWithString:escapedValue];
+	streamer = [[AudioStreamer alloc] initWithURL:url];
+	
+	self.timer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    
+	[[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(playbackStateChanged:) name:ASStatusChangedNotification object:streamer];
 }
 
 - (void)setupNavigationBar
@@ -482,16 +530,11 @@
 - (void)setupMusicPlay
 {
     // Do any additional setup after loading the view, typically from a nib.
-//    NSURL* url = [NSURL URLWithString:mediaPath];
-    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
-    
-    
-    NSURL *url = [NSURL URLWithString:urlStr];
-    
-    //NSURL *url = [[NSURL alloc] initFileURLWithPath:mediaPath];
+    NSURL* url = [[NSURL alloc]initFileURLWithPath:mediaPath];
     NSAssert(url, @"URL is valid.");
     NSError* error = nil;
     self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    
     if(!self.player)
     {
         NSLog(@"Error creating player: %@", error);
@@ -500,11 +543,14 @@
     [self.player prepareToPlay];
     
     currentTimeSlider.minimumValue = 0.0f;
-    
-    NSLog(@"time >>> %f",self.player.duration);
-    
     currentTimeSlider.maximumValue = self.player.duration;
+    
     [self updateDisplay];
+}
+
+- (void)setupMusicPlayLive
+{
+    [self createStreamer];
 }
 
 - (void)stopPlaying
@@ -518,13 +564,9 @@
 
 - (void)downloadMediaWithPath:(NSString *)filePath
 {
-    CGRect frame = downloadBarImageView.frame;
-    frame.origin.x = currentTimeSlider.frame.origin.x - frame.size.width;
-    downloadBarImageView.frame = frame;
     isDownloading = YES;
     NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
-   // NSString *url = @"http://download.sutrix.com/pocari/a.mp4";
-    NSLog(@"File URL: %@", url);
+    //NSLog(@"File URL: %@", url);
 	mediaRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
 	[mediaRequest setDownloadDestinationPath:filePath];
 	[mediaRequest setDownloadProgressDelegate:self];
@@ -576,17 +618,19 @@
 
 - (IBAction)playButtonClicked:(id)sender
 {
-//    if (canPlay == NO)
-//    {
-//        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng tải file trước"];
-//        return;
-//    }
-
-    [self setupMusicPlay];
-    
-    [self.player play];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    if (typePlay == 1)
+    {
+        [self.player play];
+        
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        
+        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    }
+    else
+    {
+        [self downloadMediaWithPath:mediaPath];
+        [streamer start];
+    }
     
     playButton.hidden = YES;
     expandPlayButton.hidden = YES;
@@ -597,6 +641,10 @@
 
 - (IBAction)downloadButtonClicked:(id)sender
 {
+    if (isDownloading == YES)
+    {
+        return;
+    }
     [self downloadMediaWithPath:mediaPath];
 }
 
@@ -673,9 +721,52 @@
 
 #pragma mark - Display Update
 
+
+- (void)animateScrollTitleRight
+{
+    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width + 2;
+    if (distance <= 0)
+    {
+        return;
+    }
+    double time = distance/30;
+    [UIView animateWithDuration:time animations:^{
+        titleBgView.contentOffset = CGPointMake(distance, 0);
+    }completion:^(BOOL finished)
+     {
+         [self performSelector:@selector(animateScrollTitleLeft) withObject:nil afterDelay:1.0];
+     }];
+}
+
+- (void)animateScrollTitleLeft
+{
+    int distance = titleBgView.contentSize.width - titleBgView.frame.size.width;
+    if (distance <= 0)
+    {
+        return;
+    }
+    double time = distance/30;
+    [UIView animateWithDuration:time animations:^{
+        titleBgView.contentOffset = CGPointMake(0, 0);
+    }completion:^(BOOL finished)
+     {
+         [self performSelector:@selector(animateScrollTitleRight) withObject:nil afterDelay:1.0];
+     }];
+}
+
 - (void)updateDisplay
 {
-    NSTimeInterval currentTime = self.player.currentTime;
+    NSTimeInterval currentTime;
+    
+    if (typePlay == 1)
+    {
+        currentTime = self.player.currentTime;
+    }
+    else
+    {
+        currentTimeSlider.maximumValue = streamer.duration;
+        currentTime = streamer.progress;
+    }
     
     currentTimeSlider.value = currentTime;
     [self updateSliderLabels];
@@ -736,6 +827,23 @@
     [self.timer invalidate];
     self.timer = nil;
     [self updateDisplay];
+}
+
+- (void)playbackStateChanged:(NSNotification *)aNotification
+{
+	if ([streamer isWaiting])
+	{
+		//[self setButtonImageNamed:@"loadingbutton.png"];
+	}
+	else if ([streamer isPlaying])
+	{
+		//[self setButtonImageNamed:@"stopbutton.png"];
+	}
+	else if ([streamer isIdle])
+	{
+		[self destroyStreamer];
+		//[self setButtonImageNamed:@"playbutton.png"];
+	}
 }
 
 #pragma mark - AVAudioPlayerDelegate
@@ -886,6 +994,7 @@
     downloadButton.userInteractionEnabled = NO;
     canPlay = YES;
     //----------    player --------------------
+    typePlay = 1;
     [self setupMusicPlay];
 }
 
@@ -908,30 +1017,6 @@
 {
     currentLength += bytes;
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:currentLength],[self byteToMegaByte:request.contentLength]];
-    
-    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
-    float percent = (currentLength*100)/request.contentLength;
-    int width = currentTimeSlider.frame.size.width;
-    int posX = (width*percent)/100;
-    CGRect frame = downloadBarImageView.frame;
-    frame.origin.x +=posX;
-    downloadBarImageView.frame = frame;
-    
-    NSLog(@"Size download bar: %@",NSStringFromCGRect(downloadBarImageView.frame));
-}
-
--(void)request:(ASIHTTPRequest *)request didReceiveData:(NSData *)data
-{
-    if (receivedData == nil)
-    {
-        receivedData = [NSMutableData data];
-    }
-    
-    [receivedData  appendData:data];
-    
-    [receivedData writeToFile:mediaPath atomically:NO];
-    [self setupMusicPlay];
-    canPlay = YES;
 }
 
 - (void)setProgress:(float)newProgress

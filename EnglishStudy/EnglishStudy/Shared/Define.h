@@ -46,6 +46,7 @@
 #define kSetting_Display_Type               @"Display_Type"
 #define kSetting_Display_Style              @"Display_Style"
 #define kSetting_Text_Size                  @"Display_Size_Type"
+#define kSetting_Auto_Download              @"Auto_Download"
 
 #define kSetting_Display_List               0
 #define kSetting_Display_TungCau            1
@@ -57,6 +58,8 @@
 #define kSetting_CoVua                      1
 #define kSetting_CoLon                      0
 
+#define kSetting_AutoDL                     0
+#define kSetting_ManualDL                   1
 
 #define kServerMedia                    @"http://download.tflat.vn/loidich/mp3/"
 #define kServerCardChecking             @"http://loidich.tflat.vn/service/app/check_card"
