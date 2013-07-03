@@ -167,8 +167,6 @@
     
     searchTableView.delegate = self;
     searchTableView.dataSource = self;
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-    searchTableView.tableFooterView = footerView;
     
     delaySearchUntilQueryUnchangedForTimeOffset = 0.4 * NSEC_PER_SEC;
     
@@ -255,6 +253,22 @@
         return NO;
     }
     return YES;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 3)
+    {
+        if (buttonIndex == 0)
+        {
+            
+        }
+        else
+        {
+            DownloadViewController *downloadViewController = [[DownloadViewController alloc] init];
+            [self presentModalViewController:downloadViewController animated:YES];
+        }
+    }
 }
 #pragma mark - Button Delegate
 
@@ -360,6 +374,7 @@
     searchTextField.text = @"";
     [searchTextField becomeFirstResponder];
     searchTableView.hidden = YES;
+    searchBgView.hidden = YES;
 }
 
 #pragma mark - UITextfield Delegate
@@ -451,7 +466,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 105;
+    return 63;
 }
 
 
@@ -471,41 +486,14 @@
     
     if (cell == nil)
     {
-        cell = [[[NSBundle mainBundle] loadNibNamed:@"SongViewCell" owner:self options:nil] objectAtIndex:0];
+        cell = [[[NSBundle mainBundle] loadNibNamed:@"SongSearchViewCell" owner:self options:nil] objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.delegate = self;
     }
     
     Song *song = nil;
     song = [listItem objectAtIndex:indexPath.row];
-    [cell setupViewWithSong:song];
-    
-    int xu = song.num_view/1000 + 10;
-    if (xu > 100)
-    {
-        xu = 100;
-    }
-    [cell setupViewWithSong:song];
-    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES)
-    {
-        [cell setPurchaseButtonValue:xu andPurcharse:YES];
-    }
-    else
-    {
-        [cell setPurchaseButtonValue:xu andPurcharse:NO];
-    }
-    //
-    //      Check favorite item
-    //
-    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:song.tblID] == YES)
-    {
-        [cell setupFavoriteButton:YES];
-    }
-    else
-    {
-        [cell setupFavoriteButton:NO];
-    }
-
+    [cell setupViewWithSongInSearch:song andIndex:indexPath.row];
     
     return cell;
 }
@@ -514,112 +502,15 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     Song *song = [listItem objectAtIndex:indexPath.row];
-    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:song.tblID] == YES || 1)
-    {
-        PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
-        
-        viewController.playerSong = song;
-        
-        [self.navigationController pushViewController:viewController animated:YES];
-        viewController = nil;
-        
-        [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    }
-    else
-    {
-        int xu = song.num_view/1000 + 10;
-        if (xu > 100)
-        {
-            xu = 100;
-        }
-        songId = song.tblID;
-        songPrice = xu;
-        NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,songPrice];
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
-        alertView.tag = 1;
-        [alertView show];
-        alertView= nil;
-    }
-}
-
-#pragma mark - song view cell delegate
-
-- (void)purcharseSongWithId:(int)tblId andPrice:(int)price
-{
-    songId = tblId;
-    songPrice = price;
-    NSString *title = [NSString stringWithFormat:kAlert_Message_Purcharse_Title,price];
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title message:kAlert_Message_Purcharse_Message delegate:self cancelButtonTitle:@"Không" otherButtonTitles:@"Có", nil];
-    alertView.tag = 1;
-    [alertView show];
-    alertView= nil;
-}
-
-- (void)favoriteSongChanged:(int)tblId andFlag:(BOOL)flag
-{
-    if (flag == YES)
-    {
-        // add new item
-        [[UserDataManager sharedManager] insertFavoriteSong:tblId];
-    }
-    else
-    {
-        // remove item
-        [[UserDataManager sharedManager] deleteFavoriteSong:tblId];
-    }
+    PlayerMusicViewController *viewController = [[PlayerMusicViewController alloc] init];
     
-    [searchTableView reloadData];
+    viewController.playerSong = song;
+    
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == 1)
-    {
-        if (buttonIndex == 1)
-        {
-            int coinUser = [[UserDataManager sharedManager] getCoinUser];
-            if ((coinUser - songPrice) < 0)
-            {
-                NSString *message = [NSString stringWithFormat:kAlert_Message_Enough_Coin,songPrice,[[UserDataManager sharedManager] getCoinUser]];
-                UIAlertView *mAlertView = [[UIAlertView alloc] initWithTitle:nil message:message delegate:self cancelButtonTitle:@"Đóng" otherButtonTitles:@"Nạp Xu",@"Share Facebook", nil];
-                mAlertView.tag = 2;
-                [mAlertView show];
-                mAlertView = nil;
-            }
-            else
-            {
-                //
-                //      Insert song to  UserDataManager
-                //
-                [[UserDataManager sharedManager] insertPurcharseSong:songId];
-                [[UserDataManager sharedManager] minusCoinUser:songPrice];
-                [searchTableView reloadData];
-            }
-        }
-    }
-    else if(alertView.tag == 2)
-    {
-        if (buttonIndex == 1)
-        {
-            LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
-            [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
-        }
-        else
-        {
-            // share facebook
-        }
-    }
-    else if(alertView.tag == 3)
-    {
-        
-        if (buttonIndex == 1)
-        {
-            DownloadViewController *downloadController = [[DownloadViewController alloc] init];
-            [self presentModalViewController:downloadController animated:YES];
-        }
-    }
-}
-
 
 #pragma mark - Keyboard will show
 

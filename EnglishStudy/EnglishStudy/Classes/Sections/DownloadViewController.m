@@ -23,6 +23,7 @@
 }
 
 - (IBAction)closeButtonClicked:(id)sender;
+- (void)setupView;
 
 @end
 
@@ -37,10 +38,16 @@
     return self;
 }
 
+- (void)setupView
+{
+    mediaSizeLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self setupView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -96,6 +103,11 @@
 
 - (IBAction)closeButtonClicked:(id)sender
 {
+    if ([dbRequest isExecuting] == YES)
+    {
+        [dbRequest cancel];        
+    }
+
     [self dismissModalViewControllerAnimated:YES];
 }
 

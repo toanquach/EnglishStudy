@@ -89,8 +89,8 @@
     // add right button
     
     UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
-    [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, rightMenuImage.size.width + 20, 44)];
+    [rightButton setImage:rightMenuImage forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightButton];

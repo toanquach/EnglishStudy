@@ -37,6 +37,8 @@
 
 - (void)setupViewWithSong:(Song *)song;
 
+- (void)setupViewWithSongInSearch:(Song *)song andIndex:(int)index;
+
 - (void)setPurchaseButtonValue:(int)price andPurcharse:(BOOL)isPurcharse;
 
 - (void)setupFavoriteButton:(BOOL)flag;

@@ -36,7 +36,7 @@
     songNameLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:15];
     singerNameLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
     desLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
-    numViewLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:10];
+    numViewLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:12];
     
     songNameLabel.textColor = [UIColor colorWithRed:153.0f/255.0f green:52.0f/255.0f blue:204.0f/255.0f alpha:1.0];
     numViewLabel.textColor = [UIColor colorWithRed:171.0f/255.0f green:171.0f/255.0f blue:171.0f/255.0f alpha:1.0];
@@ -56,6 +56,24 @@
     purchaseButton.titleEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
     [purchaseButton setTitleColor:[UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0] forState:UIControlStateNormal];
 
+    songId = song.tblID;
+}
+
+- (void)setupViewWithSongInSearch:(Song *)song andIndex:(int)index
+{
+    songNameLabel.font = [UIFont fontWithName:kFont_Klavika_Medium size:15];
+    desLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:12];
+    
+    songNameLabel.textColor = [UIColor colorWithRed:153.0f/255.0f green:52.0f/255.0f blue:204.0f/255.0f alpha:1.0];
+    desLabel.textColor = [UIColor colorWithRed:171.0f/255.0f green:171.0f/255.0f blue:171.0f/255.0f alpha:1.0];
+    NSArray *arr = [song.name componentsSeparatedByString:@"- "];
+    if ([arr count] > 1)
+    {
+        songNameLabel.text = [NSString stringWithFormat:@"%d. %@",index + 1,[[arr objectAtIndex:0] uppercaseString]];
+    }
+    
+    desLabel.text = song.des;
+    
     songId = song.tblID;
 }
 

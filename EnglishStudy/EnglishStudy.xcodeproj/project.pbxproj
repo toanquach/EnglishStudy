@@ -94,6 +94,7 @@
 		6A6F00C21770B0C600BAF81E /* btn_block.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00BF1770B0C600BAF81E /* btn_block.png */; };
 		6A6F00C31770B0C600BAF81E /* btn_nap_the_cao.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00C01770B0C600BAF81E /* btn_nap_the_cao.png */; };
 		6A6F00C41770B0C600BAF81E /* btn_share_fb.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A6F00C11770B0C600BAF81E /* btn_share_fb.png */; };
+		6A72C45A1783451100310086 /* SongSearchViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A72C4591783451100310086 /* SongSearchViewCell.xib */; };
 		6A7A393D177D5CC100412EE1 /* transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7A393C177D5CC100412EE1 /* transparent.png */; };
 		6A7DAE2E1760D6C2005F4267 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2D1760D6C2005F4267 /* UIKit.framework */; };
 		6A7DAE301760D6C2005F4267 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE2F1760D6C2005F4267 /* Foundation.framework */; };
@@ -113,6 +114,7 @@
 		6A7DAE9D1760E8C7005F4267 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAE9C1760E8C7005F4267 /* CFNetwork.framework */; };
 		6A7DAEA11760E916005F4267 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAEA01760E916005F4267 /* QuartzCore.framework */; };
 		6A7DAEA51760E95D005F4267 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7DAEA41760E95D005F4267 /* Security.framework */; };
+		6A7DD6E4178396AC00E1FF65 /* icon_menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7DD6E3178396AC00E1FF65 /* icon_menu@2x.png */; };
 		6A7E28E3177535CE006F1767 /* hoctienganh_640x960_baihotnhat_03.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7E28E2177535CE006F1767 /* hoctienganh_640x960_baihotnhat_03.png */; };
 		6A7E28E5177537BD006F1767 /* CategoryViewCell2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6A7E28E4177537BD006F1767 /* CategoryViewCell2.xib */; };
 		6A7EA86B1767F2AA00542515 /* icon-category.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A7EA8681767F2AA00542515 /* icon-category.png */; };
@@ -379,6 +381,7 @@
 		6A6F00BF1770B0C600BAF81E /* btn_block.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_block.png; sourceTree = "<group>"; };
 		6A6F00C01770B0C600BAF81E /* btn_nap_the_cao.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_nap_the_cao.png; sourceTree = "<group>"; };
 		6A6F00C11770B0C600BAF81E /* btn_share_fb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_share_fb.png; sourceTree = "<group>"; };
+		6A72C4591783451100310086 /* SongSearchViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SongSearchViewCell.xib; sourceTree = "<group>"; };
 		6A7A393C177D5CC100412EE1 /* transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transparent.png; sourceTree = "<group>"; };
 		6A7DAE2A1760D6C2005F4267 /* EnglishStudy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EnglishStudy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A7DAE2D1760D6C2005F4267 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -403,6 +406,7 @@
 		6A7DAE9C1760E8C7005F4267 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		6A7DAEA01760E916005F4267 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6A7DAEA41760E95D005F4267 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6A7DD6E3178396AC00E1FF65 /* icon_menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_menu@2x.png"; sourceTree = "<group>"; };
 		6A7E28E2177535CE006F1767 /* hoctienganh_640x960_baihotnhat_03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hoctienganh_640x960_baihotnhat_03.png; sourceTree = "<group>"; };
 		6A7E28E4177537BD006F1767 /* CategoryViewCell2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CategoryViewCell2.xib; sourceTree = "<group>"; };
 		6A7EA8681767F2AA00542515 /* icon-category.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-category.png"; sourceTree = "<group>"; };
@@ -661,6 +665,7 @@
 				6A3F083E17755A030009B1C1 /* SongViewCell.h */,
 				6A3F083F17755A030009B1C1 /* SongViewCell.m */,
 				6A3F084117755A140009B1C1 /* SongViewCell.xib */,
+				6A72C4591783451100310086 /* SongSearchViewCell.xib */,
 			);
 			name = "Hot Song Page";
 			sourceTree = "<group>";
@@ -1045,6 +1050,7 @@
 				6AC38D6E17798BA000D0B538 /* icon_favourite_song.png */,
 				6AC38D6F17798BA000D0B538 /* icon_hot_song.png */,
 				6AC38D7017798BA000D0B538 /* icon_menu.png */,
+				6A7DD6E3178396AC00E1FF65 /* icon_menu@2x.png */,
 				6AC38D7117798BA000D0B538 /* icon_other_app.png */,
 				6AC38D7217798BA000D0B538 /* icon_purchased_song.png */,
 				6AC38D7317798BA000D0B538 /* icon_setting.png */,
@@ -1509,6 +1515,8 @@
 				6A850440178101FB00F83D8C /* MTZTiltReflectionSliderTrackEmpty@2x.png in Resources */,
 				6A850441178101FB00F83D8C /* MTZTiltReflectionSliderTrackFill.png in Resources */,
 				6A850442178101FB00F83D8C /* MTZTiltReflectionSliderTrackFill@2x.png in Resources */,
+				6A72C45A1783451100310086 /* SongSearchViewCell.xib in Resources */,
+				6A7DD6E4178396AC00E1FF65 /* icon_menu@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -49,7 +49,7 @@
     numViewLabel.textColor = [UIColor colorWithRed:171.0f/255.0f green:171.0f/255.0f blue:171.0f/255.0f alpha:1.0];
     
     nameLabel.text = singer.name;
-    numSongLabel.text = [NSString stringWithFormat:@"Số bài hát: %d - Code: %d",singer.num_song, singer.tblID];
+    numSongLabel.text = [NSString stringWithFormat:@"Số bài hát: %d",singer.num_song];
     numViewLabel.text = [NSString stringWithFormat:@"Số lượt xem: %d",singer.num_view];
     
     // check image icon exist

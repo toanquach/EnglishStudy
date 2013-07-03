@@ -16,6 +16,11 @@
 #import "MTZTiltReflectionSlider.h"
 #import "AudioStreamer.h"
 
+#import "LoadMoneyViewController.h"
+
+#define kPlay_Local         1
+#define kPlay_Online        2
+
 @interface PlayerMusicViewController ()
 {
     __unsafe_unretained IBOutlet UITableView *myTableView;
@@ -73,6 +78,7 @@
     int autoDownloadFile;
     int fontSize;
     int typePlay;
+    int isPlaying;
 }
  
 @property (nonatomic, strong) AVAudioPlayer* player;
@@ -281,6 +287,9 @@
     arrEn = [arrEn filteredArrayUsingPredicate:predicate];
     arrVn = [arrVn filteredArrayUsingPredicate:predicate];
     
+    //
+    //      khoi tao list cau hat
+    //
     listItems = [NSMutableArray array];
     for (int i = 0; i < [arrEn count]; i++)
     {
@@ -339,7 +348,7 @@
     //
     if ([fileManager fileExistsAtPath:mediaPath])
     {
-        typePlay = 1;
+        typePlay = kPlay_Local;
         [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
         download2Button.userInteractionEnabled = NO;
         downloadButton.userInteractionEnabled = NO;
@@ -349,81 +358,31 @@
     }
     else
     {
-        typePlay = 2;
         [download2Button setImage:[UIImage imageNamed:@"icon_download.png"] forState:UIControlStateNormal];
+        typePlay = kPlay_Online;
         canPlay = NO;
         isDownloading = NO;
+        //
+        //      auto download file mp3
+        //
         if (autoDownloadFile == 0)
         {
             // Download file
             [self downloadMediaWithPath:mediaPath];
         }
         
+        currentTimeSlider.maximumValue = 100;
+        //
+        //      create strem file
+        //
         [self createStreamer];
     }
+    
+    isPlaying = 0;
     progressDownloadBar.progress = 0.0;
     currentTimeSlider.value = 0.0;
     [currentTimeSlider setSize:MTZTiltReflectionSliderSizeSmall];
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
-}
-
-
-#pragma mark - AudioStream download
-
-//
-// destroyStreamer
-//
-// Removes the streamer, the UI update timer and the change notification
-//
-- (void)destroyStreamer
-{
-	if (streamer)
-	{
-		[[NSNotificationCenter defaultCenter]
-         removeObserver:self
-         name:ASStatusChangedNotification
-         object:streamer];
-		[self.timer invalidate];
-		self.timer = nil;
-		
-		[streamer stop];
-		//[streamer release];
-		streamer = nil;
-	}
-}
-
-//
-// createStreamer
-//
-// Creates or recreates the AudioStreamer object.
-//
-- (void)createStreamer
-{
-	if (streamer)
-	{
-		return;
-	}
-    
-	[self destroyStreamer];
-	
-    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
-    
-	NSString *escapedValue =
-    (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
-                                                         nil,
-                                                         (CFStringRef)urlStr,
-                                                         NULL,
-                                                         NULL,
-                                                         kCFStringEncodingUTF8));
-    
-	NSURL *url = [NSURL URLWithString:escapedValue];
-	streamer = [[AudioStreamer alloc] initWithURL:url];
-	
-	self.timer =[NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
-    
-	[[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(playbackStateChanged:) name:ASStatusChangedNotification object:streamer];
 }
 
 - (void)setupNavigationBar
@@ -482,8 +441,8 @@
     // add right button
     
     UIImage *rightMenuImage = [UIImage imageNamed:@"icon_menu.png"];
-    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(90 - rightMenuImage.size.width/2, 22 -  rightMenuImage.size.height/4, rightMenuImage.size.width/2, rightMenuImage.size.height/2)];
-    [rightButton setBackgroundImage:rightMenuImage forState:UIControlStateNormal];
+    UIButton *rightButton = [[UIButton alloc] initWithFrame:CGRectMake(70 - rightMenuImage.size.width, 0, rightMenuImage.size.width + 20, 44)];
+    [rightButton setImage:rightMenuImage forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     //
@@ -491,7 +450,7 @@
     //
     UIView  *rightBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 90, 44)];
     [rightBgView setBackgroundColor:[UIColor clearColor]];
-    [rightBgView addSubview:rightButton];
+    
     //
     //          Add Coin Icon
     //
@@ -502,17 +461,20 @@
     //          Add coin button
     //
     NSString *userCoin = [NSString stringWithFormat:@"%d",[[UserDataManager sharedManager] getCoinUser]];
-    UIButton *coinButton = [[UIButton alloc] initWithFrame:CGRectMake(16, 0,60,44)];
+    UIButton *coinButton = [[UIButton alloc] initWithFrame:CGRectMake(0,0,70,44)];
     [coinButton setTitle:userCoin forState:UIControlStateNormal];
-    [coinButton addTarget:self action:@selector(showMenuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [coinButton addTarget:self action:@selector(showLoadMoney:) forControlEvents:UIControlEventTouchUpInside];
     [rightBgView addSubview:coinButton];
+
     //
     //      Add line image
     //
     UIImageView *lineImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"player_nav_line.png"]];
-    lineImageView.frame = CGRectMake(90 - rightMenuImage.size.width/2 - 8, 13, 2, 18);
+    lineImageView.frame = CGRectMake(85 - rightMenuImage.size.width/2 - 8, 13, 2, 18);
     
     [rightBgView addSubview:lineImageView];
+
+    [rightBgView addSubview:rightButton];
     
     UIBarButtonItem *rightButtonBar = [[UIBarButtonItem alloc] initWithCustomView:rightBgView];
     self.navigationItem.rightBarButtonItem = rightButtonBar;
@@ -527,6 +489,70 @@
     [self animateScrollTitleRight];
 }
 
+#pragma mark - AudioStream download
+
+//
+// destroyStreamer
+//
+// Removes the streamer, the UI update timer and the change notification
+//
+- (void)destroyStreamer
+{
+	if (streamer)
+	{
+		[[NSNotificationCenter defaultCenter]
+         removeObserver:self
+         name:ASStatusChangedNotification
+         object:streamer];
+		[self.timer invalidate];
+		self.timer = nil;
+		
+		[streamer stop];
+		//[streamer release];
+		streamer = nil;
+	}
+}
+
+//
+// createStreamer
+//
+// Creates or recreates the AudioStreamer object.
+//
+- (void)createStreamer
+{
+	if (streamer)
+	{
+		return;
+	}
+    
+	[self destroyStreamer];
+	
+    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+	NSString *escapedValue =
+    (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
+                                                         nil,
+                                                         (CFStringRef)urlStr,
+                                                         NULL,
+                                                         NULL,
+                                                         kCFStringEncodingUTF8));
+    
+	NSURL *url = [NSURL URLWithString:escapedValue];
+	streamer = [[AudioStreamer alloc] initWithURL:url];
+	
+    if ([self.timer isValid])
+    {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    
+	[[NSNotificationCenter defaultCenter]
+     addObserver:self selector:@selector(playbackStateChanged:) name:ASStatusChangedNotification object:streamer];
+}
+
 - (void)setupMusicPlay
 {
     // Do any additional setup after loading the view, typically from a nib.
@@ -539,6 +565,9 @@
     {
         NSLog(@"Error creating player: %@", error);
     }
+    //
+    //      setup player
+    //
     self.player.delegate = self;
     [self.player prepareToPlay];
     
@@ -591,6 +620,13 @@
 
 #pragma mark - Button Clicked
 
+- (void)showLoadMoney:(id)sender
+{
+    LoadMoneyViewController *viewController = [[LoadMoneyViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+}
+
 - (void)backButtonPressed:(id)sender
 {
     if (UIAppDelegate.isMenuShow == 1)
@@ -618,17 +654,26 @@
 
 - (IBAction)playButtonClicked:(id)sender
 {
-    if (typePlay == 1)
+    if (typePlay == kPlay_Local)
     {
         [self.player play];
         
+        if ([self.timer isValid])
+        {
+            [self.timer invalidate];
+            self.timer = nil;
+        }
         self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
         
         [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
     }
     else
     {
-        [self downloadMediaWithPath:mediaPath];
+        if (isDownloading == NO)
+        {
+            [self downloadMediaWithPath:mediaPath];
+        }
+        
         [streamer start];
     }
     
@@ -637,12 +682,14 @@
     
     pauseButton.hidden = NO;
     expandPauseButton.hidden = NO;
+    isPlaying = 1;
 }
 
 - (IBAction)downloadButtonClicked:(id)sender
 {
     if (isDownloading == YES)
     {
+        [UIAppDelegate showAlertView:nil andMessage:@"Bạn đang tải, vui lòng chờ."];
         return;
     }
     [self downloadMediaWithPath:mediaPath];
@@ -665,7 +712,16 @@
 
 - (IBAction)expandPauseButtonClicked:(id)sender
 {
-    [self.player pause];
+    if (streamer != nil)
+    {
+        [streamer pause];
+    }
+    
+    if ([self.player isPlaying])
+    {
+        [self.player pause];
+    }
+    
     [self stopTimer];
     [self updateDisplay];
     
@@ -758,17 +814,36 @@
 {
     NSTimeInterval currentTime;
     
-    if (typePlay == 1)
+    if (typePlay == kPlay_Local)
     {
         currentTime = self.player.currentTime;
+        currentTimeSlider.value = currentTime;
     }
     else
     {
-        currentTimeSlider.maximumValue = streamer.duration;
-        currentTime = streamer.progress;
+        if (streamer.bitRate != 0.0)
+        {
+            double progress = streamer.progress;
+            double duration = streamer.duration;
+            
+            if (duration > 0)
+            {
+//                currentTimeSlider.maximumValue = streamer.duration;
+//                currentTime = streamer.progress;
+                
+                [currentTimeSlider setValue:100 * progress / duration];
+            }
+            else
+            {
+                //currentTime = 0.0;
+                //currentTimeSlider.maximumValue = 100;
+                //[currentTimeSlider setValue:100 * progress / duration];
+                return;
+            }
+        }
     }
     
-    currentTimeSlider.value = currentTime;
+    
     [self updateSliderLabels];
     
     //NSLog(@"%f",currentTime);
@@ -782,6 +857,13 @@
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
         [cell setDetailTextColor:kColor_Purple];
+    }
+    
+    for (int i=[arrFilter count]; i < [listItems count]; i++)
+    {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+        PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
+        [cell setDetailTextColor:kColor_CustomGray];
     }
     
     if ([arrFilter count] > lastIndex)
@@ -950,9 +1032,30 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.player play];
+    //
+    //  Hien tai nhac chua dc play
+    //
+    if (isPlaying == 0)
+    {
+        return;
+    }
     
+    if (typePlay == kPlay_Local)
+    {
+        [self.player play];
+    }
+    else
+    {
+        [streamer start];
+    }
+    
+    if ([self.timer isValid])
+    {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
     self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
     
     playButton.hidden = YES;
@@ -989,13 +1092,34 @@
 {
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
     isDownloading = NO;
+    
     [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
     download2Button.userInteractionEnabled = NO;
     downloadButton.userInteractionEnabled = NO;
+    
     canPlay = YES;
     //----------    player --------------------
-    typePlay = 1;
+    typePlay = kPlay_Local;
+    //
+    //      khoi tao de play local
+    //
     [self setupMusicPlay];
+    
+    if (isPlaying == 1)
+    {
+        //
+        //      stop streaming playing
+        //
+        [streamer stop];
+        [self destroyStreamer];
+        //
+        //      seek time to current time
+        //
+        NSLog(@"Time current: %f",currentTimeSlider.value);
+//        [self.player play];
+        [self.player playAtTime:currentTimeSlider.value];
+        [self.player play];
+    }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request

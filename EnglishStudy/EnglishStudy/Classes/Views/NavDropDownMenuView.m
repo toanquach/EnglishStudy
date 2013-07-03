@@ -257,6 +257,12 @@
     }
     
     [UIAppDelegate.navigationController popToRootViewControllerAnimated:NO];
+    FavoritesViewController *viewController = [[FavoritesViewController alloc] init];
+    [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+    
+    UIAppDelegate.isMenuShow = 0;
+    self.hidden = YES;
 }
 
 - (IBAction)baiDaMuaButtonClicked:(id)sender
@@ -267,6 +273,12 @@
     }
     
     [UIAppDelegate.navigationController popToRootViewControllerAnimated:NO];
+    PurchaseViewController *viewController = [[PurchaseViewController alloc] init];
+    [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+    viewController = nil;
+    
+    UIAppDelegate.isMenuShow = 0;
+    self.hidden = YES;
 }
 
 - (IBAction)taiKhoanButtonClicked:(id)sender
@@ -312,14 +324,30 @@
     if (buttonIndex == 1)
     {
         // Ten Ca si
+        [UIAppDelegate.navigationController popToRootViewControllerAnimated:NO];
+        CategoryViewController *viewController = [[CategoryViewController alloc]init];
+        viewController.categotyType = kCategoryType_Singer;
+        [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
     }
     else if(buttonIndex == 2)
     {
         // Danh Muc
+        [UIAppDelegate.navigationController popToRootViewControllerAnimated:NO];
+        CategoryViewController *viewController = [[CategoryViewController alloc]init];
+        viewController.categotyType = kCategoryType_Category;
+        [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
     }
     else if(buttonIndex == 3)
     {
         // Bai Hat
+        [UIAppDelegate.navigationController popToRootViewControllerAnimated:NO];
+        HotSongViewController *viewController = [[HotSongViewController alloc]init];
+        viewController.type = kCategoryType_Song;
+        viewController.titleString = @"Danh Sách Bài Hát";
+        [UIAppDelegate.navigationController pushViewController:viewController animated:YES];
+        viewController = nil;
     }
     else
     {
