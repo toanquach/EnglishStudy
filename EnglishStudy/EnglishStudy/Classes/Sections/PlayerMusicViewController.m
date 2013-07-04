@@ -70,6 +70,7 @@
     int lastIndex;
     int currentTypeDisplay;
     BOOL isDownloading;
+    BOOL isDownloadFinish;
     
     ASIHTTPRequest *mediaRequest;
     
@@ -79,10 +80,23 @@
     int fontSize;
     int typePlay;
     int isPlaying;
+    double mCurrentTime;
+    
+    AVAudioPlayer* player;
+    NSTimer *timer;
+    AVPlayer *livePlayer;
+    
+    //
+    //      view tung cau
+    //
+    IBOutlet UIView *tungCauView;
+    IBOutlet UILabel *enCau01Label;
+    IBOutlet UILabel *vnCau01Label;
+    IBOutlet UILabel *enCau02Label;
+    IBOutlet UILabel *vnCau02Label;
+    
 }
- 
-@property (nonatomic, strong) AVAudioPlayer* player;
-@property (nonatomic, strong) NSTimer *timer;
+
 - (void)setupView;
 
 - (void)setupMusicPlay;
@@ -115,6 +129,8 @@
                                  error:(NSError *)error;
 
 - (void)downloadMediaWithPath:(NSString *)filePath;
+
+- (void)viewTungCauWithIndex:(int)index;
 
 @end
 
@@ -175,6 +191,11 @@
     mediaSizeLabel = nil;
     mainScrollView = nil;
     currentTimeSlider = nil;
+    tungCauView = nil;
+    enCau01Label = nil;
+    vnCau01Label = nil;
+    enCau02Label = nil;
+    vnCau02Label = nil;
     [super viewDidUnload];
 }
 
@@ -224,6 +245,11 @@
         singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         
+        vnCau01Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        vnCau02Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        enCau01Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        enCau02Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        
         enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"icon_select_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"icon_status.png"];
@@ -233,6 +259,11 @@
         backgroundImageView.hidden = NO;
         singerLabel.textColor = [UIColor whiteColor];
         categoryLabel.textColor = [UIColor whiteColor];
+        
+        vnCau01Label.textColor = [UIColor whiteColor];
+        vnCau02Label.textColor = [UIColor whiteColor];
+        enCau01Label.textColor = [UIColor whiteColor];
+        enCau02Label.textColor = [UIColor whiteColor];
         
         enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"btn_unselect.png"];
@@ -371,18 +402,41 @@
             [self downloadMediaWithPath:mediaPath];
         }
         
-        currentTimeSlider.maximumValue = 100;
+        //currentTimeSlider.maximumValue = 100;
         //
         //      create strem file
         //
-        [self createStreamer];
+        //[self createStreamer];
+        
+        [self setupMusicPlayLive];
     }
     
+    isDownloadFinish = NO;
     isPlaying = 0;
     progressDownloadBar.progress = 0.0;
     currentTimeSlider.value = 0.0;
     [currentTimeSlider setSize:MTZTiltReflectionSliderSizeSmall];
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
+    
+    tungCauView.frame = CGRectMake(320, 0, 320, 300);
+    
+    enCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    enCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    
+    [mainScrollView addSubview:tungCauView];
+    //
+    //      check favorite button
+    //
+    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:playerSong.tblID] == YES)
+    {
+        favoriteButton.selected = YES;
+    }
+    else
+    {
+        favoriteButton.selected = NO;
+    }
 }
 
 - (void)setupNavigationBar
@@ -504,8 +558,8 @@
          removeObserver:self
          name:ASStatusChangedNotification
          object:streamer];
-		[self.timer invalidate];
-		self.timer = nil;
+		[timer invalidate];
+		timer = nil;
 		
 		[streamer stop];
 		//[streamer release];
@@ -540,14 +594,14 @@
 	NSURL *url = [NSURL URLWithString:escapedValue];
 	streamer = [[AudioStreamer alloc] initWithURL:url];
 	
-    if ([self.timer isValid])
+    if ([timer isValid])
     {
-        [self.timer invalidate];
-        self.timer = nil;
+        [timer invalidate];
+        timer = nil;
     }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
     
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     
 	[[NSNotificationCenter defaultCenter]
      addObserver:self selector:@selector(playbackStateChanged:) name:ASStatusChangedNotification object:streamer];
@@ -555,39 +609,91 @@
 
 - (void)setupMusicPlay
 {
+    if (![[NSFileManager defaultManager] fileExistsAtPath:mediaPath])
+    {
+        DLog(@" media path ko ton tai");
+        return;
+    }
     // Do any additional setup after loading the view, typically from a nib.
     NSURL* url = [[NSURL alloc]initFileURLWithPath:mediaPath];
     NSAssert(url, @"URL is valid.");
     NSError* error = nil;
-    self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     
-    if(!self.player)
+    if(!player)
     {
         NSLog(@"Error creating player: %@", error);
     }
     //
     //      setup player
     //
-    self.player.delegate = self;
-    [self.player prepareToPlay];
-    
+    player.delegate = self;
+    [player prepareToPlay];
+
     currentTimeSlider.minimumValue = 0.0f;
-    currentTimeSlider.maximumValue = self.player.duration;
+    currentTimeSlider.maximumValue = player.duration;
     
     [self updateDisplay];
 }
 
 - (void)setupMusicPlayLive
 {
-    [self createStreamer];
+    NSString *urlString = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+    livePlayer = [[AVPlayer alloc]initWithURL:[NSURL URLWithString:urlString]];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:[livePlayer currentItem]];
+    [livePlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
 }
+
+- (NSTimeInterval) availableDuration;
+{
+    NSArray *loadedTimeRanges = [[livePlayer currentItem] loadedTimeRanges];
+    CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+    float startSeconds = CMTimeGetSeconds(timeRange.start);
+    float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+    NSTimeInterval result = startSeconds + durationSeconds;
+    return result;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if (object == livePlayer && [keyPath isEqualToString:@"status"])
+    {
+        if (livePlayer.status == AVPlayerStatusFailed)
+        {
+            NSLog(@"AVPlayer Failed");
+            
+        } else if (livePlayer.status == AVPlayerStatusReadyToPlay)
+        {
+            NSLog(@"AVPlayerStatusReadyToPlay");
+            
+            
+        } else if (livePlayer.status == AVPlayerItemStatusUnknown)
+        {
+            NSLog(@"AVPlayer Unknown");
+            
+        }
+    }
+}
+
+- (void)playerItemDidReachEnd:(NSNotification *)notification
+{
+    
+    //  code here to play next sound file
+    
+}
+
 
 - (void)stopPlaying
 {
-    [self.player stop];
+    [player stop];
     [self stopTimer];
-    self.player.currentTime = 0;
-    [self.player prepareToPlay];
+    player.currentTime = 0;
+    [player prepareToPlay];
     [self updateDisplay];
 }
 
@@ -656,16 +762,16 @@
 {
     if (typePlay == kPlay_Local)
     {
-        [self.player play];
+        [player play];
         
-        if ([self.timer isValid])
+        if ([timer isValid])
         {
-            [self.timer invalidate];
-            self.timer = nil;
+            [timer invalidate];
+            timer = nil;
         }
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
         
-        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     }
     else
     {
@@ -673,8 +779,18 @@
         {
             [self downloadMediaWithPath:mediaPath];
         }
+
         
-        [streamer start];
+        currentTimeSlider.maximumValue = CMTimeGetSeconds(livePlayer.currentItem.duration);
+        
+        //[streamer start];
+        [livePlayer play];
+        
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
+        
+
     }
     
     playButton.hidden = YES;
@@ -697,16 +813,19 @@
 
 - (IBAction)currentTimeSliderValueChanged:(id)sender
 {
-    if(self.timer)
+    if(timer)
         [self stopTimer];
     [self updateSliderLabels];
 }
 
 - (IBAction)currentTimeSliderTouchUpInside:(id)sender
 {
-    [self.player stop];
-        self.player.currentTime = currentTimeSlider.value;
-    [self.player prepareToPlay];
+    [player stop];
+    
+    player.currentTime = currentTimeSlider.value;
+    
+    [player prepareToPlay];
+    
     [self playButtonClicked:self];
 }
 
@@ -717,10 +836,12 @@
         [streamer pause];
     }
     
-    if ([self.player isPlaying])
+    if ([player isPlaying])
     {
-        [self.player pause];
+        [player pause];
     }
+    
+    [livePlayer pause];
     
     [self stopTimer];
     [self updateDisplay];
@@ -734,7 +855,18 @@
 
 - (IBAction)favoriteButtonClicked:(id)sender
 {
+    favoriteButton.selected = !favoriteButton.selected;
     
+    if (favoriteButton.selected == YES)
+    {
+        // add new item
+        [[UserDataManager sharedManager] insertFavoriteSong:playerSong.tblID];
+    }
+    else
+    {
+        // remove item
+        [[UserDataManager sharedManager] deleteFavoriteSong:playerSong.tblID];
+    }
 }
 
 - (IBAction)enIconButtonClicked:(id)sender
@@ -762,7 +894,6 @@
 
 - (IBAction)switchIconButtonClicked:(id)sender
 {
-    
     if (switchIconButton.selected == YES)
     {
         [mainScrollView setContentOffset:CGPointMake(320, 0) animated:YES];
@@ -812,35 +943,18 @@
 
 - (void)updateDisplay
 {
-    NSTimeInterval currentTime;
+    NSTimeInterval currentTime = 0.0;
     
     if (typePlay == kPlay_Local)
     {
-        currentTime = self.player.currentTime;
+        currentTime = player.currentTime;
         currentTimeSlider.value = currentTime;
     }
     else
     {
-        if (streamer.bitRate != 0.0)
-        {
-            double progress = streamer.progress;
-            double duration = streamer.duration;
-            
-            if (duration > 0)
-            {
-//                currentTimeSlider.maximumValue = streamer.duration;
-//                currentTime = streamer.progress;
-                
-                [currentTimeSlider setValue:100 * progress / duration];
-            }
-            else
-            {
-                //currentTime = 0.0;
-                //currentTimeSlider.maximumValue = 100;
-                //[currentTimeSlider setValue:100 * progress / duration];
-                return;
-            }
-        }
+        currentTime = CMTimeGetSeconds(livePlayer.currentItem.currentTime);
+        
+        currentTimeSlider.value = currentTime;
     }
     
     
@@ -877,8 +991,17 @@
         }
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        
+        CGRect cellRect = [myTableView rectForRowAtIndexPath:indexPath];
+        cellRect = [myTableView convertRect:cellRect toView:myTableView.superview];
+        BOOL completelyVisible = CGRectContainsRect(myTableView.frame, cellRect);
+        if  (!completelyVisible)
+        {
+            [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }
     }
+
+    [self viewTungCauWithIndex:lastIndex];
 }
 
 - (void)updateSliderLabels
@@ -887,7 +1010,14 @@
     NSString* currentTimeString = [self formattedStringForDuration:currentTime];//[NSString stringWithFormat:@"%.02f", currentTime];
 
     elapsedTimeLabel.text =  currentTimeString;
-    remainingTimeLabel.text = [self formattedStringForDuration:self.player.duration - currentTime];
+    if (typePlay == kPlay_Local)
+    {
+        remainingTimeLabel.text = [self formattedStringForDuration:player.duration - currentTime];
+    }
+    else
+    {
+        remainingTimeLabel.text = [self formattedStringForDuration:CMTimeGetSeconds(livePlayer.currentItem.duration) - currentTime];
+    }
 }
 
 - (NSString*)formattedStringForDuration:(NSTimeInterval)duration
@@ -895,6 +1025,57 @@
     NSInteger minutes = floor(duration/60);
     NSInteger seconds = round(duration - minutes * 60);
     return [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+}
+
+- (void)viewTungCauWithIndex:(int)index
+{
+    NSDictionary *dict = [listItems objectAtIndex:index];
+    NSDictionary *dict2;
+    
+    if (lastIndex < [listItems count] - 1)
+    {
+         dict2 = [listItems objectAtIndex:lastIndex +1];
+    }
+    
+    if (currentTypeDisplay == kPlayerMusic_ENVN)
+    {
+        enCau01Label.hidden = NO;
+        enCau02Label.hidden = NO;
+        vnCau01Label.hidden = NO;
+        vnCau02Label.hidden = NO;
+    }
+    else if(currentTypeDisplay == kPlayerMusic_EN)
+    {
+        vnCau01Label.hidden = YES;
+        vnCau02Label.hidden = YES;
+        enCau01Label.hidden = NO;
+        enCau02Label.hidden = NO;
+    }
+    else
+    {
+        enCau01Label.hidden = YES;
+        enCau02Label.hidden = YES;
+        vnCau01Label.hidden = NO;
+        vnCau02Label.hidden = NO;
+    }
+    
+    if (lastIndex%2 ==0)
+    {
+        enCau01Label.text = [dict objectForKey:@"en"];
+        vnCau01Label.text = [dict objectForKey:@"vn"];
+        
+
+        enCau02Label.text = [dict2 objectForKey:@"en"];
+        vnCau02Label.text = [dict2 objectForKey:@"vn"];
+    }
+    else
+    {
+        enCau02Label.text = [dict objectForKey:@"en"];
+        vnCau02Label.text = [dict objectForKey:@"vn"];
+        
+        enCau01Label.text = [dict2 objectForKey:@"en"];
+        vnCau01Label.text = [dict2 objectForKey:@"vn"];
+    }
 }
 
 #pragma mark - Timer
@@ -906,8 +1087,8 @@
 
 - (void)stopTimer
 {
-    [self.timer invalidate];
-    self.timer = nil;
+    [timer invalidate];
+    timer = nil;
     [self updateDisplay];
 }
 
@@ -1042,21 +1223,21 @@
     
     if (typePlay == kPlay_Local)
     {
-        [self.player play];
+        [player play];
     }
     else
     {
         [streamer start];
     }
     
-    if ([self.timer isValid])
+    if ([timer isValid])
     {
-        [self.timer invalidate];
-        self.timer = nil;
+        [timer invalidate];
+        timer = nil;
     }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
     
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     
     playButton.hidden = YES;
     expandPlayButton.hidden = YES;
@@ -1066,7 +1247,7 @@
 
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
-    self.player.currentTime = [[dict objectForKey:@"seekTime"] doubleValue];
+    player.currentTime = [[dict objectForKey:@"seekTime"] doubleValue];
     int extraIndex = lastIndex;
     lastIndex = [[dict objectForKey:@"id"] intValue];
   
@@ -1110,15 +1291,37 @@
         //
         //      stop streaming playing
         //
-        [streamer stop];
-        [self destroyStreamer];
+        
+        //[streamer stop];
+        //[self destroyStreamer];
         //
         //      seek time to current time
         //
-        NSLog(@"Time current: %f",currentTimeSlider.value);
+        NSLog(@"Time current: %f",CMTimeGetSeconds(livePlayer.currentItem.currentTime));
+        
 //        [self.player play];
-        [self.player playAtTime:currentTimeSlider.value];
-        [self.player play];
+//        [player playAtTime:CMTimeGetSeconds(livePlayer.currentItem.currentTime)];
+//        [player play];
+        
+        mCurrentTime = CMTimeGetSeconds(livePlayer.currentItem.currentTime);
+        
+        [livePlayer pause];
+       
+        AVPlayerItem *playItem = [[AVPlayerItem alloc]initWithURL:[NSURL fileURLWithPath:mediaPath]];
+        
+        livePlayer = [[AVPlayer alloc]initWithPlayerItem:playItem];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(playerItemDidReachEnd:)
+                                                     name:AVPlayerItemDidPlayToEndTimeNotification
+                                                   object:[livePlayer currentItem]];
+        [livePlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
+
+        
+        
+        [livePlayer seekToTime:CMTimeMake(mCurrentTime, 1.0)];
+        
+        [livePlayer play];
     }
 }
 
