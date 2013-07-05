@@ -94,7 +94,9 @@
     IBOutlet UILabel *vnCau01Label;
     IBOutlet UILabel *enCau02Label;
     IBOutlet UILabel *vnCau02Label;
-    
+ 
+    UIColor *defaultColor;
+    UIColor *hoverColor;
 }
 
 - (void)setupView;
@@ -253,6 +255,9 @@
         enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"icon_select_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"icon_status.png"];
+        
+        defaultColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        hoverColor = kColor_Purple;
     }
     else
     {
@@ -268,6 +273,9 @@
         enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"btn_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"btn_mode.png"];
+        
+        defaultColor = [UIColor whiteColor];
+        hoverColor = kColor_Purple;
     }
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -437,6 +445,9 @@
     {
         favoriteButton.selected = NO;
     }
+    
+    switchIconButton.selected = YES;
+    
 }
 
 - (void)setupNavigationBar
@@ -1029,12 +1040,27 @@
 
 - (void)viewTungCauWithIndex:(int)index
 {
-    NSDictionary *dict = [listItems objectAtIndex:index];
+    if (index <= 0)
+    {
+        return;
+    }
+    NSDictionary *dict = [listItems objectAtIndex:index - 1];
     NSDictionary *dict2;
     
-    if (lastIndex < [listItems count] - 1)
+    enCau01Label.textColor = defaultColor;
+    enCau02Label.textColor = defaultColor;
+    vnCau01Label.textColor = defaultColor;
+    vnCau02Label.textColor = defaultColor;
+    
+    NSLog(@" Last index: %d",lastIndex);
+    
+    if (index < [listItems count] - 1)
     {
-         dict2 = [listItems objectAtIndex:lastIndex +1];
+        if (index  > [listItems count] - 1)
+        {
+            return;
+        }
+         dict2 = [listItems objectAtIndex:index];
     }
     
     if (currentTypeDisplay == kPlayerMusic_ENVN)
@@ -1063,7 +1089,8 @@
     {
         enCau01Label.text = [dict objectForKey:@"en"];
         vnCau01Label.text = [dict objectForKey:@"vn"];
-        
+        enCau01Label.textColor = hoverColor;
+        vnCau01Label.textColor = hoverColor;
 
         enCau02Label.text = [dict2 objectForKey:@"en"];
         vnCau02Label.text = [dict2 objectForKey:@"vn"];
@@ -1072,6 +1099,8 @@
     {
         enCau02Label.text = [dict objectForKey:@"en"];
         vnCau02Label.text = [dict objectForKey:@"vn"];
+        enCau02Label.textColor = hoverColor;
+        vnCau02Label.textColor = hoverColor;
         
         enCau01Label.text = [dict2 objectForKey:@"en"];
         vnCau01Label.text = [dict2 objectForKey:@"vn"];
@@ -1322,6 +1351,9 @@
         [livePlayer seekToTime:CMTimeMake(mCurrentTime, 1.0)];
         
         [livePlayer play];
+        
+        currentTimeSlider.maximumValue = CMTimeGetSeconds(livePlayer.currentItem.duration);
+        currentTimeSlider.value = mCurrentTime;
     }
 }
 
