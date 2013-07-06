@@ -14,8 +14,6 @@
 #import <Pods/Category/UILabel+Custom.h>
 #import "PlayerMusicViewCell.h"
 #import "MTZTiltReflectionSlider.h"
-#import "AudioStreamer.h"
-
 #import "LoadMoneyViewController.h"
 
 #define kPlay_Local         1
@@ -70,19 +68,20 @@
     int lastIndex;
     int currentTypeDisplay;
     BOOL isDownloading;
+    BOOL isDownloadFinish;
     
     ASIHTTPRequest *mediaRequest;
-    
-    AudioStreamer *streamer;
     
     int autoDownloadFile;
     int fontSize;
     int typePlay;
     int isPlaying;
+    double mCurrentTime;
+    
+    NSTimer *timer;
+    AVPlayer *livePlayer;
 }
- 
-@property (nonatomic, strong) AVAudioPlayer* player;
-@property (nonatomic, strong) NSTimer *timer;
+
 - (void)setupView;
 
 - (void)setupMusicPlay;
@@ -107,12 +106,6 @@
 - (IBAction)enIconButtonClicked:(id)sender;
 - (IBAction)listIconButtonClicked:(id)sender;
 - (IBAction)switchIconButtonClicked:(id)sender;
-
-
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player
-                       successfully:(BOOL)flag;
-- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player
-                                 error:(NSError *)error;
 
 - (void)downloadMediaWithPath:(NSString *)filePath;
 
@@ -182,7 +175,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self stopPlaying];
-    [self destroyStreamer];
     [super viewWillDisappear:animated];
 }
 
@@ -353,6 +345,7 @@
         download2Button.userInteractionEnabled = NO;
         downloadButton.userInteractionEnabled = NO;
         canPlay = YES;
+        isDownloading = NO;
         //----------    player --------------------
         [self setupMusicPlay];
     }
@@ -371,18 +364,24 @@
             [self downloadMediaWithPath:mediaPath];
         }
         
-        currentTimeSlider.maximumValue = 100;
-        //
-        //      create strem file
-        //
-        [self createStreamer];
+        [self setupMusicPlayLive];
     }
     
+    isDownloadFinish = NO;
     isPlaying = 0;
     progressDownloadBar.progress = 0.0;
     currentTimeSlider.value = 0.0;
     [currentTimeSlider setSize:MTZTiltReflectionSliderSizeSmall];
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
+    
+    if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:playerSong.tblID] == YES)
+    {
+        favoriteButton.selected = YES;
+    }
+    else
+    {
+        favoriteButton.selected = NO;
+    }
 }
 
 - (void)setupNavigationBar
@@ -489,113 +488,107 @@
     [self animateScrollTitleRight];
 }
 
-#pragma mark - AudioStream download
-
-//
-// destroyStreamer
-//
-// Removes the streamer, the UI update timer and the change notification
-//
-- (void)destroyStreamer
-{
-	if (streamer)
-	{
-		[[NSNotificationCenter defaultCenter]
-         removeObserver:self
-         name:ASStatusChangedNotification
-         object:streamer];
-		[self.timer invalidate];
-		self.timer = nil;
-		
-		[streamer stop];
-		//[streamer release];
-		streamer = nil;
-	}
-}
-
-//
-// createStreamer
-//
-// Creates or recreates the AudioStreamer object.
-//
-- (void)createStreamer
-{
-	if (streamer)
-	{
-		return;
-	}
-    
-	[self destroyStreamer];
-	
-    NSString *urlStr = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
-    
-	NSString *escapedValue =
-    (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(
-                                                         nil,
-                                                         (CFStringRef)urlStr,
-                                                         NULL,
-                                                         NULL,
-                                                         kCFStringEncodingUTF8));
-    
-	NSURL *url = [NSURL URLWithString:escapedValue];
-	streamer = [[AudioStreamer alloc] initWithURL:url];
-	
-    if ([self.timer isValid])
-    {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
-    
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
-    
-	[[NSNotificationCenter defaultCenter]
-     addObserver:self selector:@selector(playbackStateChanged:) name:ASStatusChangedNotification object:streamer];
-}
 
 - (void)setupMusicPlay
 {
-    // Do any additional setup after loading the view, typically from a nib.
-    NSURL* url = [[NSURL alloc]initFileURLWithPath:mediaPath];
-    NSAssert(url, @"URL is valid.");
-    NSError* error = nil;
-    self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-    
-    if(!self.player)
+    if (![[NSFileManager defaultManager] fileExistsAtPath:mediaPath])
     {
-        NSLog(@"Error creating player: %@", error);
+        DLog(@" media path ko ton tai");
+        return;
+    }
+ 
+    if (livePlayer != nil)
+    {
+        [livePlayer pause];
+        livePlayer = nil;
     }
     //
-    //      setup player
+    //      create player item
     //
-    self.player.delegate = self;
-    [self.player prepareToPlay];
+    AVPlayerItem *playItem = [[AVPlayerItem alloc]initWithURL:[NSURL fileURLWithPath:mediaPath]];
     
-    currentTimeSlider.minimumValue = 0.0f;
-    currentTimeSlider.maximumValue = self.player.duration;
+    livePlayer = [[AVPlayer alloc]initWithPlayerItem:playItem];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:[livePlayer currentItem]];
+    [livePlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
+    
+    
+    typePlay = kPlay_Local;
+
     
     [self updateDisplay];
 }
 
 - (void)setupMusicPlayLive
 {
-    [self createStreamer];
+    NSString *urlString = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
+    
+    livePlayer = [[AVPlayer alloc]initWithURL:[NSURL URLWithString:urlString]];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(playerItemDidReachEnd:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:[livePlayer currentItem]];
+    [livePlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
 }
+
+- (NSTimeInterval) availableDuration;
+{
+    NSArray *loadedTimeRanges = [[livePlayer currentItem] loadedTimeRanges];
+    CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+    float startSeconds = CMTimeGetSeconds(timeRange.start);
+    float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+    NSTimeInterval result = startSeconds + durationSeconds;
+    return result;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if (object == livePlayer && [keyPath isEqualToString:@"status"])
+    {
+        if (livePlayer.status == AVPlayerStatusFailed)
+        {
+            NSLog(@"AVPlayer Failed");
+            
+        } else if (livePlayer.status == AVPlayerStatusReadyToPlay)
+        {
+            NSLog(@"AVPlayerStatusReadyToPlay");
+            
+            
+        } else if (livePlayer.status == AVPlayerItemStatusUnknown)
+        {
+            NSLog(@"AVPlayer Unknown");
+            
+        }
+    }
+}
+
+- (void)playerItemDidReachEnd:(NSNotification *)notification
+{
+    
+    //  code here to play next sound file
+    
+}
+
 
 - (void)stopPlaying
 {
-    [self.player stop];
+    [livePlayer pause];
+    livePlayer = nil;
     [self stopTimer];
-    self.player.currentTime = 0;
-    [self.player prepareToPlay];
     [self updateDisplay];
 }
 
 - (void)downloadMediaWithPath:(NSString *)filePath
 {
     isDownloading = YES;
+    canPlay = YES;
+    isDownloadFinish = NO;
+    
     NSString *url = [NSString stringWithFormat:@"%@%d.mp3",kServerMedia,playerSong.tblID];
-    //NSLog(@"File URL: %@", url);
 	mediaRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
 	[mediaRequest setDownloadDestinationPath:filePath];
 	[mediaRequest setDownloadProgressDelegate:self];
@@ -654,27 +647,37 @@
 
 - (IBAction)playButtonClicked:(id)sender
 {
+    if (canPlay == NO)
+    {
+        [UIAppDelegate showAlertView:nil andMessage:@"Vui lòng tải file trước để thực hiện thao tác này."];
+        return;
+    }
     if (typePlay == kPlay_Local)
     {
-        [self.player play];
+        [livePlayer play];
         
-        if ([self.timer isValid])
+        if ([timer isValid])
         {
-            [self.timer invalidate];
-            self.timer = nil;
+            [timer invalidate];
+            timer = nil;
         }
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
         
-        [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     }
     else
     {
-        if (isDownloading == NO)
+        [livePlayer play];
+        
+        if ([timer isValid])
         {
-            [self downloadMediaWithPath:mediaPath];
+            [timer invalidate];
+            timer = nil;
         }
         
-        [streamer start];
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     }
     
     playButton.hidden = YES;
@@ -697,30 +700,97 @@
 
 - (IBAction)currentTimeSliderValueChanged:(id)sender
 {
-    if(self.timer)
+    if(timer)
         [self stopTimer];
     [self updateSliderLabels];
 }
 
 - (IBAction)currentTimeSliderTouchUpInside:(id)sender
 {
-    [self.player stop];
-        self.player.currentTime = currentTimeSlider.value;
-    [self.player prepareToPlay];
-    [self playButtonClicked:self];
+    if (isDownloading == YES)
+    {
+        if ([timer isValid])
+        {
+            [timer invalidate];
+            timer = nil;
+        }
+        
+        timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+        
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
+        
+        return;
+    }
+    
+    if (typePlay == kPlay_Online)
+    {
+        if (isDownloading == NO)
+        {
+            
+        }
+        
+        if (isDownloadFinish == YES)
+        {
+            //NSLog(@"Time current: %f",CMTimeGetSeconds(livePlayer.currentItem.currentTime));
+            
+            //mCurrentTime = CMTimeGetSeconds(livePlayer.currentItem.currentTime);
+            
+            mCurrentTime = currentTimeSlider.value;
+            
+            if (livePlayer != nil)
+            {
+                [livePlayer pause];
+                livePlayer = nil;
+            }
+            
+            AVPlayerItem *playItem = [[AVPlayerItem alloc]initWithURL:[NSURL fileURLWithPath:mediaPath]];
+            
+            livePlayer = [[AVPlayer alloc]initWithPlayerItem:playItem];
+            
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(playerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[livePlayer currentItem]];
+            [livePlayer addObserver:self forKeyPath:@"status" options:0 context:nil];
+            
+            [livePlayer seekToTime:CMTimeMake((mCurrentTime * CMTimeGetSeconds(livePlayer.currentItem.duration))/100, 1.0)];
+            
+            [livePlayer play];
+            
+            NSLog(@"aa: %f",(mCurrentTime * CMTimeGetSeconds(livePlayer.currentItem.duration))/100);
+            //currentTimeSlider.value = (mCurrentTime * CMTimeGetSeconds(livePlayer.currentItem.duration))/100;
+            
+            NSLog(@" min: %f - max: %f",currentTimeSlider.minimumValue, currentTimeSlider.maximumValue);
+            NSLog(@" current: %f",currentTimeSlider.value);
+            
+            typePlay = kPlay_Local;
+            
+            if ([timer isValid])
+            {
+                [timer invalidate];
+                timer = nil;
+            }
+            
+            timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+            
+            [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
+        }
+    }
+    else
+    {
+        [livePlayer pause];
+        
+        [livePlayer seekToTime:CMTimeMake((currentTimeSlider.value * CMTimeGetSeconds(livePlayer.currentItem.duration))/100, 1)];
+        
+        //[livePlayer play];
+        
+        [self playButtonClicked:self];
+    }
 }
 
 - (IBAction)expandPauseButtonClicked:(id)sender
 {
-    if (streamer != nil)
-    {
-        [streamer pause];
-    }
-    
-    if ([self.player isPlaying])
-    {
-        [self.player pause];
-    }
+    [livePlayer pause];
     
     [self stopTimer];
     [self updateDisplay];
@@ -730,11 +800,22 @@
     
     pauseButton.hidden = YES;
     expandPauseButton.hidden = YES;
+    isPlaying = 0;
 }
 
 - (IBAction)favoriteButtonClicked:(id)sender
 {
-    
+    favoriteButton.selected = !favoriteButton.selected;
+    if (favoriteButton.selected == YES)
+    {
+        // add new item
+        [[UserDataManager sharedManager] insertFavoriteSong:playerSong.tblID];
+    }
+    else
+    {
+        // remove item
+        [[UserDataManager sharedManager] deleteFavoriteSong:playerSong.tblID];
+    }
 }
 
 - (IBAction)enIconButtonClicked:(id)sender
@@ -762,7 +843,6 @@
 
 - (IBAction)switchIconButtonClicked:(id)sender
 {
-    
     if (switchIconButton.selected == YES)
     {
         [mainScrollView setContentOffset:CGPointMake(320, 0) animated:YES];
@@ -812,41 +892,15 @@
 
 - (void)updateDisplay
 {
-    NSTimeInterval currentTime;
+    NSTimeInterval currentTime = 0.0;
     
-    if (typePlay == kPlay_Local)
-    {
-        currentTime = self.player.currentTime;
-        currentTimeSlider.value = currentTime;
-    }
-    else
-    {
-        if (streamer.bitRate != 0.0)
-        {
-            double progress = streamer.progress;
-            double duration = streamer.duration;
-            
-            if (duration > 0)
-            {
-//                currentTimeSlider.maximumValue = streamer.duration;
-//                currentTime = streamer.progress;
-                
-                [currentTimeSlider setValue:100 * progress / duration];
-            }
-            else
-            {
-                //currentTime = 0.0;
-                //currentTimeSlider.maximumValue = 100;
-                //[currentTimeSlider setValue:100 * progress / duration];
-                return;
-            }
-        }
-    }
+    currentTime = CMTimeGetSeconds(livePlayer.currentItem.currentTime);
+    
+    currentTimeSlider.value = (currentTime * 100)/CMTimeGetSeconds(livePlayer.currentItem.duration);
     
     
     [self updateSliderLabels];
     
-    //NSLog(@"%f",currentTime);
     NSNumber *timePlay = [NSNumber numberWithFloat:currentTime];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"seekTime <= %@",timePlay];
     
@@ -883,11 +937,15 @@
 
 - (void)updateSliderLabels
 {
-    NSTimeInterval currentTime = currentTimeSlider.value;
-    NSString* currentTimeString = [self formattedStringForDuration:currentTime];//[NSString stringWithFormat:@"%.02f", currentTime];
+    NSTimeInterval currentTime = 0.0;
+    
+    currentTime = (currentTimeSlider.value * CMTimeGetSeconds(livePlayer.currentItem.duration))/100;
+    
+    NSString* currentTimeString = [self formattedStringForDuration:currentTime];
 
     elapsedTimeLabel.text =  currentTimeString;
-    remainingTimeLabel.text = [self formattedStringForDuration:self.player.duration - currentTime];
+
+    remainingTimeLabel.text = [self formattedStringForDuration:CMTimeGetSeconds(livePlayer.currentItem.duration) - currentTime];
 }
 
 - (NSString*)formattedStringForDuration:(NSTimeInterval)duration
@@ -906,43 +964,11 @@
 
 - (void)stopTimer
 {
-    [self.timer invalidate];
-    self.timer = nil;
+    [timer invalidate];
+    timer = nil;
     [self updateDisplay];
 }
 
-- (void)playbackStateChanged:(NSNotification *)aNotification
-{
-	if ([streamer isWaiting])
-	{
-		//[self setButtonImageNamed:@"loadingbutton.png"];
-	}
-	else if ([streamer isPlaying])
-	{
-		//[self setButtonImageNamed:@"stopbutton.png"];
-	}
-	else if ([streamer isIdle])
-	{
-		[self destroyStreamer];
-		//[self setButtonImageNamed:@"playbutton.png"];
-	}
-}
-
-#pragma mark - AVAudioPlayerDelegate
-
-- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
-{
-    NSLog(@"%s successfully=%@", __PRETTY_FUNCTION__, flag ? @"YES"  : @"NO");
-    [self stopTimer];
-    [self updateDisplay];
-}
-
-- (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error
-{
-    NSLog(@"%s error=%@", __PRETTY_FUNCTION__, error);
-    [self stopTimer];
-    [self updateDisplay];
-}
 
 - (NSInteger )getHeightForCell:(NSDictionary *)dict
 {
@@ -1040,23 +1066,16 @@
         return;
     }
     
-    if (typePlay == kPlay_Local)
-    {
-        [self.player play];
-    }
-    else
-    {
-        [streamer start];
-    }
+    [livePlayer play];
     
-    if ([self.timer isValid])
+    if ([timer isValid])
     {
-        [self.timer invalidate];
-        self.timer = nil;
+        [timer invalidate];
+        timer = nil;
     }
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
     
-    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode: NSRunLoopCommonModes];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
     
     playButton.hidden = YES;
     expandPlayButton.hidden = YES;
@@ -1066,7 +1085,8 @@
 
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
-    self.player.currentTime = [[dict objectForKey:@"seekTime"] doubleValue];
+    [livePlayer seekToTime:CMTimeMake([[dict objectForKey:@"seekTime"] doubleValue],1)];
+    
     int extraIndex = lastIndex;
     lastIndex = [[dict objectForKey:@"id"] intValue];
   
@@ -1091,7 +1111,9 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     mediaSizeLabel.text = [NSString stringWithFormat:@"%@/%@",[self byteToMegaByte:request.contentLength],[self byteToMegaByte:request.contentLength]];
+    
     isDownloading = NO;
+    isDownloadFinish = YES;
     
     [download2Button setImage:[UIImage imageNamed:@"icon_check.png"] forState:UIControlStateNormal];
     download2Button.userInteractionEnabled = NO;
@@ -1099,34 +1121,34 @@
     
     canPlay = YES;
     //----------    player --------------------
-    typePlay = kPlay_Local;
+    typePlay = kPlay_Online;
     //
     //      khoi tao de play local
     //
-    [self setupMusicPlay];
     
     if (isPlaying == 1)
     {
         //
-        //      stop streaming playing
+        //      play live online
         //
-        [streamer stop];
-        [self destroyStreamer];
-        //
-        //      seek time to current time
-        //
-        NSLog(@"Time current: %f",currentTimeSlider.value);
-//        [self.player play];
-        [self.player playAtTime:currentTimeSlider.value];
-        [self.player play];
+    }
+    else
+    {
+        [self setupMusicPlay];
     }
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
+    canPlay = NO;
     isDownloading = NO;
+    
+    if (isPlaying == 1)
+    {
+        [livePlayer pause];
+    }
+    
     [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
-
     NSLog(@"%@",request.error.description);
 }
 
