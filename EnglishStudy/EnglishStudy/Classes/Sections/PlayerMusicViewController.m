@@ -80,6 +80,19 @@
     
     NSTimer *timer;
     AVPlayer *livePlayer;
+
+    
+    //
+    //      view tung cau
+    //
+    IBOutlet UIView *tungCauView;
+    IBOutlet UILabel *enCau01Label;
+    IBOutlet UILabel *vnCau01Label;
+    IBOutlet UILabel *enCau02Label;
+    IBOutlet UILabel *vnCau02Label;
+ 
+    UIColor *defaultColor;
+    UIColor *hoverColor;
 }
 
 - (void)setupView;
@@ -108,6 +121,8 @@
 - (IBAction)switchIconButtonClicked:(id)sender;
 
 - (void)downloadMediaWithPath:(NSString *)filePath;
+
+- (void)viewTungCauWithIndex:(int)index;
 
 @end
 
@@ -168,6 +183,11 @@
     mediaSizeLabel = nil;
     mainScrollView = nil;
     currentTimeSlider = nil;
+    tungCauView = nil;
+    enCau01Label = nil;
+    vnCau01Label = nil;
+    enCau02Label = nil;
+    vnCau02Label = nil;
     [super viewDidUnload];
 }
 
@@ -216,9 +236,17 @@
         singerLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         categoryLabel.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         
+        vnCau01Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        vnCau02Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        enCau01Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        enCau02Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        
         enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"icon_select_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"icon_status.png"];
+        
+        defaultColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
+        hoverColor = kColor_Purple;
     }
     else
     {
@@ -226,9 +254,17 @@
         singerLabel.textColor = [UIColor whiteColor];
         categoryLabel.textColor = [UIColor whiteColor];
         
+        vnCau01Label.textColor = [UIColor whiteColor];
+        vnCau02Label.textColor = [UIColor whiteColor];
+        enCau01Label.textColor = [UIColor whiteColor];
+        enCau02Label.textColor = [UIColor whiteColor];
+        
         enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
         listIconImageView.image = [UIImage imageNamed:@"btn_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"btn_mode.png"];
+        
+        defaultColor = [UIColor whiteColor];
+        hoverColor = kColor_Purple;
     }
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
@@ -363,7 +399,7 @@
             // Download file
             [self downloadMediaWithPath:mediaPath];
         }
-        
+
         [self setupMusicPlayLive];
     }
     
@@ -374,6 +410,18 @@
     [currentTimeSlider setSize:MTZTiltReflectionSliderSizeSmall];
     mainScrollView.contentSize = CGSizeMake(320*2, mainScrollView.frame.size.height);
     
+    tungCauView.frame = CGRectMake(320, 0, 320, 300);
+    
+    enCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    enCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    vnCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    
+    [mainScrollView addSubview:tungCauView];
+    //
+    //      check favorite button
+    //
+
     if ([[UserDataManager sharedManager] filterFavoriteSongWithKey:playerSong.tblID] == YES)
     {
         favoriteButton.selected = YES;
@@ -382,6 +430,8 @@
     {
         favoriteButton.selected = NO;
     }
+    
+    switchIconButton.selected = YES;
 }
 
 - (void)setupNavigationBar
@@ -488,7 +538,6 @@
     [self animateScrollTitleRight];
 }
 
-
 - (void)setupMusicPlay
 {
     if (![[NSFileManager defaultManager] fileExistsAtPath:mediaPath])
@@ -505,6 +554,7 @@
     //
     //      create player item
     //
+
     AVPlayerItem *playItem = [[AVPlayerItem alloc]initWithURL:[NSURL fileURLWithPath:mediaPath]];
     
     livePlayer = [[AVPlayer alloc]initWithPlayerItem:playItem];
@@ -518,7 +568,6 @@
     
     typePlay = kPlay_Local;
 
-    
     [self updateDisplay];
 }
 
@@ -674,7 +723,7 @@
             [timer invalidate];
             timer = nil;
         }
-        
+
         timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
         
         [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
@@ -792,6 +841,8 @@
 {
     [livePlayer pause];
     
+    [livePlayer pause];
+    
     [self stopTimer];
     [self updateDisplay];
     
@@ -893,10 +944,11 @@
 - (void)updateDisplay
 {
     NSTimeInterval currentTime = 0.0;
-    
+
     currentTime = CMTimeGetSeconds(livePlayer.currentItem.currentTime);
     
     currentTimeSlider.value = (currentTime * 100)/CMTimeGetSeconds(livePlayer.currentItem.duration);
+
     
     
     [self updateSliderLabels];
@@ -931,8 +983,17 @@
         }
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        
+        CGRect cellRect = [myTableView rectForRowAtIndexPath:indexPath];
+        cellRect = [myTableView convertRect:cellRect toView:myTableView.superview];
+        BOOL completelyVisible = CGRectContainsRect(myTableView.frame, cellRect);
+        if  (!completelyVisible)
+        {
+            [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+        }
     }
+
+    [self viewTungCauWithIndex:lastIndex];
 }
 
 - (void)updateSliderLabels
@@ -953,6 +1014,75 @@
     NSInteger minutes = floor(duration/60);
     NSInteger seconds = round(duration - minutes * 60);
     return [NSString stringWithFormat:@"%d:%02d", minutes, seconds];
+}
+
+- (void)viewTungCauWithIndex:(int)index
+{
+    if (index <= 0)
+    {
+        return;
+    }
+    NSDictionary *dict = [listItems objectAtIndex:index - 1];
+    NSDictionary *dict2;
+    
+    enCau01Label.textColor = defaultColor;
+    enCau02Label.textColor = defaultColor;
+    vnCau01Label.textColor = defaultColor;
+    vnCau02Label.textColor = defaultColor;
+    
+    NSLog(@" Last index: %d",lastIndex);
+    
+    if (index < [listItems count] - 1)
+    {
+        if (index  > [listItems count] - 1)
+        {
+            return;
+        }
+         dict2 = [listItems objectAtIndex:index];
+    }
+    
+    if (currentTypeDisplay == kPlayerMusic_ENVN)
+    {
+        enCau01Label.hidden = NO;
+        enCau02Label.hidden = NO;
+        vnCau01Label.hidden = NO;
+        vnCau02Label.hidden = NO;
+    }
+    else if(currentTypeDisplay == kPlayerMusic_EN)
+    {
+        vnCau01Label.hidden = YES;
+        vnCau02Label.hidden = YES;
+        enCau01Label.hidden = NO;
+        enCau02Label.hidden = NO;
+    }
+    else
+    {
+        enCau01Label.hidden = YES;
+        enCau02Label.hidden = YES;
+        vnCau01Label.hidden = NO;
+        vnCau02Label.hidden = NO;
+    }
+    
+    if (lastIndex%2 ==0)
+    {
+        enCau01Label.text = [dict objectForKey:@"en"];
+        vnCau01Label.text = [dict objectForKey:@"vn"];
+        enCau01Label.textColor = hoverColor;
+        vnCau01Label.textColor = hoverColor;
+
+        enCau02Label.text = [dict2 objectForKey:@"en"];
+        vnCau02Label.text = [dict2 objectForKey:@"vn"];
+    }
+    else
+    {
+        enCau02Label.text = [dict objectForKey:@"en"];
+        vnCau02Label.text = [dict objectForKey:@"vn"];
+        enCau02Label.textColor = hoverColor;
+        vnCau02Label.textColor = hoverColor;
+        
+        enCau01Label.text = [dict2 objectForKey:@"en"];
+        vnCau01Label.text = [dict2 objectForKey:@"vn"];
+    }
 }
 
 #pragma mark - Timer
@@ -1085,9 +1215,11 @@
 
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
-    [livePlayer seekToTime:CMTimeMake([[dict objectForKey:@"seekTime"] doubleValue],1)];
     
+    [livePlayer seekToTime:CMTimeMake([[dict objectForKey:@"seekTime"] doubleValue],1)];
+
     int extraIndex = lastIndex;
+    
     lastIndex = [[dict objectForKey:@"id"] intValue];
   
     for (int i = 0; i < lastIndex; i++)
