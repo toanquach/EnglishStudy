@@ -69,7 +69,13 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)viewDidUnload {
+- (void)viewDidUnload
+{
+    if ([dbRequest isExecuting])
+    {
+        [dbRequest cancel];
+    }
+    dbRequest = nil;
     downloadProgressBar = nil;
     loadingView = nil;
     closeButton = nil;
@@ -143,7 +149,7 @@
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
     isDownloading = NO;
-    [UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
+    //[UIAppDelegate showAlertView:nil andMessage:@"Lỗi trong quá trình tải. Vui lòng thử lại!"];
 }
 
 // Download file delegate

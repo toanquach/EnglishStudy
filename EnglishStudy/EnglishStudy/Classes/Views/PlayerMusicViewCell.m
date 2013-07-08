@@ -10,6 +10,10 @@
 
 @implementation PlayerMusicViewCell
 
+@synthesize indexPathRow;
+@synthesize songId;
+@synthesize fontSize;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -28,10 +32,27 @@
 
 - (void)setupView:(NSDictionary *)dict andDisplayType:(int)displayType
 {
-    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    enTextLabel.text = [dict objectForKey:@"en"];
-    vnTextLabel.text = [dict objectForKey:@"vn"];
+    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:songId] == YES)
+    {
+        enTextLabel.text = [dict objectForKey:@"en"];
+        vnTextLabel.text = [dict objectForKey:@"vn"];
+    }
+    else
+    {
+        if (indexPathRow > 15)
+        {
+            enTextLabel.text = kMessage_Mua_Bai_Hat_EN;
+            vnTextLabel.text = kMessage_Mua_Bai_Hat_VN;
+        }
+        else
+        {
+            enTextLabel.text = [dict objectForKey:@"en"];
+            vnTextLabel.text = [dict objectForKey:@"vn"];
+        }
+    }
     
     enTextLabel.numberOfLines = 0;
     [enTextLabel sizeToFit];

@@ -104,11 +104,13 @@
 - (void)stopTimer;
 - (void)stopPlaying;
 - (void)setupNavigationBar;
-- (NSInteger)getHeightForCell:(NSDictionary *)dict;
+- (NSInteger)getHeightForCell:(NSDictionary *)dict andIndexPathRow:(int)indexPathRow;
 - (NSString*)formattedStringForDuration:(NSTimeInterval)duration;
 - (void)animateScrollTitleRight;
 - (void)animateScrollTitleLeft;
 - (NSString *)byteToMegaByte:(double)size;
+
+- (void)generateViewTungCau;
 
 - (IBAction)playButtonClicked:(id)sender;
 - (IBAction)downloadButtonClicked:(id)sender;
@@ -121,7 +123,6 @@
 - (IBAction)switchIconButtonClicked:(id)sender;
 
 - (void)downloadMediaWithPath:(NSString *)filePath;
-
 - (void)viewTungCauWithIndex:(int)index;
 
 @end
@@ -241,7 +242,7 @@
         enCau01Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         enCau02Label.textColor = [UIColor colorWithRed:111.0f/255.0f green:109.0f/255.0f blue:109.0f/255.0f alpha:1.0];
         
-        enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
+        enIconImageView.image = [UIImage imageNamed:@"icon_EV.png"];
         listIconImageView.image = [UIImage imageNamed:@"icon_select_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"icon_status.png"];
         
@@ -259,7 +260,7 @@
         enCau01Label.textColor = [UIColor whiteColor];
         enCau02Label.textColor = [UIColor whiteColor];
         
-        enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
+        enIconImageView.image = [UIImage imageNamed:@"btn_EV.png"];
         listIconImageView.image = [UIImage imageNamed:@"btn_unselect.png"];
         switchIconImageView.image = [UIImage imageNamed:@"btn_mode.png"];
         
@@ -355,6 +356,21 @@
         [listItems addObject:dict];
     }
     [myTableView reloadData];
+    //
+    //      set text for view tung cau
+    //
+    if ([listItems count] > 1)
+    {
+        NSDictionary *dict = [listItems objectAtIndex:0];
+        enCau01Label.text = [dict objectForKey:@"en"];
+        vnCau01Label.text = [dict objectForKey:@"vn"];
+        
+        dict = [listItems objectAtIndex:1];
+        enCau02Label.text = [dict objectForKey:@"en"];
+        vnCau02Label.text = [dict objectForKey:@"vn"];
+    }
+    
+    [self generateViewTungCau];
     
     [self setupNavigationBar];
     
@@ -412,10 +428,10 @@
     
     tungCauView.frame = CGRectMake(320, 0, 320, 300);
     
-    enCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    vnCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    enCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    vnCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
+    enCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    vnCau01Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    enCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    vnCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
     
     [mainScrollView addSubview:tungCauView];
     //
@@ -431,7 +447,17 @@
         favoriteButton.selected = NO;
     }
     
-    switchIconButton.selected = YES;
+    if (displayType == kSetting_Display_List)
+    {
+        switchIconButton.selected = YES;
+        [mainScrollView setContentOffset:CGPointMake(0, 0) animated:NO];
+    }
+    else
+    {
+        switchIconButton.selected = NO;
+        [mainScrollView setContentOffset:CGPointMake(320, 0) animated:NO];
+    }
+    
 }
 
 - (void)setupNavigationBar
@@ -832,7 +858,7 @@
         [livePlayer seekToTime:CMTimeMake((currentTimeSlider.value * CMTimeGetSeconds(livePlayer.currentItem.duration))/100, 1)];
         
         //[livePlayer play];
-        
+        lastIndex = 0;
         [self playButtonClicked:self];
     }
 }
@@ -874,14 +900,40 @@
     if (currentTypeDisplay == kPlayerMusic_ENVN)
     {
         currentTypeDisplay = kPlayerMusic_EN;
+        if (displayStyle == kSetting_BanNgay)
+        {
+            enIconImageView.image = [UIImage imageNamed:@"icon_EN.png"];
+        }
+        else
+        {
+            enIconImageView.image = [UIImage imageNamed:@"btn_EN.png"];
+        }
+
     }
     else if(currentTypeDisplay == kPlayerMusic_EN)
     {
         currentTypeDisplay = kPlayerMusic_VN;
+        if (displayStyle == kSetting_BanNgay)
+        {
+            enIconImageView.image = [UIImage imageNamed:@"icon_VN.png"];
+        }
+        else
+        {
+            enIconImageView.image = [UIImage imageNamed:@"btn_VN.png"];
+        }
     }
     else
     {
         currentTypeDisplay = kPlayerMusic_ENVN;
+        if (displayStyle == kSetting_BanNgay)
+        {
+            enIconImageView.image = [UIImage imageNamed:@"icon_EV.png"];
+        }
+        else
+        {
+            enIconImageView.image = [UIImage imageNamed:@"btn_EV.png"];
+        }
+        
     }
     
     [myTableView reloadData];
@@ -958,7 +1010,7 @@
     
     NSArray *arrFilter = [listItems filteredArrayUsingPredicate:predicate];
     //NSLog(@"Filter found >>>>> %@",arrFilter);
-    for (int i=lastIndex; i < [arrFilter count]; i++)
+    for (int i = 0; i < [arrFilter count]; i++)
     {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
@@ -992,7 +1044,11 @@
             [myTableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
         }
     }
-
+    else
+    {
+    
+    }
+    
     [self viewTungCauWithIndex:lastIndex];
 }
 
@@ -1065,8 +1121,17 @@
     
     if (lastIndex%2 ==0)
     {
-        enCau01Label.text = [dict objectForKey:@"en"];
-        vnCau01Label.text = [dict objectForKey:@"vn"];
+        if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:playerSong.tblID] == YES)
+        {
+            enCau01Label.text = [dict objectForKey:@"en"];
+            vnCau01Label.text = [dict objectForKey:@"vn"];
+        }
+        else
+        {
+            enCau01Label.text = kMessage_Mua_Bai_Hat_EN;
+            vnCau01Label.text = kMessage_Mua_Bai_Hat_VN;
+        }
+
         enCau01Label.textColor = hoverColor;
         vnCau01Label.textColor = hoverColor;
 
@@ -1075,14 +1140,41 @@
     }
     else
     {
-        enCau02Label.text = [dict objectForKey:@"en"];
-        vnCau02Label.text = [dict objectForKey:@"vn"];
+        
+        if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:playerSong.tblID] == YES)
+        {
+            enCau02Label.text = [dict objectForKey:@"en"];
+            vnCau02Label.text = [dict objectForKey:@"vn"];
+        }
+        else
+        {
+            enCau02Label.text = kMessage_Mua_Bai_Hat_EN;
+            vnCau02Label.text = kMessage_Mua_Bai_Hat_VN;
+        }
+
         enCau02Label.textColor = hoverColor;
         vnCau02Label.textColor = hoverColor;
         
         enCau01Label.text = [dict2 objectForKey:@"en"];
         vnCau01Label.text = [dict2 objectForKey:@"vn"];
     }
+    
+    [self generateViewTungCau];
+}
+
+- (void)generateViewTungCau
+{
+    [UILabel setHeightForLabel:enCau01Label];
+    [UILabel setHeightForLabel:vnCau01Label];
+    CGRect rect = vnCau01Label.frame;
+    rect.origin.y = enCau01Label.frame.origin.y + enCau01Label.frame.size.height;
+    vnCau01Label.frame = rect;
+    
+    [UILabel setHeightForLabel:enCau02Label];
+    [UILabel setHeightForLabel:vnCau02Label];
+    rect = vnCau02Label.frame;
+    rect.origin.y = enCau02Label.frame.origin.y + enCau02Label.frame.size.height;
+    vnCau02Label.frame = rect;
 }
 
 #pragma mark - Timer
@@ -1100,14 +1192,31 @@
 }
 
 
-- (NSInteger )getHeightForCell:(NSDictionary *)dict
+- (NSInteger )getHeightForCell:(NSDictionary *)dict andIndexPathRow:(int)indexPathRow
 {
     UILabel *enTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 305, 21)];
     UILabel *vnTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 305, 21)];
-    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:14];
-    enTextLabel.text = [dict objectForKey:@"en"];
-    vnTextLabel.text = [dict objectForKey:@"vn"];
+    enTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    vnTextLabel.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
+    
+    if ([[UserDataManager sharedManager] filterPurcharseSongWithKey:playerSong.tblID] == YES)
+    {
+        enTextLabel.text = [dict objectForKey:@"en"];
+        vnTextLabel.text = [dict objectForKey:@"vn"];
+    }
+    else
+    {
+        if (indexPathRow > 15)
+        {
+            enTextLabel.text = kMessage_Mua_Bai_Hat_EN;
+            vnTextLabel.text = kMessage_Mua_Bai_Hat_VN;
+        }
+        else
+        {
+            enTextLabel.text = [dict objectForKey:@"en"];
+            vnTextLabel.text = [dict objectForKey:@"vn"];
+        }
+    }
     
     enTextLabel.numberOfLines = 0;
     [enTextLabel sizeToFit];
@@ -1144,7 +1253,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
-    return [self getHeightForCell:dict];
+    return [self getHeightForCell:dict andIndexPathRow:indexPath.row];
 }
 
 
@@ -1169,6 +1278,11 @@
     }
     
     NSDictionary *dict = [listItems objectAtIndex:indexPath.row];
+    
+    cell.indexPathRow = indexPath.row;
+    cell.songId = playerSong.tblID;
+    cell.fontSize = fontSize;
+    
     [cell setupView:dict andDisplayType:currentTypeDisplay];
     if (displayStyle == kSetting_BanNgay)
     {
@@ -1196,16 +1310,7 @@
         return;
     }
     
-    [livePlayer play];
-    
-    if ([timer isValid])
-    {
-        [timer invalidate];
-        timer = nil;
-    }
-    timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
-    
-    [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
+    [livePlayer pause];
     
     playButton.hidden = YES;
     expandPlayButton.hidden = YES;
@@ -1218,6 +1323,8 @@
     
     [livePlayer seekToTime:CMTimeMake([[dict objectForKey:@"seekTime"] doubleValue],1)];
 
+    [livePlayer play];
+    
     int extraIndex = lastIndex;
     
     lastIndex = [[dict objectForKey:@"id"] intValue];
@@ -1235,6 +1342,15 @@
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
         [cell setDetailTextColor:kColor_CustomGray];
     }
+    
+    if ([timer isValid])
+    {
+        [timer invalidate];
+        timer = nil;
+    }
+    timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode: NSRunLoopCommonModes];
 }
 
 

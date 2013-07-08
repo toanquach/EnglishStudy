@@ -15,6 +15,9 @@
     
 }
 
+@property (nonatomic) int indexPathRow;
+@property (nonatomic) int songId;
+@property (nonatomic) int fontSize;
 - (void)setupView:(NSDictionary *)dict andDisplayType:(int)displayType;
 
 - (void)setDetailTextColor:(UIColor *)color;

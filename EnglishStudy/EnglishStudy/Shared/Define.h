@@ -79,6 +79,10 @@
 
 #define kAlert_Message_Enough_Coin          @"Bài này giá %d xu\nTài khoản của bạn còn %d xu do đó bạn chưa đủ xu để mua. Để nạp xu bạn có thể nạp thẻ cào mobi, vina, viettel hoặc share facebook bài hát này"
 
+
+#define kMessage_Mua_Bai_Hat_EN             @"Please purchased this song for view this text."
+#define kMessage_Mua_Bai_Hat_VN             @"Vui lòng mua bài hát, để xem chi tiết."
+
 #define kPlayerMusic_ENVN                   1
 #define kPlayerMusic_EN                     2
 #define kPlayerMusic_VN                     3
