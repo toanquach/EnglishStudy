@@ -220,7 +220,7 @@
     {
         fontSize = 20;
     }
-    else if(textSize == kSetting_CoVua)
+    else if(textSize == kSetting_CoVua || textSize == 0)
     {
         fontSize = 15;
     }
@@ -370,8 +370,6 @@
         vnCau02Label.text = [dict objectForKey:@"vn"];
     }
     
-    [self generateViewTungCau];
-    
     [self setupNavigationBar];
     
     //
@@ -380,7 +378,7 @@
     pauseButton.hidden = YES;
     expandPauseButton.hidden = YES;
     
-    [currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
+    //[currentTimeSlider setThumbImage:[UIImage imageNamed:@"icon_seek.png"] forState:UIControlStateNormal];
 
     // ***********************************
     //      Check media file exist
@@ -434,6 +432,7 @@
     vnCau02Label.font = [UIFont fontWithName:kFont_Klavika_Regular size:fontSize];
     
     [mainScrollView addSubview:tungCauView];
+    [self generateViewTungCau];
     //
     //      check favorite button
     //
@@ -1021,7 +1020,15 @@
     {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
-        [cell setDetailTextColor:kColor_CustomGray];
+        if (displayStyle == kSetting_BanNgay)
+        {
+            [cell setDetailTextColor:kColor_CustomGray];
+        }
+        else
+        {
+            [cell setDetailTextColor:[UIColor whiteColor]];
+        }
+    
     }
     
     if ([arrFilter count] > lastIndex)
@@ -1340,7 +1347,14 @@
     {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         PlayerMusicViewCell *cell = (PlayerMusicViewCell *)[myTableView cellForRowAtIndexPath:indexPath];
-        [cell setDetailTextColor:kColor_CustomGray];
+        if (displayStyle == kSetting_BanNgay)
+        {
+            [cell setDetailTextColor:kColor_CustomGray];
+        }
+        else
+        {
+            [cell setDetailTextColor:[UIColor whiteColor]];
+        }
     }
     
     if ([timer isValid])

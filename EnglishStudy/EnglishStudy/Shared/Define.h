@@ -54,9 +54,9 @@
 #define kSetting_BanDem                     1
 #define kSetting_BanNgay                    0
 
-#define kSetting_CoNho                      2
-#define kSetting_CoVua                      1
-#define kSetting_CoLon                      0
+#define kSetting_CoNho                      1
+#define kSetting_CoVua                      2
+#define kSetting_CoLon                      3
 
 #define kSetting_AutoDL                     0
 #define kSetting_ManualDL                   1

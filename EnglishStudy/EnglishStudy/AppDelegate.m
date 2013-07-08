@@ -40,8 +40,8 @@
 @end
 
 @implementation AppDelegate
-
-static NSString* kAppId = @"463470557051319";
+//416331938482355 -- 463470557051319
+static NSString* kAppId = @"416331938482355";
 
 @synthesize navigationController;
 @synthesize navDropDownMenu;

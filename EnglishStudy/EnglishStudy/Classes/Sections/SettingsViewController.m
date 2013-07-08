@@ -130,15 +130,20 @@
     
     if (displayTextSizeType == 0)
     {
+        displayTextSizeType = 2;
+    }
+    
+    if (displayTextSizeType == 1)
+    {
         coLonImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coLonTextButton.selected = YES;
     }
-    else if(displayTextSizeType == 1)
+    else if(displayTextSizeType == 2)
     {
         coVuaImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coVuaTextButton.selected = YES;
     }
-    else
+    else if(displayTextSizeType == 3)
     {
         coNhoImageView.image = [UIImage imageNamed:kRadio_Checked_Image];
         coNhoTextButton.selected = YES;
